@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from .forms import LoginForm
@@ -20,7 +20,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return index_view(request)
+                return HttpResponseRedirect('/')
             else:
                 return render(request, 'auth/login.html', {'status':'noauth'})
         else:
@@ -31,4 +31,4 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
-    return index_view(request)
+    return HttpResponseRedirect('/login/')
