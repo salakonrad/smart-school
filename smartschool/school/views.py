@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -34,5 +34,6 @@ def logout_view(request):
     return HttpResponseRedirect('/login/')
 
 @login_required
+@permission_required('school.view_squad', raise_exception=True)
 def class_list_view(request):
     return render(request, 'class/class_list.html')
