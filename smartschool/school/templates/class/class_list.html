@@ -1,5 +1,7 @@
   {% extends '../base.html' %}
 
   {% block page_content %}
-    <p>CLASSES LIST</p>
+    {% for class in data.classes %}
+      {{ class.name }}
+    {% endfor %}
   {% endblock %}

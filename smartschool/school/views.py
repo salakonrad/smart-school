@@ -4,6 +4,7 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from .forms import LoginForm
+from .models import Squad
 
 
 def index_view(request):
@@ -22,18 +23,21 @@ def login_view(request):
                 login(request, user)
                 return HttpResponseRedirect('/')
             else:
-                return render(request, 'auth/login.html', {'status':'noauth'})
+                return render(request, 'auth/login.html', {'status': 'noauth'})
         else:
-            return render(request, 'auth/login.html', {'status':'invalidform', 'error':form.errors})
+            return render(request, 'auth/login.html', {'status': 'invalidform', 'error': form.errors})
     else:
         return render(request, 'auth/login.html')
 
 @login_required
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/login/')
+    return HttpResponseRedirect('/accounts/login/')
 
 @login_required
 @permission_required('school.view_squad', raise_exception=True)
 def class_list_view(request):
-    return render(request, 'class/class_list.html')
+    data = {
+        'classes': Squad.objects.all()
+    }
+    return render(request, 'class/class_list.html', {'data': data})
