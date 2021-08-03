@@ -32,3 +32,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/login/')
+
+@login_required
+def class_list_view(request):
+    return render(request, 'class/class_list.html')
