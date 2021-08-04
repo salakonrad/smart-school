@@ -53,6 +53,18 @@ class ClassProfile(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    def add(profile_data):
+        profile = ClassProfile()
+        profile.name = profile_data['name']
+        profile.save()
+
+    def remove(profile_id):
+        if ClassProfile.objects.filter(class_profile = profile_id).exists():
+            ClassProfile.objects.get(class_profile = profile_id).delete()
+            return True
+        else:
+            return False
+
     def get_by_id(id):
         if ClassProfile.objects.filter(class_profile = id).exists():
             return ClassProfile.objects.get(class_profile = id)

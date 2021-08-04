@@ -9,7 +9,7 @@
   <div class="col-auto">
     <div class="page-utilities">
       <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-        {% if perms.school.add_class_profile %}
+        {% if perms.school.add_classprofile %}
         <div class="col-auto">
           <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_profile">
             Dodaj nowy profil
@@ -25,33 +25,29 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Nazwa</th>
-      <th scope="col">Profil</th>
-      <th scope="col">Wychowawca</th>
-      {% if perms.school.change_squad %}
+      <th scope="col">Nazwa profilu</th>
+      {% if perms.school.change_classprofile %}
         <th scope="col"></th>
       {% endif %}
-      {% if perms.school.delete_squad %}
+      {% if perms.school.delete_classprofile %}
         <th scope="col"></th>
       {% endif %}
     </tr>
   </thead>
   <tbody>
-    {% for class in data.classes %}
+    {% for profile in data.class_profiles %}
       <tr>
-        <td>{{ class.name }}</td>
-        <td>{{ class.profile }}</td>
-        <td>{{ class.supervisor }}</td>
-        {% if perms.school.change_squad %}
+        <td>{{ profile.name }}</td>
+        {% if perms.school.change_classprofile %}
           <td class="table-btn">
-            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_classprofile{{ profile.class_profile }}">
               Edytuj
             </button>
           </td>
         {% endif %}
-        {% if perms.school.delete_squad %}
+        {% if perms.school.delete_classprofile %}
           <td class="table-btn">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_classprofile{{ profile.class_profile }}">
               Usuń
             </button>
           </td>
@@ -66,35 +62,17 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nową klasę</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nowy profil</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{% url 'class_add' %}" method="POST" class="settings-form">
+      <form action="{% url 'class_profile_add' %}" method="POST" class="settings-form">
         {% csrf_token %}
         <div class="modal-body">
           <div class="app-card-settings">
             <!-- Class name -->
             <div class="mb-3">
-              <label for="add-squad-1" class="form-label">Nazwa klasy</label>
+              <label for="add-squad-1" class="form-label">Nazwa profilu</label>
               <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
-            </div>
-            <!-- Class profile -->
-            <div class="mb-3">
-              <label for="add-squad-2" class="form-label">Profil klasy</label>
-              <select name="profile" class="form-select" id="add-squad-2" aria-label="Wybór profilu klasy">
-                {% for profile in data.profiles %}
-                  <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <!-- Wychowawca -->
-            <div class="mb-3">
-              <label for="add-squad-3" class="form-label">Wychowawca</label>
-              <select name="supervisor" class="form-select" id="add-squad-3" aria-label="Wybór wychowawcy klasy">
-                {% for teacher in data.teachers %}
-                  <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
-                {% endfor %}
-              </select>
             </div>
           </div>
         </div>
@@ -108,24 +86,21 @@
 </div>
 
 <!-- Modals for every class -->
-{% for class in data.classes %}
+{% for profile in data.class_profiles %}
   <!-- Delete class modal -->
-  <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="delete_classprofile{{ profile.class_profile }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Usuń klasę</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń profil</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'class_delete' %}" method="POST" class="settings-form">
+        <form action="{% url 'class_profile_delete' %}" method="POST" class="settings-form">
           {% csrf_token %}
           <div class="modal-body">
-            <input type="hidden" name="class_id" value="{{ class.squad }}"/>
-            <p>Czy na pewno chcesz usunąć tę klasę?</p>
-            <p><strong>Nazwa: </strong> {{ class.name }}</p>
-            <p><strong>Profil: </strong> {{ class.profile }}</p>
-            <p><strong>Wychowawca: </strong> {{ class.supervisor }}</p>
-            <p>Utworzona <strong>{{ class.created }}</strong> przez użytkownika <strong>{{ class.supervisor }}</strong></p>
+            <input type="hidden" name="class_profile_id" value="{{ profile.class_profile }}"/>
+            <p>Czy na pewno chcesz usunąć ten profil?</p>
+            <p><strong>Nazwa: </strong> {{ profile.name }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
@@ -137,41 +112,23 @@
   </div>
 
   <!-- Edit class modal -->
-  <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="change_classprofile{{ profile.class_profile }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Edytuj klasę</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">Edytuj profil</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'class_change' %}" method="POST" class="settings-form">
+        <form action="{% url 'class_profile_change' %}" method="POST" class="settings-form">
           {% csrf_token %}
           <div class="modal-body">
             <div class="app-card-settings">
-              <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+              <input type="hidden" name="class_profile_id" value="{{ profile.class_profile }}"/>
               <!-- Class name -->
               <div class="mb-3">
-                <label for="change-squad-1" class="form-label">Nazwa klasy</label>
+                <label for="change-squad-1" class="form-label">Nazwa profilu</label>
                 <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
-              </div>
-              <!-- Class profile -->
-              <div class="mb-3">
-                <label for="change-squad-2" class="form-label">Profil klasy</label>
-                <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
-                  {% for profile in data.profiles %}
-                    <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Wychowawca -->
-              <div class="mb-3">
-                <label for="change-squad-3" class="form-label">Wychowawca</label>
-                <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">
-                  {% for teacher in data.teachers %}
-                    <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
+              </div>              
             </div>
           </div>
           <div class="modal-footer">
