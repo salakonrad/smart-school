@@ -9,17 +9,38 @@ class Principal(User):
     class Meta:
         proxy = True
 
+    def __str__(self):
+        return f'{self.last_name} {self.first_name}'
+
 class Teacher(User):
     class Meta:
         proxy = True
+
+    def __str__(self):
+        return f'{self.last_name} {self.first_name}'
+
+    def get_by_id(id):
+        if Teacher.objects.filter(id = id).exists():
+            return Teacher.objects.get(id = id)
+        else:
+            return None
+
+    def get_all():
+        return Teacher.objects.filter(groups__name='Teachers')
 
 class Parent(User):
     class Meta:
         proxy = True
 
+    def __str__(self):
+        return f'{self.last_name} {self.first_name}'
+
 class Student(User):
     class Meta:
         proxy = True
+
+    def __str__(self):
+        return f'{self.last_name} {self.first_name}'
 
 class ClassProfile(models.Model):
     class_profile = models.AutoField(primary_key=True)
@@ -30,6 +51,15 @@ class ClassProfile(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_by_id(id):
+        if ClassProfile.objects.filter(class_profile = id).exists():
+            return ClassProfile.objects.get(class_profile = id)
+        else:
+            return None
+
+    def get_all():
+        return ClassProfile.objects.all()
 
 class Squad(models.Model):
     squad = models.AutoField(primary_key=True)
@@ -46,4 +76,28 @@ class Squad(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def add(class_data, creator):
+        squad = Squad()
+        squad.name = class_data['name']
+        squad.profile = ClassProfile.get_by_id(class_data['profile'])
+        squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
+        squad.created_by = creator
+        squad.save()
+    
+    def remove(class_id):
+        if Squad.objects.filter(squad = class_id).exists():
+            Squad.objects.get(squad = class_id).delete()
+            return True
+        else:
+            return False
+
+    def get_all():
+        return Squad.objects.all().order_by('name')
+
+    def get_profiles():
+        return ClassProfile.get_all()
+
+    def get_teachers():
+        return Teacher.get_all()
 
