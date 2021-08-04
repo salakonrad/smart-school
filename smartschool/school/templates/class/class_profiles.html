@@ -4,22 +4,15 @@
 <!-- Page header -->
 <div class="row g-3 mb-4 align-items-center justify-content-between">
   <div class="col-auto">
-    <h1 class="app-page-title mb-0">Klasy</h1>
+    <h1 class="app-page-title mb-0">Profile klas</h1>
   </div>
   <div class="col-auto">
     <div class="page-utilities">
       <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-        {% if perms.school.view_classprofile %}
+        {% if perms.school.add_class_profile %}
         <div class="col-auto">
-          <a href="{% url 'class_profiles_list' %}" class="btn app-btn-secondary">
-            Profile klas
-          </a>
-        </div>
-        {% endif %}
-        {% if perms.school.add_squad %}
-        <div class="col-auto">
-          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_squad">
-            Dodaj klasę
+          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_profile">
+            Dodaj nowy profil
           </button>
         </div>
         {% endif %}
@@ -69,7 +62,7 @@
 </table>
 
 <!-- Add new class Modal -->
-<div class="modal fade" id="add_squad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="add_profile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
