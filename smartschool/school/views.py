@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import LoginForm, AddSquadForm, DeleteSquadForm
+from .forms import LoginForm, AddSquadForm, DeleteSquadForm, ChangeSquadForm
 from .models import Squad
 
 
@@ -73,6 +73,28 @@ def class_delete(request):
         if form.is_valid():
             class_id = form.cleaned_data['class_id']
             Squad.remove(class_id)
+            return HttpResponseRedirect('/classes')
+        else:
+            return class_list_view(request, form.errors)
+    else:
+        return class_list_view(request)
+
+@login_required
+@permission_required('school.change_squad', raise_exception=True)
+def class_change(request):
+    if request.method == 'POST':
+        form = ChangeSquadForm(request.POST)
+        if form.is_valid():
+            class_id = form.cleaned_data['class_id']
+            class_name = form.cleaned_data['name']
+            class_profile = form.cleaned_data['profile']
+            class_supervisor = form.cleaned_data['supervisor']
+            Squad.edit({
+                'class_id': class_id,
+                'name': class_name,
+                'profile': class_profile,
+                'supervisor': class_supervisor
+            }, request.user)
             return HttpResponseRedirect('/classes')
         else:
             return class_list_view(request, form.errors)
