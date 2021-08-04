@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<!-- Classes table -->
+<!-- Profiles table -->
 <table class="table">
   <thead>
     <tr>
@@ -57,7 +57,7 @@
   </tbody>
 </table>
 
-<!-- Add new class Modal -->
+<!-- Add new profile Modal -->
 <div class="modal fade" id="add_profile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -69,7 +69,7 @@
         {% csrf_token %}
         <div class="modal-body">
           <div class="app-card-settings">
-            <!-- Class name -->
+            <!-- Profile name -->
             <div class="mb-3">
               <label for="add-squad-1" class="form-label">Nazwa profilu</label>
               <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
@@ -87,7 +87,7 @@
 
 <!-- Modals for every class -->
 {% for profile in data.class_profiles %}
-  <!-- Delete class modal -->
+  <!-- Delete profile modal -->
   <div class="modal fade" id="delete_classprofile{{ profile.class_profile }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <!-- Edit class modal -->
+  <!-- Edit profile modal -->
   <div class="modal fade" id="change_classprofile{{ profile.class_profile }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -124,10 +124,10 @@
           <div class="modal-body">
             <div class="app-card-settings">
               <input type="hidden" name="class_profile_id" value="{{ profile.class_profile }}"/>
-              <!-- Class name -->
+              <!-- Profile name -->
               <div class="mb-3">
                 <label for="change-squad-1" class="form-label">Nazwa profilu</label>
-                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
+                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ profile.name }}" required>
               </div>              
             </div>
           </div>
