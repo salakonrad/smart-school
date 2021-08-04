@@ -9,13 +9,20 @@
   <div class="col-auto">
     <div class="page-utilities">
       <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+        {% if perms.school.view_squad %}
+        <div class="col-auto">
+          <a href="{% url 'class_list'%}" class="btn app-btn-secondary">
+            Powrót do Klas
+          </a>
+        </div>
+        {% endif %}
         {% if perms.school.add_classprofile %}
         <div class="col-auto">
           <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_profile">
             Dodaj nowy profil
           </button>
         </div>
-        {% endif %}
+        {% endif %}        
       </div>
     </div>
   </div>
