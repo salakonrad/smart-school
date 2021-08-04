@@ -10,10 +10,10 @@ urlpatterns = [
     path('classes/delete', views.class_delete, name="class_delete"),
     path('classes/change', views.class_change, name="class_change"),
     # Class Profiles
-    path('class_profiles', views.class_profiles_list_view, name="class_profiles_list"),
-    # path('class_profiles/add', views.class_profiles_add, name="class_profiles_add"),
-    # path('class_profiles/delete', views.class_profiles_delete, name="class_profiles_delete"),
-    # path('class_profiles/change', views.class_profiles_change, name="class_profiles_change"),
+    path('class_profile', views.class_profile_list_view, name="class_profile_list"),
+    path('class_profile/add', views.class_profile_add, name="class_profile_add"),
+    path('class_profile/delete', views.class_profile_delete, name="class_profile_delete"),
+    path('class_profile/change', views.class_profile_change, name="class_profile_change"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

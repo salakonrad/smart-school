@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import LoginForm, AddSquadForm, DeleteSquadForm, ChangeSquadForm
-from .models import Squad
+from .forms import *
+from .models import Squad, ClassProfile
 
 
 # /
@@ -118,9 +118,50 @@ def class_change(request):
 # /class_profiles
 @login_required
 @permission_required('school.view_classprofile', raise_exception=True)
-def class_profiles_list_view(request, error_message=None):
+def class_profile_list_view(request, error_message=None):
     data = {
         'class_profiles': Squad.get_profiles(),
         'errors': error_message
     }
     return render(request, 'class/class_profiles.html', {'data': data})
+
+
+# /class_profiles/add
+@login_required
+@permission_required('school.add_classprofile', raise_exception=True)
+def class_profile_add(request, error_message=None):
+    if request.method == 'POST':
+        form = AddProfileForm(request.POST)
+        if form.is_valid():
+            profile_name = form.cleaned_data['name']
+            ClassProfile.add({
+                'name': profile_name
+            })
+            return HttpResponseRedirect('/class_profile')
+        else:
+            return class_list_view(request, form.errors)
+    else:
+        return class_list_view(request)
+
+
+# /class_profiles/delete
+@login_required
+@permission_required('school.delete_classprofile', raise_exception=True)
+def class_profile_delete(request, error_message=None):
+    if request.method == 'POST':
+        form = DeleteProfileForm(request.POST)
+        if form.is_valid():
+            profile_id = form.cleaned_data['class_profile_id']
+            ClassProfile.remove(profile_id)
+            return HttpResponseRedirect('/class_profile')
+        else:
+            return class_list_view(request, form.errors)
+    else:
+        return class_list_view(request)
+
+
+# /class_profiles/change
+@login_required
+@permission_required('school.change_classprofile', raise_exception=True)
+def class_profile_change(request, error_message=None):
+    pass
