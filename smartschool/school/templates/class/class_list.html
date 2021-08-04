@@ -166,7 +166,11 @@
                 <label for="change-squad-2" class="form-label">Profil klasy</label>
                 <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
                   {% for profile in data.profiles %}
-                    <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                    {% if profile.class_profile == class.profile.class_profile %}
+                      <option value="{{ profile.class_profile }}" selected>{{ profile.name }}</option>
+                    {% else %}
+                      <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
@@ -175,7 +179,11 @@
                 <label for="change-squad-3" class="form-label">Wychowawca</label>
                 <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">
                   {% for teacher in data.teachers %}
-                    <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                    {% if teacher.id == class.supervisor.id %}
+                      <option value="{{ teacher.id }}" selected>{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                    {% else %}
+                      <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                    {% endif %}                    
                   {% endfor %}
                 </select>
               </div>
