@@ -65,6 +65,15 @@ class ClassProfile(models.Model):
         else:
             return False
 
+    def edit(profile_data):
+        if ClassProfile.objects.filter(class_profile = profile_data['class_profile_id']).exists():
+            profile = ClassProfile.objects.get(class_profile = profile_data['class_profile_id'])
+            profile.name = profile_data['name']
+            profile.save()
+            return True
+        else:
+            return False
+
     def get_by_id(id):
         if ClassProfile.objects.filter(class_profile = id).exists():
             return ClassProfile.objects.get(class_profile = id)

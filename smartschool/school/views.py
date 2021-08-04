@@ -164,4 +164,17 @@ def class_profile_delete(request, error_message=None):
 @login_required
 @permission_required('school.change_classprofile', raise_exception=True)
 def class_profile_change(request, error_message=None):
-    pass
+    if request.method == 'POST':
+        form = ChangeProfileForm(request.POST)
+        if form.is_valid():
+            profile_id = form.cleaned_data['class_profile_id']
+            profile_name = form.cleaned_data['name']
+            ClassProfile.edit({
+                'class_profile_id': profile_id,
+                'name': profile_name
+            })
+            return HttpResponseRedirect('/class_profile')
+        else:
+            return class_list_view(request, form.errors)
+    else:
+        return class_list_view(request)
