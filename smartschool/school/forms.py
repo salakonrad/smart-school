@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models.fields import IntegerField
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=48, label="Nazwa użytkownika")
@@ -11,3 +12,9 @@ class AddSquadForm(forms.Form):
 
 class DeleteSquadForm(forms.Form):
     class_id = forms.IntegerField()
+
+class ChangeSquadForm(forms.Form):
+    class_id = forms.IntegerField()
+    name = forms.CharField(max_length=36)
+    profile = forms.IntegerField()
+    supervisor = forms.IntegerField()

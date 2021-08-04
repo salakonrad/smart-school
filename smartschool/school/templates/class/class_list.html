@@ -44,7 +44,7 @@
         <td>{{ class.supervisor }}</td>
         {% if perms.school.change_squad %}
           <td class="table-btn">
-            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
               Edytuj
             </button>
           </td>
@@ -110,7 +110,7 @@
 <!-- Modals for every class -->
 {% for class in data.classes %}
   <!-- Delete class modal -->
-  <div class="modal fade" id="delete_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,6 +130,53 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
             <input type="submit" class="btn btn-danger" value="Usuń">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit class modal -->
+  <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edytuj klasę</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'class_change' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="app-card-settings">
+              <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+              <!-- Class name -->
+              <div class="mb-3">
+                <label for="change-squad-1" class="form-label">Nazwa klasy</label>
+                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
+              </div>
+              <!-- Class profile -->
+              <div class="mb-3">
+                <label for="change-squad-2" class="form-label">Profil klasy</label>
+                <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
+                  {% for profile in data.profiles %}
+                    <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <!-- Wychowawca -->
+              <div class="mb-3">
+                <label for="change-squad-3" class="form-label">Wychowawca</label>
+                <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">
+                  {% for teacher in data.teachers %}
+                    <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
           </div>
         </form>
       </div>

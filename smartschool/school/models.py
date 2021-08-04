@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
+from datetime import datetime
 
 from django.contrib.auth.models import User
 
@@ -88,6 +89,19 @@ class Squad(models.Model):
     def remove(class_id):
         if Squad.objects.filter(squad = class_id).exists():
             Squad.objects.get(squad = class_id).delete()
+            return True
+        else:
+            return False
+
+    def edit(class_data, editor):
+        if Squad.objects.filter(squad = class_data['class_id']).exists():
+            squad = Squad.objects.get(squad = class_data['class_id'])
+            squad.name = class_data['name']
+            squad.profile = ClassProfile.get_by_id(class_data['profile'])
+            squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
+            squad.edited = datetime.now()
+            squad.edited_by = editor
+            squad.save()
             return True
         else:
             return False
