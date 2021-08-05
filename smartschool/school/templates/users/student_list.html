@@ -63,10 +63,8 @@
     <tr>
       <th scope="col">Imię</th>
       <th scope="col">Nazwisko</th>
+      <th scipe="col">Klasa</th>
       <th scipe="col"></th>
-      {% if perms.school.change_student %}
-        <th scope="col"></th>
-      {% endif %}
       {% if perms.school.delete_student %}
         <th scope="col"></th>
       {% endif %}
@@ -77,18 +75,12 @@
       <tr>
         <td>{{ student.first_name }}</td>
         <td>{{ student.last_name }}</td>
+        <td>{{ student.squad_set.first }}</td>
         <td class="table-btn">
           <a href="{% url 'student' id=student.id %}" type="button" class="btn app-btn-secondary">
             Szczegóły
           </a>
         </td>
-        {% if perms.school.change_student %}
-          <td class="table-btn">
-            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
-              Edytuj
-            </button>
-          </td>
-        {% endif %}
         {% if perms.school.delete_student %}
           <td class="table-btn">
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
@@ -181,61 +173,6 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
             <input type="submit" class="btn btn-danger" value="Usuń">
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit student modal -->
-  <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Edytuj klasę</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{% url 'class_change' %}" method="POST" class="settings-form">
-          {% csrf_token %}
-          <div class="modal-body">
-            <div class="app-card-settings">
-              <input type="hidden" name="class_id" value="{{ class.squad }}"/>
-              <!-- Student first name -->
-              <div class="mb-3">
-                <label for="change-squad-1" class="form-label">Nazwa klasy</label>
-                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
-              </div>
-              <!-- Class profile -->
-              <div class="mb-3">
-                <label for="change-squad-2" class="form-label">Profil klasy</label>
-                <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
-                  {% for profile in data.profiles %}
-                    {% if profile.class_profile == class.profile.class_profile %}
-                      <option value="{{ profile.class_profile }}" selected>{{ profile.name }}</option>
-                    {% else %}
-                      <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Parent -->
-              <div class="mb-3">
-                <label for="change-squad-3" class="form-label">Wychowawca</label>
-                <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">
-                  {% for teacher in data.teachers %}
-                    {% if teacher.id == class.supervisor.id %}
-                      <option value="{{ teacher.id }}" selected>{{ teacher.last_name }} {{ teacher.first_name }}</option>
-                    {% else %}
-                      <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
-                    {% endif %}                    
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-            <input type="submit" class="btn btn-primary" value="Zapisz">
           </div>
         </form>
       </div>

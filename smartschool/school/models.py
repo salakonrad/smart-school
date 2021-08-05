@@ -71,6 +71,23 @@ class Student(User):
         student.groups.add(student_group)
         return student.id
 
+    def edit(student_data):
+        if Student.objects.filter(id = student_data['student_id']).exists():
+            student = Student.objects.get(id = student_data['student_id'])
+            student.first_name = student_data['first_name']
+            student.last_name = student_data['last_name']
+            student.email = student_data['email']
+            student.username = student_data['username']
+            student.save()     
+            old_squad = student.squad_set.first()
+            if old_squad:
+                old_squad.delete_member(student)
+            squad = Squad.get_by_id(student_data['squad'])
+            squad.add_member(student)
+            return True
+        else:
+            return False
+
 class ClassProfile(models.Model):
     class_profile = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
@@ -158,6 +175,9 @@ class Squad(models.Model):
 
     def add_member(self, student):
         self.members.add(student)
+
+    def delete_member(self, student):
+        self.members.remove(student)
 
     def get_by_id(id):
         if Squad.objects.filter(squad = id).exists():
