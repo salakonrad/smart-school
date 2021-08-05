@@ -1,4 +1,6 @@
+from django.db.models.functions import Concat
 from django.db import models
+from django.db.models import Q
 from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
 from datetime import datetime
@@ -42,6 +44,15 @@ class Student(User):
 
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
+
+    def get_all():
+        return Student.objects.filter(groups__name='Students').order_by('first_name', 'last_name')
+
+    def find(search):
+        students = Student.objects.all()
+        for term in search.split(' '):
+            students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term))
+        return students
 
 class ClassProfile(models.Model):
     class_profile = models.AutoField(primary_key=True)
