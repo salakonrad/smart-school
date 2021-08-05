@@ -16,6 +16,8 @@ urlpatterns = [
     path('class_profile/change', views.class_profile_change, name="class_profile_change"),
     # Students
     path('students', views.student_list_view, name="student_list"),
+    path('students/details/<str:id>', views.student_view, name="student"),
+    path('students/add', views.student_add, name="student_add"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

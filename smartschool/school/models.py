@@ -5,7 +5,7 @@ from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
 from datetime import datetime
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 
 
 class Principal(User):
@@ -45,6 +45,12 @@ class Student(User):
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
 
+    def get_by_id(id):
+        if Student.objects.filter(id = id, groups__name='Students').exists():
+            return Student.objects.get(id = id, groups__name='Students')
+        else:
+            return None
+
     def get_all():
         return Student.objects.filter(groups__name='Students').order_by('first_name', 'last_name')
 
@@ -53,6 +59,17 @@ class Student(User):
         for term in search.split(' '):
             students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term))
         return students
+
+    def add(student_data):
+        student = Student.objects.create_user(student_data['username'], student_data['email'], student_data['password'])
+        student.first_name = student_data['first_name']
+        student.last_name = student_data['last_name']
+        student.save()
+        squad = Squad.get_by_id(student_data['squad'])
+        squad.add_member(student)
+        student_group = Group.objects.get(name='Students')
+        student.groups.add(student_group)
+        return student.id
 
 class ClassProfile(models.Model):
     class_profile = models.AutoField(primary_key=True)
@@ -99,6 +116,7 @@ class Squad(models.Model):
     name = models.CharField(max_length=36)
     profile = models.ForeignKey(ClassProfile, on_delete=DO_NOTHING, null=True, blank=True)
     supervisor = models.ForeignKey(Teacher, related_name='%(class)s_supervisor', on_delete=DO_NOTHING, null=True, blank=True)
+    members = models.ManyToManyField(Student)
     edited = models.DateTimeField(null=True, blank=True)
     edited_by = models.ForeignKey(User, related_name='%(class)s_edited_by', on_delete=DO_NOTHING, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -137,6 +155,15 @@ class Squad(models.Model):
             return True
         else:
             return False
+
+    def add_member(self, student):
+        self.members.add(student)
+
+    def get_by_id(id):
+        if Squad.objects.filter(squad = id).exists():
+            return Squad.objects.get(squad = id)
+        else:
+            return None
 
     def get_all():
         return Squad.objects.all().order_by('name')
