@@ -219,7 +219,8 @@ def student_list_view(request):
 def student_view(request, id):
     student = Student.get_by_id(id)
     data = {
-        'student': student
+        'student': student,
+        'classes': Squad.get_all(),
     }
     return render(request, 'users/student.html', {'data': data})
 
@@ -242,5 +243,28 @@ def student_add(request):
             return HttpResponseRedirect(f'/students/details/{student_id}')
         else:
             return student_list_view(request)
+    else:
+        return student_list_view(request)
+
+
+# /students/change
+@login_required
+@permission_required('school.change_student', raise_exception=True)
+def student_change(request):
+    if request.method == 'POST':
+        form = ChangeStudentForm(request.POST)
+        if form.is_valid():
+            student_id = form.cleaned_data['student_id']
+            Student.edit({
+                'student_id': student_id,
+                'username': form.cleaned_data['username'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'squad': form.cleaned_data['squad']
+            })
+            return HttpResponseRedirect(f'/students/details/{student_id}')
+        else:
+            return student_view(request, form.cleaned_data['student_id'])
     else:
         return student_list_view(request)
