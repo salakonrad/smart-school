@@ -34,3 +34,14 @@ class DeleteProfileForm(forms.Form):
 class ChangeProfileForm(forms.Form):
     class_profile_id = forms.IntegerField()
     name = forms.CharField(max_length=36)
+
+
+# Students
+
+class AddStudentForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    email = forms.CharField(required=False)
+    squad = forms.IntegerField()

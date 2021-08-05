@@ -18,7 +18,7 @@
         {% endif %}
         {% if perms.school.add_student %}
         <div class="col-auto">
-          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_squad">
+          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_student">
             Dodaj ucznia
           </button>
         </div>
@@ -57,16 +57,17 @@
 
 </div>
 
-<!-- Classes table -->
+<!-- Students table -->
 <table class="table">
   <thead>
     <tr>
       <th scope="col">Imię</th>
       <th scope="col">Nazwisko</th>
-      {% if perms.school.change_squad %}
+      <th scipe="col"></th>
+      {% if perms.school.change_student %}
         <th scope="col"></th>
       {% endif %}
-      {% if perms.school.delete_squad %}
+      {% if perms.school.delete_student %}
         <th scope="col"></th>
       {% endif %}
     </tr>
@@ -76,14 +77,19 @@
       <tr>
         <td>{{ student.first_name }}</td>
         <td>{{ student.last_name }}</td>
-        {% if perms.school.change_squad %}
+        <td class="table-btn">
+          <a href="{% url 'student' id=student.id %}" type="button" class="btn app-btn-secondary">
+            Szczegóły
+          </a>
+        </td>
+        {% if perms.school.change_student %}
           <td class="table-btn">
             <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
               Edytuj
             </button>
           </td>
         {% endif %}
-        {% if perms.school.delete_squad %}
+        {% if perms.school.delete_student %}
           <td class="table-btn">
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
               Usuń
@@ -95,38 +101,49 @@
   </tbody>
 </table>
 
-<!-- Add new class Modal -->
-<div class="modal fade" id="add_squad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- Add new student Modal -->
+<div class="modal fade" id="add_student" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nową klasę</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nowego ucznia</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{% url 'class_add' %}" method="POST" class="settings-form">
+      <form action="{% url 'student_add' %}" method="POST" class="settings-form">
         {% csrf_token %}
         <div class="modal-body">
           <div class="app-card-settings">
-            <!-- Class name -->
+            <!-- Student first name -->
             <div class="mb-3">
-              <label for="add-squad-1" class="form-label">Nazwa klasy</label>
-              <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
+              <label for="add-student-1" class="form-label">Imię</label>
+              <input name="first_name" type="text" class="form-control" id="add-student-1" value="" required>
             </div>
-            <!-- Class profile -->
+            <!-- Student last name -->
             <div class="mb-3">
-              <label for="add-squad-2" class="form-label">Profil klasy</label>
-              <select name="profile" class="form-select" id="add-squad-2" aria-label="Wybór profilu klasy">
-                {% for profile in data.profiles %}
-                  <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
-                {% endfor %}
-              </select>
+              <label for="add-student-2" class="form-label">Nazwisko</label>
+              <input name="last_name" type="text" class="form-control" id="add-student-2" value="" required>
             </div>
-            <!-- Wychowawca -->
+            <!-- Student e-mail -->
             <div class="mb-3">
-              <label for="add-squad-3" class="form-label">Wychowawca</label>
-              <select name="supervisor" class="form-select" id="add-squad-3" aria-label="Wybór wychowawcy klasy">
-                {% for teacher in data.teachers %}
-                  <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+              <label for="add-student-3" class="form-label">E-mail</label>
+              <input name="email" type="email" class="form-control" id="add-student-3" value="">
+            </div>
+            <!-- Student username -->
+            <div class="mb-3">
+              <label for="add-student-4" class="form-label">Nazwa użytkownika</label>
+              <input name="username" type="text" class="form-control" id="add-student-4" value="" required>
+            </div>
+            <!-- Student password -->
+            <div class="mb-3">
+              <label for="add-student-5" class="form-label">Hasło</label>
+              <input name="password" type="password" class="form-control" id="add-student-5" value="" required>
+            </div>
+            <!-- Class -->
+            <div class="mb-3">
+              <label for="add-student-6" class="form-label">Klasa</label>
+              <select name="squad" class="form-select" id="add-student-6" aria-label="Wybór klasy">
+                {% for class in data.classes %}
+                  <option value="{{ class.squad }}">{{ class.name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -141,9 +158,9 @@
   </div>
 </div>
 
-<!-- Modals for every class -->
-{% for class in data.classes %}
-  <!-- Delete class modal -->
+<!-- Modals for every student -->
+{% for student in data.students %}
+  <!-- Delete student modal -->
   <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -170,7 +187,7 @@
     </div>
   </div>
 
-  <!-- Edit class modal -->
+  <!-- Edit student modal -->
   <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -183,7 +200,7 @@
           <div class="modal-body">
             <div class="app-card-settings">
               <input type="hidden" name="class_id" value="{{ class.squad }}"/>
-              <!-- Class name -->
+              <!-- Student first name -->
               <div class="mb-3">
                 <label for="change-squad-1" class="form-label">Nazwa klasy</label>
                 <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
@@ -201,7 +218,7 @@
                   {% endfor %}
                 </select>
               </div>
-              <!-- Wychowawca -->
+              <!-- Parent -->
               <div class="mb-3">
                 <label for="change-squad-3" class="form-label">Wychowawca</label>
                 <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">

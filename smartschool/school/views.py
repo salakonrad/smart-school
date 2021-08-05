@@ -207,6 +207,40 @@ def student_list_view(request):
 
     data = {
         'students': students_page,
+        'classes': Squad.get_all(),
         'paginator': paginator
     }
     return render(request, 'users/student_list.html', {'data': data})
+
+
+# /students/details/id
+@login_required
+@permission_required('school.view_student', raise_exception=True)
+def student_view(request, id):
+    student = Student.get_by_id(id)
+    data = {
+        'student': student
+    }
+    return render(request, 'users/student.html', {'data': data})
+
+
+# /students/add
+@login_required
+@permission_required('school.add_student', raise_exception=True)
+def student_add(request):
+    if request.method == 'POST':
+        form = AddStudentForm(request.POST)
+        if form.is_valid():
+            student_id = Student.add({
+                'username': form.cleaned_data['username'],
+                'password': form.cleaned_data['password'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'squad': form.cleaned_data['squad']
+            })
+            return HttpResponseRedirect(f'/students/details/{student_id}')
+        else:
+            return student_list_view(request)
+    else:
+        return student_list_view(request)
