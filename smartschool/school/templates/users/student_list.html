@@ -1,0 +1,228 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+  <div class="col-auto">
+    <h1 class="app-page-title mb-0">Uczniowie</h1>
+  </div>
+  <div class="col-auto">
+    <div class="page-utilities">
+      <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+        {% if perms.school.view_parent %}
+        <div class="col-auto">
+          <a href="{% url 'class_profile_list' %}" class="btn app-btn-secondary">
+            Rodzice
+          </a>
+        </div>
+        {% endif %}
+        {% if perms.school.add_student %}
+        <div class="col-auto">
+          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_squad">
+            Dodaj ucznia
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+  <nav aria-label="Students table navigation" class="col-md-5">
+    <ul class="pagination">
+      {% if data.paginator.has_prev %}
+        <li class="page-item"><a class="page-link" href="{% url 'student_list'%}?page={{ data.paginator.prev_page }}">Poprzednia strona</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="{% url 'student_list'%}?page={{ data.paginator.prev_page }}">Poprzednia strona</a></li>
+      {% endif %}
+      <li class="page-item disabled"><a class="page-link" href="#">{{ data.paginator.actual_page }}</a></li>
+      {% if data.paginator.has_next %}
+        <li class="page-item"><a class="page-link" href="{% url 'student_list'%}?page={{ data.paginator.next_page }}">Następna strona</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="{% url 'student_list'%}?page={{ data.paginator.next_page }}">Następna strona</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="app-search-box col-md-7">
+    <form action="{% url 'student_list' %}" method="GET" class="app-search-form">
+      <input type="text" placeholder="Szukaj..." name="search"
+        class="form-control search-input">
+      <button type="submit" class="btn search-btn btn-primary" value="Search"><i
+          class="fas fa-search"></i></button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Classes table -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      {% if perms.school.change_squad %}
+        <th scope="col"></th>
+      {% endif %}
+      {% if perms.school.delete_squad %}
+        <th scope="col"></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in data.students %}
+      <tr>
+        <td>{{ student.first_name }}</td>
+        <td>{{ student.last_name }}</td>
+        {% if perms.school.change_squad %}
+          <td class="table-btn">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
+              Edytuj
+            </button>
+          </td>
+        {% endif %}
+        {% if perms.school.delete_squad %}
+          <td class="table-btn">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
+              Usuń
+            </button>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Add new class Modal -->
+<div class="modal fade" id="add_squad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nową klasę</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'class_add' %}" method="POST" class="settings-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="app-card-settings">
+            <!-- Class name -->
+            <div class="mb-3">
+              <label for="add-squad-1" class="form-label">Nazwa klasy</label>
+              <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
+            </div>
+            <!-- Class profile -->
+            <div class="mb-3">
+              <label for="add-squad-2" class="form-label">Profil klasy</label>
+              <select name="profile" class="form-select" id="add-squad-2" aria-label="Wybór profilu klasy">
+                {% for profile in data.profiles %}
+                  <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <!-- Wychowawca -->
+            <div class="mb-3">
+              <label for="add-squad-3" class="form-label">Wychowawca</label>
+              <select name="supervisor" class="form-select" id="add-squad-3" aria-label="Wybór wychowawcy klasy">
+                {% for teacher in data.teachers %}
+                  <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modals for every class -->
+{% for class in data.classes %}
+  <!-- Delete class modal -->
+  <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń klasę</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'class_delete' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+            <p>Czy na pewno chcesz usunąć tę klasę?</p>
+            <p><strong>Nazwa: </strong> {{ class.name }}</p>
+            <p><strong>Profil: </strong> {{ class.profile }}</p>
+            <p><strong>Wychowawca: </strong> {{ class.supervisor }}</p>
+            <p>Utworzona <strong>{{ class.created }}</strong> przez użytkownika <strong>{{ class.supervisor }}</strong></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-danger" value="Usuń">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit class modal -->
+  <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edytuj klasę</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'class_change' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="app-card-settings">
+              <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+              <!-- Class name -->
+              <div class="mb-3">
+                <label for="change-squad-1" class="form-label">Nazwa klasy</label>
+                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
+              </div>
+              <!-- Class profile -->
+              <div class="mb-3">
+                <label for="change-squad-2" class="form-label">Profil klasy</label>
+                <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
+                  {% for profile in data.profiles %}
+                    {% if profile.class_profile == class.profile.class_profile %}
+                      <option value="{{ profile.class_profile }}" selected>{{ profile.name }}</option>
+                    {% else %}
+                      <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <!-- Wychowawca -->
+              <div class="mb-3">
+                <label for="change-squad-3" class="form-label">Wychowawca</label>
+                <select name="supervisor" class="form-select" id="change-squad-3" aria-label="Wybór wychowawcy klasy">
+                  {% for teacher in data.teachers %}
+                    {% if teacher.id == class.supervisor.id %}
+                      <option value="{{ teacher.id }}" selected>{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                    {% else %}
+                      <option value="{{ teacher.id }}">{{ teacher.last_name }} {{ teacher.first_name }}</option>
+                    {% endif %}                    
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

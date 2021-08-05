@@ -14,6 +14,8 @@ urlpatterns = [
     path('class_profile/add', views.class_profile_add, name="class_profile_add"),
     path('class_profile/delete', views.class_profile_delete, name="class_profile_delete"),
     path('class_profile/change', views.class_profile_change, name="class_profile_change"),
+    # Students
+    path('students', views.student_list_view, name="student_list"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

@@ -2,9 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
 from .forms import *
-from .models import Squad, ClassProfile
+from .models import Squad, ClassProfile, Student
 
 
 # /
@@ -178,3 +179,34 @@ def class_profile_change(request, error_message=None):
             return class_list_view(request, form.errors)
     else:
         return class_list_view(request)
+
+
+# /students
+@login_required
+@permission_required('school.view_student', raise_exception=True)
+def student_list_view(request):
+    # Search
+    if request.GET.get('search'):
+        students_list = Student.find(request.GET.get('search'))
+    else:
+        students_list = Student.get_all()
+
+    # Paginator
+    paginator = Paginator(students_list, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
+    students_page = paginator.get_page(page_number)
+    paginator = {
+        'actual_page': page_number,
+        'has_next': students_page.has_next(),
+        'has_prev': students_page.has_previous()
+    }
+    if paginator['has_next']: 
+        paginator['next_page'] = students_page.next_page_number()
+    if paginator['has_prev']: 
+        paginator['prev_page'] = students_page.previous_page_number()
+
+    data = {
+        'students': students_page,
+        'paginator': paginator
+    }
+    return render(request, 'users/student_list.html', {'data': data})
