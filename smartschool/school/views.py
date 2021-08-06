@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 
 from .forms import *
-from .models import Squad, ClassProfile, Student
+from .models import Squad, ClassProfile, Student, Parent
 
 
 # /
@@ -220,7 +220,9 @@ def student_view(request, id):
     student = Student.get_by_id(id)
     data = {
         'student': student,
+        'parents': student.get_parents(),
         'classes': Squad.get_all(),
+        'parents_list': Parent.get_all()
     }
     return render(request, 'users/student.html', {'data': data})
 
@@ -266,5 +268,50 @@ def student_change(request):
             return HttpResponseRedirect(f'/students/details/{student_id}')
         else:
             return student_view(request, form.cleaned_data['student_id'])
+    else:
+        return student_list_view(request)
+
+
+# /parents/add
+@login_required
+@permission_required('school.add_parent', raise_exception=True)
+def parent_add(request):
+    if request.method == 'POST':
+        form = AddParentForm(request.POST)
+        if form.is_valid():
+            student_id = form.cleaned_data['student_id']
+            Parent.add({
+                'username': form.cleaned_data['username'],
+                'password': form.cleaned_data['password'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'student_id': student_id
+            })
+            return HttpResponseRedirect(f'/students/details/{student_id}')
+        else:
+            return student_list_view(request)
+    else:
+        return student_list_view(request)
+
+
+# /parents/assign
+@login_required
+@permission_required('school.change_student', raise_exception=True)
+def parent_assign(request):
+    if request.method == 'POST':
+        form = AddStudentForm(request.POST)
+        if form.is_valid():
+            student_id = Student.add({
+                'username': form.cleaned_data['username'],
+                'password': form.cleaned_data['password'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'squad': form.cleaned_data['squad']
+            })
+            return HttpResponseRedirect(f'/students/details/{student_id}')
+        else:
+            return student_list_view(request)
     else:
         return student_list_view(request)

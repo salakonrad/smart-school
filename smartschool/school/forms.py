@@ -53,3 +53,14 @@ class ChangeStudentForm(forms.Form):
     last_name = forms.CharField(max_length=150)
     email = forms.CharField(required=False)
     squad = forms.IntegerField()
+
+
+# Parents
+
+class AddParentForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    email = forms.CharField(required=False)
+    student_id = forms.IntegerField()
