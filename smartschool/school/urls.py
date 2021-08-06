@@ -19,6 +19,9 @@ urlpatterns = [
     path('students/details/<int:id>', views.student_view, name="student"),
     path('students/add', views.student_add, name="student_add"),
     path('students/change', views.student_change, name="student_change"),
+    # Parents
+    path('parents/add', views.parent_add, name="parent_add"),
+    path('parents/assign', views.parent_assign, name="parent_assign"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

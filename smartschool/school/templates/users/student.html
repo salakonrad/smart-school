@@ -16,8 +16,10 @@
                 <div class="row align-items-center gx-3">
                     <div class="col-auto">
                         <div class="app-icon-holder">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 5c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 5c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
                             </svg>
                         </div>
                     </div>
@@ -34,9 +36,10 @@
                             <div class="item-data">{{ data.student.first_name }} {{ data.student.last_name }}</div>
                         </div>
                         {% if perms.school.change_student %}
-                            <div class="col text-end">
-                                <button class="btn-sm app-btn-secondary" data-bs-toggle="modal" data-bs-target="#change_student">Edytuj</button>
-                            </div>
+                        <div class="col text-end">
+                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#change_student">Edytuj</button>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -47,9 +50,10 @@
                             <div class="item-data">{{ data.student.email }}</div>
                         </div>
                         {% if perms.school.change_student %}
-                            <div class="col text-end">
-                                <button class="btn-sm app-btn-secondary" data-bs-toggle="modal" data-bs-target="#change_student">Edytuj</button>
-                            </div>
+                        <div class="col text-end">
+                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#change_student">Edytuj</button>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -60,9 +64,10 @@
                             <div class="item-data">{{ data.student.username }}</div>
                         </div>
                         {% if perms.school.change_student %}
-                            <div class="col text-end">
-                                <button class="btn-sm app-btn-secondary" data-bs-toggle="modal" data-bs-target="#change_student">Edytuj</button>
-                            </div>
+                        <div class="col text-end">
+                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#change_student">Edytuj</button>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -73,9 +78,10 @@
                             <div class="item-data">{{ data.student.squad_set.first }}</div>
                         </div>
                         {% if perms.school.change_student %}
-                            <div class="col text-end">
-                                <button class="btn-sm app-btn-secondary" data-bs-toggle="modal" data-bs-target="#change_student">Edytuj</button>
-                            </div>
+                        <div class="col text-end">
+                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#change_student">Edytuj</button>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -90,8 +96,10 @@
                 <div class="row align-items-center gx-3">
                     <div class="col-auto">
                         <div class="app-icon-holder">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-sliders" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/>
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-sliders" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
                             </svg>
                         </div>
                     </div>
@@ -101,22 +109,28 @@
                 </div>
             </div>
             <div class="app-card-body px-4 w-100">
-                <div class="item border-bottom py-3">
-                    <div class="row justify-content-between align-items-center">
-                        <div class="col-auto">
-                            <div class="item-label"><strong>Imię i nazwisko</strong></div>
-                            <div class="item-data">Rodzic Rodzicowski</div>
-                        </div>
-                        <div class="col text-end">
-                            <a class="btn-sm app-btn-secondary" href="#">Szczegóły</a>
-                            <a class="btn-sm btn-danger" href="#">Usuń powiązanie</a>
+                {% for parent in data.parents %}
+                    <div class="item border-bottom py-3">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-auto">
+                                <div class="item-label"><strong>Imię i nazwisko</strong></div>
+                                <div class="item-data">{{ parent.parent.first_name }} {{ parent.parent.last_name }}</div>
+                            </div>
+                            <div class="col text-end">
+                                <a class="btn-sm app-btn-secondary" href="{% url 'student' id=parent.parent.id %}">Szczegóły</a>
+                                <a class="btn-sm btn-danger" href="#">Usuń powiązanie</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
+            {% if perms.school.add_parent or perms.school.change_student %}
             <div class="app-card-footer p-4 mt-auto">
-               <a class="btn app-btn-secondary" href="#">Dodaj opiekuna</a>
+                <button class="btn app-btn-secondary" data-bs-toggle="modal" data-bs-target="#add_parent">Dodaj
+                    opiekuna</button>
+                <button class="btn app-btn-secondary" data-bs-toggle="modal" data-bs-target="#assign_parent">Przypisz opiekuna</button>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -128,9 +142,12 @@
                 <div class="row align-items-center gx-3">
                     <div class="col-auto">
                         <div class="app-icon-holder">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shield-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M5.443 1.991a60.17 60.17 0 0 0-2.725.802.454.454 0 0 0-.315.366C1.87 7.056 3.1 9.9 4.567 11.773c.736.94 1.533 1.636 2.197 2.093.333.228.626.394.857.5.116.053.21.089.282.11A.73.73 0 0 0 8 14.5c.007-.001.038-.005.097-.023.072-.022.166-.058.282-.111.23-.106.525-.272.857-.5a10.197 10.197 0 0 0 2.197-2.093C12.9 9.9 14.13 7.056 13.597 3.159a.454.454 0 0 0-.315-.366c-.626-.2-1.682-.526-2.725-.802C9.491 1.71 8.51 1.5 8 1.5c-.51 0-1.49.21-2.557.491zm-.256-.966C6.23.749 7.337.5 8 .5c.662 0 1.77.249 2.813.525a61.09 61.09 0 0 1 2.772.815c.528.168.926.623 1.003 1.184.573 4.197-.756 7.307-2.367 9.365a11.191 11.191 0 0 1-2.418 2.3 6.942 6.942 0 0 1-1.007.586c-.27.124-.558.225-.796.225s-.526-.101-.796-.225a6.908 6.908 0 0 1-1.007-.586 11.192 11.192 0 0 1-2.417-2.3C2.167 10.331.839 7.221 1.412 3.024A1.454 1.454 0 0 1 2.415 1.84a61.11 61.11 0 0 1 2.772-.815z"/>
-                                <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shield-check"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5.443 1.991a60.17 60.17 0 0 0-2.725.802.454.454 0 0 0-.315.366C1.87 7.056 3.1 9.9 4.567 11.773c.736.94 1.533 1.636 2.197 2.093.333.228.626.394.857.5.116.053.21.089.282.11A.73.73 0 0 0 8 14.5c.007-.001.038-.005.097-.023.072-.022.166-.058.282-.111.23-.106.525-.272.857-.5a10.197 10.197 0 0 0 2.197-2.093C12.9 9.9 14.13 7.056 13.597 3.159a.454.454 0 0 0-.315-.366c-.626-.2-1.682-.526-2.725-.802C9.491 1.71 8.51 1.5 8 1.5c-.51 0-1.49.21-2.557.491zm-.256-.966C6.23.749 7.337.5 8 .5c.662 0 1.77.249 2.813.525a61.09 61.09 0 0 1 2.772.815c.528.168.926.623 1.003 1.184.573 4.197-.756 7.307-2.367 9.365a11.191 11.191 0 0 1-2.418 2.3 6.942 6.942 0 0 1-1.007.586c-.27.124-.558.225-.796.225s-.526-.101-.796-.225a6.908 6.908 0 0 1-1.007-.586 11.192 11.192 0 0 1-2.417-2.3C2.167 10.331.839 7.221 1.412 3.024A1.454 1.454 0 0 1 2.415 1.84a61.11 61.11 0 0 1 2.772-.815z" />
+                                <path fill-rule="evenodd"
+                                    d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
                             </svg>
                         </div>
                     </div>
@@ -147,9 +164,10 @@
                             <div class="item-data">••••••••••••</div>
                         </div>
                         {% if perms.school.change_student %}
-                            <div class="col text-end">
-                                <button class="btn-sm app-btn-secondary" data-bs-toggle="modal" data-bs-target="#new_password">Wygeneruj nowe hasło</button>
-                            </div>
+                        <div class="col text-end">
+                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#new_password">Wygeneruj nowe hasło</button>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -159,59 +177,158 @@
 </div>
 
 <!-- Edit student Modal -->
-<div class="modal fade" id="change_student" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="change_student" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Edytuj ucznia</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{% url 'student_change' %}" method="POST" class="settings-form">
-          {% csrf_token %}
-          <input type="hidden" name="student_id" value="{{ data.student.id }}">
-          <div class="modal-body">
-            <div class="app-card-settings">
-              <!-- Student first name -->
-              <div class="mb-3">
-                <label for="add-student-1" class="form-label">Imię</label>
-                <input name="first_name" type="text" class="form-control" id="add-student-1" value="{{ data.student.first_name }}" required>
-              </div>
-              <!-- Student last name -->
-              <div class="mb-3">
-                <label for="add-student-2" class="form-label">Nazwisko</label>
-                <input name="last_name" type="text" class="form-control" id="add-student-2" value="{{ data.student.last_name }}" required>
-              </div>
-              <!-- Student e-mail -->
-              <div class="mb-3">
-                <label for="add-student-3" class="form-label">E-mail</label>
-                <input name="email" type="email" class="form-control" id="add-student-3" value="{{ data.student.email }}">
-              </div>
-              <!-- Student username -->
-              <div class="mb-3">
-                <label for="add-student-4" class="form-label">Nazwa użytkownika</label>
-                <input name="username" type="text" class="form-control" id="add-student-4" value="{{ data.student.username }}" required>
-              </div>
-              <!-- Class -->
-              <div class="mb-3">
-                <label for="add-student-5" class="form-label">Klasa</label>
-                <select name="squad" class="form-select" id="add-student-5" aria-label="Wybór klasy">
-                  {% for class in data.classes %}
-                    {% if class.squad == data.student.squad_set.first.squad %}
-                        <option value="{{ class.squad }}" selected>{{ class.name }}</option>
-                    {% else %}
-                        <option value="{{ class.squad }}">{{ class.name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edytuj ucznia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-            <input type="submit" class="btn btn-primary" value="Zapisz">
-          </div>
-        </form>
-      </div>
+            <form action="{% url 'student_change' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <input type="hidden" name="student_id" value="{{ data.student.id }}">
+                <div class="modal-body">
+                    <div class="app-card-settings">
+                        <!-- Student first name -->
+                        <div class="mb-3">
+                            <label for="add-student-1" class="form-label">Imię</label>
+                            <input name="first_name" type="text" class="form-control" id="add-student-1"
+                                value="{{ data.student.first_name }}" required>
+                        </div>
+                        <!-- Student last name -->
+                        <div class="mb-3">
+                            <label for="add-student-2" class="form-label">Nazwisko</label>
+                            <input name="last_name" type="text" class="form-control" id="add-student-2"
+                                value="{{ data.student.last_name }}" required>
+                        </div>
+                        <!-- Student e-mail -->
+                        <div class="mb-3">
+                            <label for="add-student-3" class="form-label">E-mail</label>
+                            <input name="email" type="email" class="form-control" id="add-student-3"
+                                value="{{ data.student.email }}">
+                        </div>
+                        <!-- Student username -->
+                        <div class="mb-3">
+                            <label for="add-student-4" class="form-label">Nazwa użytkownika</label>
+                            <input name="username" type="text" class="form-control" id="add-student-4"
+                                value="{{ data.student.username }}" required>
+                        </div>
+                        <!-- Class -->
+                        <div class="mb-3">
+                            <label for="add-student-5" class="form-label">Klasa</label>
+                            <select name="squad" class="form-select" id="add-student-5" aria-label="Wybór klasy">
+                                {% for class in data.classes %}
+                                {% if class.squad == data.student.squad_set.first.squad %}
+                                <option value="{{ class.squad }}" selected>{{ class.name }}</option>
+                                {% else %}
+                                <option value="{{ class.squad }}">{{ class.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Zapisz">
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- Add parent Modal -->
+<div class="modal fade" id="add_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Dodaj opiekuna</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{% url 'parent_add' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="app-card-settings">
+
+                        <input name="student_id" type="hidden" class="form-control" value="{{ data.student.id }}"
+                                required>
+
+                        <div class="mb-3">
+                            <label for="add-parent-1" class="form-label">Imię</label>
+                            <input name="first_name" type="text" class="form-control" id="add-parent-1" value=""
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add-parent-2" class="form-label">Nazwisko</label>
+                            <input name="last_name" type="text" class="form-control" id="add-parent-2" value=""
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add-parent-3" class="form-label">E-mail</label>
+                            <input name="email" type="email" class="form-control" id="add-parent-3" value="">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add-parent-4" class="form-label">Nazwa użytkownika</label>
+                            <input name="username" type="text" class="form-control" id="add-parent-4" value="" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add-parent-5" class="form-label">Hasło</label>
+                            <input name="password" type="password" class="form-control" id="add-parent-5" value=""
+                                required>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Zapisz">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Assign parent Modal -->
+<div class="modal fade" id="assign_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Przypisz opiekuna</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{% url 'parent_assign' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="app-card-settings">
+
+                        <input name="student_id" type="hidden" class="form-control" value="{{ data.student.id }}"
+                                required>
+
+                        <div class="mb-3">
+                            <label for="add-parent-5" class="form-label">Opiekun</label>
+                            <select name="parent" class="form-select" id="add-parent-5" aria-label="Wybór opiekuna">
+                                {% for parent in data.parents_list %}
+                                    <option value="{{ parent.id }}">{{ parent.last_name }} {{ parent.first_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Zapisz">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

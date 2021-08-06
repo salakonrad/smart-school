@@ -38,6 +38,20 @@ class Parent(User):
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
 
+    def get_all():
+        return Parent.objects.filter(groups__name='Parents').order_by('last_name', 'first_name')
+
+    def add(parent_data):
+        parent = Parent.objects.create_user(parent_data['username'], parent_data['email'], parent_data['password'])
+        parent.first_name = parent_data['first_name']
+        parent.last_name = parent_data['last_name']
+        parent.save()
+        parent_group = Group.objects.get(name='Parents')
+        parent.groups.add(parent_group)
+        student = Student.get_by_id(parent_data['student_id'])
+        student.add_parent(parent)
+        return parent.id
+
 class Student(User):
     class Meta:
         proxy = True
@@ -52,7 +66,7 @@ class Student(User):
             return None
 
     def get_all():
-        return Student.objects.filter(groups__name='Students').order_by('first_name', 'last_name')
+        return Student.objects.filter(groups__name='Students').order_by('last_name', 'first_name')
 
     def find(search):
         students = Student.objects.all()
@@ -87,6 +101,41 @@ class Student(User):
             return True
         else:
             return False
+
+    def add_parent(self, parent):        
+        StudentParent.connect(self, parent)
+
+    def delete_parent(self, parent):
+        StudentParent.disconnect(self, parent)
+
+    def get_parents(self):
+        return StudentParent.objects.filter(student=self)
+
+class StudentParent(models.Model):
+    student_parent = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=DO_NOTHING)
+    parent = models.ForeignKey(Parent, related_name='%(class)s_parent', on_delete=DO_NOTHING)
+
+    class Meta:
+        db_table = 'student_parent'
+
+    def connect(student, parent):
+        if not StudentParent.objects.filter(student=student, parent=parent).exists():
+            connector = StudentParent()
+            connector.student = student
+            connector.parent = parent
+            connector.save()
+            return connector.student_parent
+        else:
+            return StudentParent.objects.get(student=student, parent=parent).student_parent
+
+    def disconnect(student, parent):
+        if not StudentParent.objects.filter(student=student, parent=parent).exists():
+            return True
+        else:
+            connector = StudentParent.objects.get(student=student, parent=parent)
+            connector.delete()
+            return True
 
 class ClassProfile(models.Model):
     class_profile = models.AutoField(primary_key=True)
