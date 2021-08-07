@@ -348,18 +348,14 @@ def parent_add(request):
 @permission_required('school.change_student', raise_exception=True)
 def parent_assign(request):
     if request.method == 'POST':
-        form = AddStudentForm(request.POST)
+        form = AssignParentForm(request.POST)
         if form.is_valid():
-            student_id = Student.add({
-                'username': form.cleaned_data['username'],
-                'password': form.cleaned_data['password'],
-                'first_name': form.cleaned_data['first_name'],
-                'last_name': form.cleaned_data['last_name'],
-                'email': form.cleaned_data['email'],
-                'squad': form.cleaned_data['squad']
-            })
-            return HttpResponseRedirect(f'/students/details/{student_id}')
+            student = Student.get_by_id(form.cleaned_data['student_id'])
+            parent = Parent.get_by_id(form.cleaned_data['parent_id'])
+            student.add_parent(parent)
+            return HttpResponseRedirect(f'/students/details/{student.id}')
         else:
+            print(form.errors)
             return student_list_view(request)
     else:
         return student_list_view(request)

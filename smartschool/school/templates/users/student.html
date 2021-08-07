@@ -315,7 +315,7 @@
 
                         <div class="mb-3">
                             <label for="add-parent-5" class="form-label">Opiekun</label>
-                            <select name="parent" class="form-select" id="add-parent-5" aria-label="Wybór opiekuna">
+                            <select name="parent_id" class="form-select" id="add-parent-5" aria-label="Wybór opiekuna">
                                 {% for parent in data.parents_list %}
                                     <option value="{{ parent.id }}">{{ parent.last_name }} {{ parent.first_name }}</option>
                                 {% endfor %}
