@@ -38,8 +38,20 @@ class Parent(User):
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
 
+    def get_by_id(id):
+        if Parent.objects.filter(id = id, groups__name='Parents').exists():
+            return Parent.objects.get(id = id, groups__name='Parents')
+        else:
+            return None
+
     def get_all():
         return Parent.objects.filter(groups__name='Parents').order_by('last_name', 'first_name')
+
+    def find(search):
+        parents = Parent.objects.filter(groups__name='Parents')
+        for term in search.split(' '):
+            parents = parents.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term))
+        return parents
 
     def add(parent_data):
         parent = Parent.objects.create_user(parent_data['username'], parent_data['email'], parent_data['password'])
@@ -51,6 +63,24 @@ class Parent(User):
         student = Student.get_by_id(parent_data['student_id'])
         student.add_parent(parent)
         return parent.id
+
+    def edit(parent_data):
+        if Parent.objects.filter(id = parent_data['parent_id']).exists():
+            parent = Parent.objects.get(id = parent_data['parent_id'])
+            parent.first_name = parent_data['first_name']
+            parent.last_name = parent_data['last_name']
+            parent.email = parent_data['email']
+            parent.username = parent_data['username']
+            parent.save()
+            return True
+        else:
+            return False
+
+    def assign(parent_data):
+        pass
+
+    def get_students(self):
+        return StudentParent.objects.filter(parent=self)
 
 class Student(User):
     class Meta:
@@ -69,9 +99,9 @@ class Student(User):
         return Student.objects.filter(groups__name='Students').order_by('last_name', 'first_name')
 
     def find(search):
-        students = Student.objects.all()
+        students = Student.objects.filter(groups__name='Students')
         for term in search.split(' '):
-            students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term))
+            students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term) | Q(squad__name__icontains = term))
         return students
 
     def add(student_data):
@@ -84,6 +114,13 @@ class Student(User):
         student_group = Group.objects.get(name='Students')
         student.groups.add(student_group)
         return student.id
+
+    def remove(student_id):
+        if Student.objects.filter(id = student_id, groups__name='Students').exists():
+            Student.objects.get(id = student_id, groups__name='Students').delete()
+            return True
+        else:
+            return False
 
     def edit(student_data):
         if Student.objects.filter(id = student_data['student_id']).exists():
@@ -113,8 +150,8 @@ class Student(User):
 
 class StudentParent(models.Model):
     student_parent = models.AutoField(primary_key=True)
-    student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=DO_NOTHING)
-    parent = models.ForeignKey(Parent, related_name='%(class)s_parent', on_delete=DO_NOTHING)
+    student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
+    parent = models.ForeignKey(Parent, related_name='%(class)s_parent', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'student_parent'
