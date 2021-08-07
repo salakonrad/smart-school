@@ -249,6 +249,22 @@ def student_add(request):
         return student_list_view(request)
 
 
+# /students/delete
+@login_required
+@permission_required('school.delete_classprofile', raise_exception=True)
+def student_delete(request):
+    if request.method == 'POST':
+        form = DeleteStudentForm(request.POST)
+        if form.is_valid():
+            student_id = form.cleaned_data['student_id']
+            Student.remove(student_id)
+            return HttpResponseRedirect('/students')
+        else:
+            return student_list_view(request)
+    else:
+        return student_list_view(request)
+
+
 # /students/change
 @login_required
 @permission_required('school.change_student', raise_exception=True)
@@ -270,6 +286,38 @@ def student_change(request):
             return student_view(request, form.cleaned_data['student_id'])
     else:
         return student_list_view(request)
+
+
+# /parents
+@login_required
+@permission_required('school.view_parent', raise_exception=True)
+def parent_list_view(request):
+    # Search
+    if request.GET.get('search'):
+        parents_list = Parent.find(request.GET.get('search'))
+    else:
+        parents_list = Parent.get_all()
+
+    # Paginator
+    paginator = Paginator(parents_list, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
+    parents_page = paginator.get_page(page_number)
+    paginator = {
+        'actual_page': page_number,
+        'has_next': parents_page.has_next(),
+        'has_prev': parents_page.has_previous()
+    }
+    if paginator['has_next']: 
+        paginator['next_page'] = parents_page.next_page_number()
+    if paginator['has_prev']: 
+        paginator['prev_page'] = parents_page.previous_page_number()
+
+    data = {
+        'parents': parents_page,
+        'paginator': paginator
+    }
+    return render(request, 'users/parent_list.html', {'data': data})
+
 
 
 # /parents/add
@@ -313,5 +361,39 @@ def parent_assign(request):
             return HttpResponseRedirect(f'/students/details/{student_id}')
         else:
             return student_list_view(request)
+    else:
+        return student_list_view(request)
+
+
+# /parents/details/id
+@login_required
+@permission_required('school.view_parent', raise_exception=True)
+def parent_view(request, id):
+    parent = Parent.get_by_id(id)
+    data = {
+        'parent': parent,
+        'students': parent.get_students()
+    }
+    return render(request, 'users/parent.html', {'data': data})
+
+
+# /parents/change
+@login_required
+@permission_required('school.change_parent', raise_exception=True)
+def parent_change(request):
+    if request.method == 'POST':
+        form = ChangeParentForm(request.POST)
+        if form.is_valid():
+            parent_id = form.cleaned_data['parent_id']
+            Parent.edit({
+                'parent_id': parent_id,
+                'username': form.cleaned_data['username'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email']
+            })
+            return HttpResponseRedirect(f'/parents/details/{parent_id}')
+        else:
+            return student_view(request, form.cleaned_data['parent_id'])
     else:
         return student_list_view(request)

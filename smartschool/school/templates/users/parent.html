@@ -4,7 +4,7 @@
 <!-- Page header -->
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">Konto ucznia</h1>
+        <h1 class="app-page-title mb-0">Konto opiekuna</h1>
     </div>
 </div>
 
@@ -33,12 +33,12 @@
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Imię i nazwisko</strong></div>
-                            <div class="item-data">{{ data.student.first_name }} {{ data.student.last_name }}</div>
+                            <div class="item-data">{{ data.parent.first_name }} {{ data.parent.last_name }}</div>
                         </div>
-                        {% if perms.school.change_student %}
+                        {% if perms.school.change_parent %}
                         <div class="col text-end">
                             <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_student">Edytuj</button>
+                                data-bs-target="#change_parent">Edytuj</button>
                         </div>
                         {% endif %}
                     </div>
@@ -47,12 +47,12 @@
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Email</strong></div>
-                            <div class="item-data">{{ data.student.email }}</div>
+                            <div class="item-data">{{ data.parent.email }}</div>
                         </div>
-                        {% if perms.school.change_student %}
+                        {% if perms.school.change_parent %}
                         <div class="col text-end">
                             <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_student">Edytuj</button>
+                                data-bs-target="#change_parent">Edytuj</button>
                         </div>
                         {% endif %}
                     </div>
@@ -61,26 +61,12 @@
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Login</strong></div>
-                            <div class="item-data">{{ data.student.username }}</div>
+                            <div class="item-data">{{ data.parent.username }}</div>
                         </div>
-                        {% if perms.school.change_student %}
+                        {% if perms.school.change_parent %}
                         <div class="col text-end">
                             <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_student">Edytuj</button>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="item border-bottom py-3">
-                    <div class="row justify-content-between align-items-center">
-                        <div class="col-auto">
-                            <div class="item-label"><strong>Klasa</strong></div>
-                            <div class="item-data">{{ data.student.squad_set.first }}</div>
-                        </div>
-                        {% if perms.school.change_student %}
-                        <div class="col text-end">
-                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_student">Edytuj</button>
+                                data-bs-target="#change_parent">Edytuj</button>
                         </div>
                         {% endif %}
                     </div>
@@ -89,7 +75,7 @@
         </div>
     </div>
 
-    <!-- Parents section -->
+    <!-- Students section -->
     <div class="col-12 col-lg-6">
         <div class="app-card app-card-account shadow-sm d-flex flex-column align-items-start">
             <div class="app-card-header p-3 border-bottom-0">
@@ -104,33 +90,26 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <h4 class="app-card-title">Opiekunowie</h4>
+                        <h4 class="app-card-title">Podopieczni</h4>
                     </div>
                 </div>
             </div>
             <div class="app-card-body px-4 w-100">
-                {% for parent in data.parents %}
+                {% for student in data.students %}
                     <div class="item border-bottom py-3">
                         <div class="row justify-content-between align-items-center">
                             <div class="col-auto">
                                 <div class="item-label"><strong>Imię i nazwisko</strong></div>
-                                <div class="item-data">{{ parent.parent.first_name }} {{ parent.parent.last_name }}</div>
+                                <div class="item-data">{{ student.student.first_name }} {{ student.student.last_name }}</div>
                             </div>
                             <div class="col text-end">
-                                <a class="btn-sm app-btn-secondary" href="{% url 'parent' id=parent.parent.id %}">Szczegóły</a>
+                                <a class="btn-sm app-btn-secondary" href="{% url 'student' id=student.student.id %}">Szczegóły</a>
                                 <a class="btn-sm btn-danger" href="#">Usuń powiązanie</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            {% if perms.school.add_parent or perms.school.change_student %}
-            <div class="app-card-footer p-4 mt-auto">
-                <button class="btn app-btn-secondary" data-bs-toggle="modal" data-bs-target="#add_parent">Dodaj
-                    opiekuna</button>
-                <button class="btn app-btn-secondary" data-bs-toggle="modal" data-bs-target="#assign_parent">Przypisz opiekuna</button>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -163,7 +142,7 @@
                             <div class="item-label"><strong>Hasło</strong></div>
                             <div class="item-data">••••••••••••</div>
                         </div>
-                        {% if perms.school.change_student %}
+                        {% if perms.school.change_parent %}
                         <div class="col text-end">
                             <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
                                 data-bs-target="#new_password">Wygeneruj nowe hasło</button>
@@ -176,150 +155,43 @@
     </div>
 </div>
 
-<!-- Edit student Modal -->
-<div class="modal fade" id="change_student" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<!-- Edit parent Modal -->
+<div class="modal fade" id="change_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Edytuj ucznia</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Edytuj opiekuna</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{% url 'student_change' %}" method="POST" class="settings-form">
+            <form action="{% url 'parent_change' %}" method="POST" class="settings-form">
                 {% csrf_token %}
-                <input type="hidden" name="student_id" value="{{ data.student.id }}">
+                <input type="hidden" name="parent_id" value="{{ data.parent.id }}">
                 <div class="modal-body">
                     <div class="app-card-settings">
-                        <!-- Student first name -->
-                        <div class="mb-3">
-                            <label for="add-student-1" class="form-label">Imię</label>
-                            <input name="first_name" type="text" class="form-control" id="add-student-1"
-                                value="{{ data.student.first_name }}" required>
-                        </div>
-                        <!-- Student last name -->
-                        <div class="mb-3">
-                            <label for="add-student-2" class="form-label">Nazwisko</label>
-                            <input name="last_name" type="text" class="form-control" id="add-student-2"
-                                value="{{ data.student.last_name }}" required>
-                        </div>
-                        <!-- Student e-mail -->
-                        <div class="mb-3">
-                            <label for="add-student-3" class="form-label">E-mail</label>
-                            <input name="email" type="email" class="form-control" id="add-student-3"
-                                value="{{ data.student.email }}">
-                        </div>
-                        <!-- Student username -->
-                        <div class="mb-3">
-                            <label for="add-student-4" class="form-label">Nazwa użytkownika</label>
-                            <input name="username" type="text" class="form-control" id="add-student-4"
-                                value="{{ data.student.username }}" required>
-                        </div>
-                        <!-- Class -->
-                        <div class="mb-3">
-                            <label for="add-student-5" class="form-label">Klasa</label>
-                            <select name="squad" class="form-select" id="add-student-5" aria-label="Wybór klasy">
-                                {% for class in data.classes %}
-                                {% if class.squad == data.student.squad_set.first.squad %}
-                                <option value="{{ class.squad }}" selected>{{ class.name }}</option>
-                                {% else %}
-                                <option value="{{ class.squad }}">{{ class.name }}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <input type="submit" class="btn btn-primary" value="Zapisz">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Add parent Modal -->
-<div class="modal fade" id="add_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Dodaj opiekuna</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form action="{% url 'parent_add' %}" method="POST" class="settings-form">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="app-card-settings">
-
-                        <input name="student_id" type="hidden" class="form-control" value="{{ data.student.id }}"
-                                required>
-
+                        <!-- parent first name -->
                         <div class="mb-3">
                             <label for="add-parent-1" class="form-label">Imię</label>
-                            <input name="first_name" type="text" class="form-control" id="add-parent-1" value=""
-                                required>
+                            <input name="first_name" type="text" class="form-control" id="add-parent-1"
+                                value="{{ data.parent.first_name }}" required>
                         </div>
-
+                        <!-- parent last name -->
                         <div class="mb-3">
                             <label for="add-parent-2" class="form-label">Nazwisko</label>
-                            <input name="last_name" type="text" class="form-control" id="add-parent-2" value=""
-                                required>
+                            <input name="last_name" type="text" class="form-control" id="add-parent-2"
+                                value="{{ data.parent.last_name }}" required>
                         </div>
-
+                        <!-- parent e-mail -->
                         <div class="mb-3">
                             <label for="add-parent-3" class="form-label">E-mail</label>
-                            <input name="email" type="email" class="form-control" id="add-parent-3" value="">
+                            <input name="email" type="email" class="form-control" id="add-parent-3"
+                                value="{{ data.parent.email }}">
                         </div>
-
+                        <!-- parent username -->
                         <div class="mb-3">
                             <label for="add-parent-4" class="form-label">Nazwa użytkownika</label>
-                            <input name="username" type="text" class="form-control" id="add-parent-4" value="" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="add-parent-5" class="form-label">Hasło</label>
-                            <input name="password" type="password" class="form-control" id="add-parent-5" value=""
-                                required>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <input type="submit" class="btn btn-primary" value="Zapisz">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Assign parent Modal -->
-<div class="modal fade" id="assign_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Przypisz opiekuna</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form action="{% url 'parent_assign' %}" method="POST" class="settings-form">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="app-card-settings">
-
-                        <input name="student_id" type="hidden" class="form-control" value="{{ data.student.id }}"
-                                required>
-
-                        <div class="mb-3">
-                            <label for="add-parent-5" class="form-label">Opiekun</label>
-                            <select name="parent" class="form-select" id="add-parent-5" aria-label="Wybór opiekuna">
-                                {% for parent in data.parents_list %}
-                                    <option value="{{ parent.id }}">{{ parent.last_name }} {{ parent.first_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input name="username" type="text" class="form-control" id="add-parent-4"
+                                value="{{ data.parent.username }}" required>
                         </div>
                     </div>
                 </div>

@@ -11,7 +11,7 @@
       <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
         {% if perms.school.view_parent %}
         <div class="col-auto">
-          <a href="{% url 'class_profile_list' %}" class="btn app-btn-secondary">
+          <a href="{% url 'parent_list' %}" class="btn app-btn-secondary">
             Rodzice
           </a>
         </div>
@@ -83,7 +83,7 @@
         </td>
         {% if perms.school.delete_student %}
           <td class="table-btn">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_student{{ student.id }}">
               Usuń
             </button>
           </td>
@@ -153,22 +153,22 @@
 <!-- Modals for every student -->
 {% for student in data.students %}
   <!-- Delete student modal -->
-  <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="delete_student{{ student.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Usuń klasę</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń ucznia</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'class_delete' %}" method="POST" class="settings-form">
+        <form action="{% url 'student_delete' %}" method="POST" class="settings-form">
           {% csrf_token %}
           <div class="modal-body">
-            <input type="hidden" name="class_id" value="{{ class.squad }}"/>
-            <p>Czy na pewno chcesz usunąć tę klasę?</p>
-            <p><strong>Nazwa: </strong> {{ class.name }}</p>
-            <p><strong>Profil: </strong> {{ class.profile }}</p>
-            <p><strong>Wychowawca: </strong> {{ class.supervisor }}</p>
-            <p>Utworzona <strong>{{ class.created }}</strong> przez użytkownika <strong>{{ class.supervisor }}</strong></p>
+            <input type="hidden" name="student_id" value="{{ student.id }}"/>
+            <p>Czy na pewno chcesz usunąć tego ucznia?</p>
+            <p><strong>Imię: </strong> {{ student.first_name }}</p>
+            <p><strong>Nazwisko: </strong> {{ student.last_name }}</p>
+            <p><strong>Klasa: </strong> {{ student.squad_set.first }}</p>
+            <p><strong>Wychowawca: </strong> {{ student.squad_set.first.supervisor }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>

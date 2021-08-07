@@ -18,10 +18,14 @@ urlpatterns = [
     path('students', views.student_list_view, name="student_list"),
     path('students/details/<int:id>', views.student_view, name="student"),
     path('students/add', views.student_add, name="student_add"),
+    path('students/delete', views.student_delete, name="student_delete"),
     path('students/change', views.student_change, name="student_change"),
     # Parents
+    path('parents', views.parent_list_view, name="parent_list"),
+    path('parents/details/<int:id>', views.parent_view, name="parent"),
     path('parents/add', views.parent_add, name="parent_add"),
     path('parents/assign', views.parent_assign, name="parent_assign"),
+    path('parents/change', views.parent_change, name="parent_change"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
