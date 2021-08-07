@@ -68,6 +68,10 @@ class AddParentForm(forms.Form):
     email = forms.CharField(required=False)
     student_id = forms.IntegerField()
 
+class AssignParentForm(forms.Form):
+    student_id = forms.IntegerField()
+    parent_id = forms.IntegerField()
+
 class ChangeParentForm(forms.Form):
     parent_id = forms.IntegerField()
     username = forms.CharField(max_length=150)
