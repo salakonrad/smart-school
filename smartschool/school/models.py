@@ -224,6 +224,9 @@ class Squad(models.Model):
     edited_by = models.ForeignKey(User, related_name='%(class)s_edited_by', on_delete=DO_NOTHING, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='%(class)s_created_by', on_delete=DO_NOTHING)
+    active = models.BooleanField(default=True)
+    year_start = models.IntegerField(default=datetime.now().year)
+    year_end = models.IntegerField(default=datetime.now().year+1)
 
     class Meta:
         db_table = 'classes'
