@@ -239,6 +239,8 @@ class Squad(models.Model):
         squad.name = class_data['name']
         squad.profile = ClassProfile.get_by_id(class_data['profile'])
         squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
+        squad.year_start = class_data['year_start']
+        squad.year_end = squad.year_start + 1
         squad.created_by = creator
         squad.save()
     

@@ -64,10 +64,12 @@ def class_add(request):
             class_name = form.cleaned_data['name']
             class_profile = form.cleaned_data['profile']
             class_supervisor = form.cleaned_data['supervisor']
+            class_start_year = form.cleaned_data['year_start']
             Squad.add({
                 'name': class_name,
                 'profile': class_profile,
-                'supervisor': class_supervisor
+                'supervisor': class_supervisor,
+                'year_start': class_start_year
             }, request.user)
             return HttpResponseRedirect('/classes')
         else:

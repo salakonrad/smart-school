@@ -33,6 +33,7 @@
   <thead>
     <tr>
       <th scope="col">Nazwa</th>
+      <th scope="col">Rocznik</th>
       <th scope="col">Profil</th>
       <th scope="col">Wychowawca</th>
       {% if perms.school.change_squad %}
@@ -47,6 +48,7 @@
     {% for class in data.classes %}
       <tr>
         <td>{{ class.name }}</td>
+        <td>{{ class.year_start }}-{{ class.year_end }}</td>
         <td>{{ class.profile }}</td>
         <td>{{ class.supervisor }}</td>
         {% if perms.school.change_squad %}
@@ -84,6 +86,11 @@
             <div class="mb-3">
               <label for="add-squad-1" class="form-label">Nazwa klasy</label>
               <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
+            </div>
+            <!-- Class start year -->
+            <div class="mb-3">
+              <label for="add-squad-4" class="form-label">Rocznik początkowy</label>
+              <input name="year_start" type="number" class="form-control" id="add-squad-4" value="" min="1990" max="2100" required>
             </div>
             <!-- Class profile -->
             <div class="mb-3">
