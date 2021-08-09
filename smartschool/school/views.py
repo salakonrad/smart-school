@@ -352,8 +352,27 @@ def parent_assign(request):
         if form.is_valid():
             student = Student.get_by_id(form.cleaned_data['student_id'])
             parent = Parent.get_by_id(form.cleaned_data['parent_id'])
-            student.add_parent(parent)
+            student.add_parent(parent)            
             return HttpResponseRedirect(f'/students/details/{student.id}')
+        else:
+            print(form.errors)
+            return student_list_view(request)
+    else:
+        return student_list_view(request)
+
+
+# /parents/assign/delete
+@login_required
+@permission_required('school.change_student', raise_exception=True)
+def parent_assign_delete(request):
+    if request.method == 'POST':
+        form = AssignParentForm(request.POST)
+        if form.is_valid():
+            student = Student.get_by_id(form.cleaned_data['student_id'])
+            parent = Parent.get_by_id(form.cleaned_data['parent_id'])
+            student.delete_parent(parent)
+            return HttpResponseRedirect(form.cleaned_data['next'])
+            # return HttpResponseRedirect(f'/students/details/{student.id}')
         else:
             print(form.errors)
             return student_list_view(request)

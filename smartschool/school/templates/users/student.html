@@ -118,10 +118,37 @@
                             </div>
                             <div class="col text-end">
                                 <a class="btn-sm app-btn-secondary" href="{% url 'parent' id=parent.parent.id %}">Szczegóły</a>
-                                <a class="btn-sm btn-danger" href="#">Usuń powiązanie</a>
+                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ parent.student_parent }}">Usuń powiązanie</button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Delete assign modal -->
+                    <div class="modal fade" id="delete_parent_assign{{ parent.student_parent }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel">Usuń powiązanie</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'parent_assign_delete' %}" method="POST" class="settings-form">
+                              {% csrf_token %}
+                              <div class="modal-body">
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <input type="hidden" name="student_id" value="{{ data.student.id }}"/>
+                                <input type="hidden" name="parent_id" value="{{ parent.parent.id }}"/>
+                                <p>Czy na pewno chcesz usunąć to powiązanie?</p>
+                                <p><strong>Uczeń: </strong>{{ data.student.first_name }} {{ data.student.last_name }}</p>
+                                <p><strong>Opiekun: </strong>{{ parent.parent.first_name }} {{ parent.parent.last_name }}</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                <input type="submit" class="btn btn-danger" value="Usuń">
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
                 {% endfor %}
             </div>
             {% if perms.school.add_parent or perms.school.change_student %}
@@ -310,6 +337,7 @@
                 <div class="modal-body">
                     <div class="app-card-settings">
 
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <input name="student_id" type="hidden" class="form-control" value="{{ data.student.id }}"
                                 required>
 
