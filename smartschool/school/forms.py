@@ -12,6 +12,7 @@ class AddSquadForm(forms.Form):
     name = forms.CharField(max_length=36)
     profile = forms.IntegerField()
     supervisor = forms.IntegerField()
+    year_start = forms.IntegerField()
 
 class DeleteSquadForm(forms.Form):
     class_id = forms.IntegerField()
