@@ -104,10 +104,37 @@
                             </div>
                             <div class="col text-end">
                                 <a class="btn-sm app-btn-secondary" href="{% url 'student' id=student.student.id %}">Szczegóły</a>
-                                <a class="btn-sm btn-danger" href="#">Usuń powiązanie</a>
+                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ student.student_parent }}">Usuń powiązanie</button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Delete assign modal -->
+                    <div class="modal fade" id="delete_parent_assign{{ student.student_parent }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel">Usuń powiązanie</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'parent_assign_delete' %}" method="POST" class="settings-form">
+                              {% csrf_token %}
+                              <div class="modal-body">
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <input type="hidden" name="student_id" value="{{ student.student.id }}"/>
+                                <input type="hidden" name="parent_id" value="{{ data.parent.id }}"/>
+                                <p>Czy na pewno chcesz usunąć to powiązanie?</p>
+                                <p><strong>Uczeń: </strong>{{ student.student.first_name }} {{ student.student.last_name }}</p>
+                                <p><strong>Opiekun: </strong>{{ data.parent.first_name }} {{ data.parent.last_name }}</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                <input type="submit" class="btn btn-danger" value="Usuń">
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
                 {% endfor %}
             </div>
         </div>

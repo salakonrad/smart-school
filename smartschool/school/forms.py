@@ -71,6 +71,7 @@ class AddParentForm(forms.Form):
 class AssignParentForm(forms.Form):
     student_id = forms.IntegerField()
     parent_id = forms.IntegerField()
+    next = forms.CharField(max_length=512)
 
 class ChangeParentForm(forms.Form):
     parent_id = forms.IntegerField()
