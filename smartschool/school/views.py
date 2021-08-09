@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 
 from .forms import *
-from .models import Squad, ClassProfile, Student, Parent
+from .models import Squad, ClassProfile, Student, Parent, Subject
 
 
 # /
@@ -183,6 +183,16 @@ def class_profile_change(request, error_message=None):
             return class_list_view(request, form.errors)
     else:
         return class_list_view(request)
+
+
+# /subjects
+@login_required
+@permission_required('school.view_subject', raise_exception=True)
+def subject_list_view(request):
+    data = {
+        'subjects': Subject.get_all()
+    }
+    return render(request, 'class/subjects.html', {'data': data})
 
 
 # /students
