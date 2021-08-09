@@ -285,3 +285,12 @@ class Squad(models.Model):
     def get_teachers():
         return Teacher.get_all()
 
+class Subject(models.Model):
+    subject = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=36)
+
+    class Meta:
+        db_table = 'subjects'
+
+    def __str__(self):
+        return f'{self.name}'
