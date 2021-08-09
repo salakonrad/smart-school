@@ -372,7 +372,6 @@ def parent_assign_delete(request):
             parent = Parent.get_by_id(form.cleaned_data['parent_id'])
             student.delete_parent(parent)
             return HttpResponseRedirect(form.cleaned_data['next'])
-            # return HttpResponseRedirect(f'/students/details/{student.id}')
         else:
             print(form.errors)
             return student_list_view(request)
