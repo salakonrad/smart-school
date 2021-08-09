@@ -195,6 +195,60 @@ def subject_list_view(request):
     return render(request, 'class/subjects.html', {'data': data})
 
 
+# /subjects/add
+@login_required
+@permission_required('school.add_subject', raise_exception=True)
+def subject_add(request):
+    if request.method == 'POST':
+        form = AddSubjectForm(request.POST)
+        if form.is_valid():
+            subject_name = form.cleaned_data['name']
+            Subject.add({
+                'name': subject_name
+            })
+            return HttpResponseRedirect('/subjects')
+        else:
+            return subject_list_view(request)
+    else:
+        return subject_list_view(request)
+
+
+# /subjects/delete
+@login_required
+@permission_required('school.delete_subject', raise_exception=True)
+def subject_delete(request):
+    if request.method == 'POST':
+        form = DeleteSubjectForm(request.POST)
+        if form.is_valid():
+            subject_id = form.cleaned_data['subject_id']
+            Subject.remove(subject_id)
+            return HttpResponseRedirect('/subjects')
+        else:
+            return subject_list_view(request)
+    else:
+        return subject_list_view(request)
+
+
+# /subjects/change
+@login_required
+@permission_required('school.change_subject', raise_exception=True)
+def subject_change(request):
+    if request.method == 'POST':
+        form = ChangeSubjectForm(request.POST)
+        if form.is_valid():
+            subject_id = form.cleaned_data['subject_id']
+            subject_name = form.cleaned_data['name']
+            Subject.edit({
+                'subject_id': subject_id,
+                'name': subject_name
+            })
+            return HttpResponseRedirect('/subjects')
+        else:
+            return subject_list_view(request)
+    else:
+        return subject_list_view(request)
+
+
 # /students
 @login_required
 @permission_required('school.view_student', raise_exception=True)

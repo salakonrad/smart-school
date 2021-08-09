@@ -297,3 +297,24 @@ class Subject(models.Model):
 
     def get_all():
         return Subject.objects.all().order_by('name')
+
+    def add(subject_data):
+        subject = Subject()
+        subject.name = subject_data['name']
+        subject.save()
+
+    def remove(subject_id):
+        if Subject.objects.filter(subject = subject_id).exists():
+            Subject.objects.get(subject = subject_id).delete()
+            return True
+        else:
+            return False
+
+    def edit(subject_data):
+        if Subject.objects.filter(subject = subject_data['subject_id']).exists():
+            subject = Subject.objects.get(subject = subject_data['subject_id'])
+            subject.name = subject_data['name']
+            subject.save()
+            return True
+        else:
+            return False
