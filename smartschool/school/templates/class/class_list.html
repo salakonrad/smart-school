@@ -90,7 +90,7 @@
             <!-- Class start year -->
             <div class="mb-3">
               <label for="add-squad-4" class="form-label">Rocznik początkowy</label>
-              <input name="year_start" type="number" class="form-control" id="add-squad-4" value="" min="1990" max="2100" required>
+              <input name="year_start" type="number" class="form-control" id="add-squad-4" value="{% now "Y" %}" min="1990" max="2100" required>
             </div>
             <!-- Class profile -->
             <div class="mb-3">
