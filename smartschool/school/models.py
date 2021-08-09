@@ -294,3 +294,6 @@ class Subject(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_all():
+        return Subject.objects.all().order_by('name')
