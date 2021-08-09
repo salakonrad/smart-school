@@ -38,6 +38,19 @@ class ChangeProfileForm(forms.Form):
     name = forms.CharField(max_length=36)
 
 
+# Subjects
+
+class AddSubjectForm(forms.Form):
+    name = forms.CharField(max_length=36)
+
+class DeleteSubjectForm(forms.Form):
+    subject_id = forms.IntegerField()
+
+class ChangeSubjectForm(forms.Form):
+    subject_id = forms.IntegerField()
+    name = forms.CharField(max_length=36)
+
+
 # Students
 
 class AddStudentForm(forms.Form):
