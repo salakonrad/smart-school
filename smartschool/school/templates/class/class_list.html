@@ -137,6 +137,7 @@
             <input type="hidden" name="class_id" value="{{ class.squad }}"/>
             <p>Czy na pewno chcesz usunąć tę klasę?</p>
             <p><strong>Nazwa: </strong> {{ class.name }}</p>
+            <p><strong>Rocznik: </strong> {{ class.year_start }}-{{ class.year_end }}</p>
             <p><strong>Profil: </strong> {{ class.profile }}</p>
             <p><strong>Wychowawca: </strong> {{ class.supervisor }}</p>
             <p>Utworzona <strong>{{ class.created }}</strong> przez użytkownika <strong>{{ class.supervisor }}</strong></p>
@@ -167,6 +168,11 @@
               <div class="mb-3">
                 <label for="change-squad-1" class="form-label">Nazwa klasy</label>
                 <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ class.name }}" required>
+              </div>
+              <!-- Class start year -->
+              <div class="mb-3">
+                <label for="add-squad-4" class="form-label">Rocznik początkowy</label>
+                <input name="year_start" type="number" class="form-control" id="add-squad-4" value="{{ class.year_start }}" min="1990" max="2100" required>
               </div>
               <!-- Class profile -->
               <div class="mb-3">
