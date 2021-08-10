@@ -32,6 +32,8 @@ urlpatterns = [
     path('parents/assign', views.parent_assign, name="parent_assign"),
     path('parents/assign/delete', views.parent_assign_delete, name="parent_assign_delete"),
     path('parents/change', views.parent_change, name="parent_change"),
+    # Time Tables
+    path('timetables/details/<int:id>', views.time_table_view, name="time_table"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
