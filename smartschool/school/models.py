@@ -319,6 +319,18 @@ class Subject(models.Model):
         else:
             return False
 
+class SquadSubject(models.Model):
+    squad_subject = models.AutoField(primary_key=True)
+    squad = models.ForeignKey(Squad, related_name='%(class)s_class', on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, related_name='%(class)s_subject', on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, related_name='%(class)s_teacher', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "squad_subject"
+
+    def __str__(self):
+        return f"{ self.squad } - { self.subject } | { self.teacher }"
+
 class LessonTable(models.Model):
     lesson_table = models.AutoField(primary_key=True)
     number = models.IntegerField()
@@ -344,8 +356,10 @@ class TimeTable(models.Model):
     day = models.CharField(max_length=1, choices=DAY_CHOICES)
     lesson_number = models.ForeignKey(LessonTable, related_name='%(class)s_lesson_number', on_delete=models.CASCADE)
     squad = models.ForeignKey(Squad, related_name='%(class)s_class', on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, related_name='%(class)s_subject', on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, related_name='%(class)s_teacher', on_delete=models.CASCADE)
+    subject = models.ForeignKey(SquadSubject, related_name='%(class)s_subject', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'time_table'
+
+    def __str__(self):
+        return f"{ self.squad } | { self.get_day_display() } | { self.lesson_number } - { self.subject.subject }"
