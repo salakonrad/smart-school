@@ -3,7 +3,7 @@
 {% block page_content %}
 <table class="table">
     <thead>
-        <tr>
+        <tr class="timetable">
             <th scope="col">#</th>
             <th scope="col">Poniedziałek</th>
             <th scope="col">Wtorek</th>
@@ -14,13 +14,31 @@
     </thead>
     <tbody>
         {% for timetable in data.time_tables %}
-            <tr>
+            <tr class="timetable">
                 <th scope="row">{{ timetable.no }}</th>
-                <td><span class="teacher">{{ timetable.M.subject.teacher.get_initials }}</span> {{ timetable.M.subject.subject.name }}</td>
-                <td><span class="teacher"></span>{{ timetable.T.subject.teacher.get_initials }}</span> {{ timetable.T.subject.subject.name }}</td>
-                <td><span class="teacher"></span>{{ timetable.W.subject.teacher.get_initials }}</span> {{ timetable.W.subject.subject.name }}</td>
-                <td><span class="teacher"></span>{{ timetable.C.subject.teacher.get_initials }}</span> {{ timetable.C.subject.subject.name }}</td>
-                <td><span class="teacher"></span>{{ timetable.F.subject.teacher.get_initials }}</span> {{ timetable.F.subject.subject.name }}</td>
+                <!-- Monday table row + CUD modals -->
+                {% if timetable.M.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.M.lesson.subject.teacher.get_initials }}</span> {{ timetable.M.lesson.subject.subject.name }}
+                        {% if perms.school.change_timetable %}
+                            <sup>
+                                <i class="far fa-edit fa-sm pointer" data-bs-toggle="modal" data-bs-target="#change_lesson{{ timetable.M.lesson.time_table }}"></i>                            
+                            </sup>
+                            <sup>
+                                <i class="far fa-trash-alt fa-sm pointer" data-bs-toggle="modal" data-bs-target="#delete_lesson{{ timetable.M.lesson.time_table }}"></i>
+                            </sup>
+                            {% include "time_tables/timetable_ud_modals.html" with lesson=timetable.M.lesson %}
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                        <i class="far fa-plus-square"></i>
+                    </td>
+                {% endif %}
+                <td><span class="teacher">{{ timetable.T.lesson.subject.teacher.get_initials }}</span> {{ timetable.T.lesson.subject.subject.name }}</td>
+                <td><span class="teacher">{{ timetable.W.lesson.subject.teacher.get_initials }}</span> {{ timetable.W.lesson.subject.subject.name }}</td>
+                <td><span class="teacher">{{ timetable.C.lesson.subject.teacher.get_initials }}</span> {{ timetable.C.lesson.subject.subject.name }}</td>
+                <td><span class="teacher">{{ timetable.F.lesson.subject.teacher.get_initials }}</span> {{ timetable.F.lesson.subject.subject.name }}</td>
             </tr>
         {% endfor %}
     </tbody>

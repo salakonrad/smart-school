@@ -15,3 +15,8 @@
 .table-btn {
     width: 60px;
 }
+
+table tbody .timetable,
+table thead .timetable {
+    text-align: center;
+}
