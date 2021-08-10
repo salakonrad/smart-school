@@ -288,6 +288,9 @@ class Squad(models.Model):
     def get_teachers():
         return Teacher.get_all()
 
+    def get_subjects(self):
+        return SquadSubject.objects.filter(squad=self)
+
 class Subject(models.Model):
     subject = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)

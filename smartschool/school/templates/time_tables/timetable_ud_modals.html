@@ -1,4 +1,4 @@
-<!-- Delete subject modal -->
+<!-- Delete lesson modal -->
 <div class="modal fade" id="delete_lesson{{ lesson.time_table }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -20,6 +20,44 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
                     <input type="submit" class="btn btn-danger" value="Usuń">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change lesson modal -->
+<div class="modal fade" id="change_lesson{{ lesson.time_table }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edytuj lekcję</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="time_table_id" value="{{ lesson.time_table }}" />
+                    <!-- Lesson -->
+                    <div class="mb-3">
+                        <p><strong>Dzień tygodnia: </strong> {{ lesson.get_day_display }}</p>
+                        <p><strong>Godziny: </strong> Od {{ lesson.lesson_number.start }} do {{ lesson.lesson_number.end }}</p>
+                        <label for="add-lesson-1" class="form-label">Przedmiot</label>
+                        <select name="subject_id" class="form-select" id="add-lesson-1" aria-label="Wybór przedmiotu">
+                        {% for subject in data.subjects %}
+                            {% if subject.squad_subject == lesson.subject.squad_subject %}
+                                <option value="{{ subject.squad_subject }}" selected>{{ subject.subject }} ({{ subject.teacher }})</option>
+                            {% else %}
+                                <option value="{{ subject.squad_subject }}">{{ subject.subject }} ({{ subject.teacher }})</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Zapisz">
                 </div>
             </form>
         </div>

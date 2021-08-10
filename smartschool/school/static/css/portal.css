@@ -20,3 +20,11 @@ table tbody .timetable,
 table thead .timetable {
     text-align: center;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
+.add-lesson {
+    color: rgba(0, 0, 0, 0.45);
+}

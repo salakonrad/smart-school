@@ -486,7 +486,9 @@ def parent_change(request):
 def time_table_view(request, id):
     requested_class = Squad.get_by_id(id)
     time_tables = TimeTable.get_by_class(requested_class)
+    subjects = requested_class.get_subjects()
     data = {
-        'time_tables': time_tables
+        'time_tables': time_tables,
+        'subjects': subjects
     }
     return render(request, 'time_tables/timetable.html', {'data': data})

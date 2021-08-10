@@ -22,7 +22,7 @@
                         <span class="teacher">{{ timetable.M.lesson.subject.teacher.get_initials }}</span> {{ timetable.M.lesson.subject.subject.name }}
                         {% if perms.school.change_timetable %}
                             <sup>
-                                <i class="far fa-edit fa-sm pointer" data-bs-toggle="modal" data-bs-target="#change_lesson{{ timetable.M.lesson.time_table }}"></i>                            
+                                <i class="far fa-edit fa-sm pointer" data-bs-toggle="modal" data-bs-target="#change_lesson{{ timetable.M.lesson.time_table }}"></i>
                             </sup>
                             <sup>
                                 <i class="far fa-trash-alt fa-sm pointer" data-bs-toggle="modal" data-bs-target="#delete_lesson{{ timetable.M.lesson.time_table }}"></i>
@@ -32,7 +32,10 @@
                     </td>
                 {% else %}
                     <td>
-                        <i class="far fa-plus-square"></i>
+                        {% if perms.school.change_timetable %}
+                            <i class="far fa-plus-square pointer add-lesson" data-bs-toggle="modal" data-bs-target="#add_lesson{{ timetable.M.lesson_no.lesson_table }}{{ timetable.M.day }}{{ timetable.M.squad.squad }}"></i>
+                            {% include "time_tables/timetable_c_modals.html" with lesson_no=timetable.M.lesson_no day=timetable.M.day squad=timetable.M.squad %}
+                        {% endif %}
                     </td>
                 {% endif %}
                 <td><span class="teacher">{{ timetable.T.lesson.subject.teacher.get_initials }}</span> {{ timetable.T.lesson.subject.subject.name }}</td>
