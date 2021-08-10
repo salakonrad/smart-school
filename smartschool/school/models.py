@@ -318,3 +318,30 @@ class Subject(models.Model):
             return True
         else:
             return False
+
+class LessonTable(models.Model):
+    lesson_table = models.AutoField(primary_key=True)
+    number = models.IntegerField()
+    start = models.TimeField()
+    end = models.TimeField()
+
+    class Meta:
+        db_table = "lesson_time_table"
+
+class TimeTable(models.Model):
+    time_table = models.AutoField(primary_key=True)
+    DAY_CHOICES = [
+        ('M', 'Poniedziałek'),
+        ('T', 'Wtorek'),
+        ('W', 'Środa'),
+        ('C', 'Czwartek'),
+        ('F', 'Piątek'),
+        ('S', 'Sobota')
+    ]
+    day = models.CharField(max_length=1, choices=DAY_CHOICES)
+    lesson_number = models.ForeignKey(LessonTable, related_name='%(class)s_lesson_number', on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, related_name='%(class)s_subject', on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, related_name='%(class)s_teacher', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'time_table'
