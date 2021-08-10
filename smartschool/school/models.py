@@ -376,10 +376,35 @@ class TimeTable(models.Model):
         for lesson in lesson_no:
             ready_time_table.append({
                 'no': lesson.number,
-                'M': time_table.filter(day='M', lesson_number=lesson).first(),
-                'T': time_table.filter(day='T', lesson_number=lesson).first(),
-                'W': time_table.filter(day='W', lesson_number=lesson).first(),
-                'C': time_table.filter(day='C', lesson_number=lesson).first(),
-                'F': time_table.filter(day='F', lesson_number=lesson).first(),
+                'M': {
+                    'lesson': time_table.filter(day='M', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'M',
+                    'squad': squad
+                },
+                'T': {
+                    'lesson': time_table.filter(day='T', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'T',
+                    'squad': squad
+                },
+                'W': {
+                    'lesson': time_table.filter(day='W', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'W',
+                    'squad': squad
+                },
+                'C': {
+                    'lesson': time_table.filter(day='C', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'C',
+                    'squad': squad
+                },
+                'F': {
+                    'lesson': time_table.filter(day='F', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'F',
+                    'squad': squad
+                },
             })  
         return ready_time_table
