@@ -31,6 +31,9 @@ class Teacher(User):
     def get_all():
         return Teacher.objects.filter(groups__name='Teachers')
 
+    def get_initials(self):
+        return f"{self.first_name[:1]}{self.last_name[:1]}"
+
 class Parent(User):
     class Meta:
         proxy = True
@@ -343,6 +346,9 @@ class LessonTable(models.Model):
     def __str__(self):
         return f"Lesson {self.number}"
 
+    def get_all():
+        return LessonTable.objects.all().order_by('number')
+
 class TimeTable(models.Model):
     time_table = models.AutoField(primary_key=True)
     DAY_CHOICES = [
@@ -350,8 +356,7 @@ class TimeTable(models.Model):
         ('T', 'Wtorek'),
         ('W', 'Środa'),
         ('C', 'Czwartek'),
-        ('F', 'Piątek'),
-        ('S', 'Sobota')
+        ('F', 'Piątek')
     ]
     day = models.CharField(max_length=1, choices=DAY_CHOICES)
     lesson_number = models.ForeignKey(LessonTable, related_name='%(class)s_lesson_number', on_delete=models.CASCADE)
@@ -363,3 +368,18 @@ class TimeTable(models.Model):
 
     def __str__(self):
         return f"{ self.squad } | { self.get_day_display() } | { self.lesson_number } - { self.subject.subject }"
+
+    def get_by_class(squad):
+        time_table =  TimeTable.objects.filter(squad=squad)
+        lesson_no = LessonTable.get_all()
+        ready_time_table = []
+        for lesson in lesson_no:
+            ready_time_table.append({
+                'no': lesson.number,
+                'M': time_table.filter(day='M', lesson_number=lesson).first(),
+                'T': time_table.filter(day='T', lesson_number=lesson).first(),
+                'W': time_table.filter(day='W', lesson_number=lesson).first(),
+                'C': time_table.filter(day='C', lesson_number=lesson).first(),
+                'F': time_table.filter(day='F', lesson_number=lesson).first(),
+            })  
+        return ready_time_table

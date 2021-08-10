@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 
 from .forms import *
-from .models import Squad, ClassProfile, Student, Parent, Subject
+from .models import LessonTable, Squad, ClassProfile, Student, Parent, Subject, TimeTable
 
 
 # /
@@ -479,3 +479,14 @@ def parent_change(request):
             return student_view(request, form.cleaned_data['parent_id'])
     else:
         return student_list_view(request)
+
+
+# /timetables/details/id
+@login_required
+def time_table_view(request, id):
+    requested_class = Squad.get_by_id(id)
+    time_tables = TimeTable.get_by_class(requested_class)
+    data = {
+        'time_tables': time_tables
+    }
+    return render(request, 'time_tables/timetable.html', {'data': data})

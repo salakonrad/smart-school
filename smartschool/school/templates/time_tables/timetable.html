@@ -1,0 +1,28 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Poniedziałek</th>
+            <th scope="col">Wtorek</th>
+            <th scope="col">Środa</th>
+            <th scope="col">Czwartek</th>
+            <th scope="col">Piątek</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for timetable in data.time_tables %}
+            <tr>
+                <th scope="row">{{ timetable.no }}</th>
+                <td><span class="teacher">{{ timetable.M.subject.teacher.get_initials }}</span> {{ timetable.M.subject.subject.name }}</td>
+                <td><span class="teacher"></span>{{ timetable.T.subject.teacher.get_initials }}</span> {{ timetable.T.subject.subject.name }}</td>
+                <td><span class="teacher"></span>{{ timetable.W.subject.teacher.get_initials }}</span> {{ timetable.W.subject.subject.name }}</td>
+                <td><span class="teacher"></span>{{ timetable.C.subject.teacher.get_initials }}</span> {{ timetable.C.subject.subject.name }}</td>
+                <td><span class="teacher"></span>{{ timetable.F.subject.teacher.get_initials }}</span> {{ timetable.F.subject.subject.name }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
