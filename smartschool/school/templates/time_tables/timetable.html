@@ -5,6 +5,7 @@
     <thead>
         <tr class="timetable">
             <th scope="col">#</th>
+            <th scope="col">Godziny</th>
             <th scope="col">Poniedziałek</th>
             <th scope="col">Wtorek</th>
             <th scope="col">Środa</th>
@@ -16,6 +17,7 @@
         {% for timetable in data.time_tables %}
             <tr class="timetable">
                 <th scope="row">{{ timetable.no }}</th>
+                <td>{{ timetable.hour_start }}-{{ timetable.hour_end }}</td>
                 <!-- Monday table row + CUD modals -->
                 {% if timetable.M.lesson %}
                     <td>

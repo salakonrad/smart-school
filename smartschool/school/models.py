@@ -379,6 +379,8 @@ class TimeTable(models.Model):
         for lesson in lesson_no:
             ready_time_table.append({
                 'no': lesson.number,
+                'hour_start': lesson.start,
+                'hour_end': lesson.end,
                 'M': {
                     'lesson': time_table.filter(day='M', lesson_number=lesson).first(),
                     'lesson_no': lesson,
