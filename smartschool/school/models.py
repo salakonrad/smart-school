@@ -300,6 +300,12 @@ class Squad(models.Model):
         else:
             return False
 
+    def change_lesson(self, lesson_id, subject_id):
+        if TimeTable.objects.filter(squad=self, time_table=lesson_id).exists:
+            TimeTable.objects.get(squad=self, time_table=lesson_id).change(subject_id)
+        else:
+            return False
+
 class Subject(models.Model):
     subject = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
@@ -446,3 +452,7 @@ class TimeTable(models.Model):
 
     def delete(self):
         super(TimeTable, self).delete()
+
+    def change(self, subject_id):
+        self.subject = SquadSubject.get_by_id(subject_id)
+        self.save()

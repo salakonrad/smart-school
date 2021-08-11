@@ -36,6 +36,7 @@ urlpatterns = [
     path('timetables/details/<int:id>', views.time_table_view, name="time_table"),
     path('timetables/add', views.time_table_add, name="time_table_add"),
     path('timetables/delete', views.time_table_delete, name="time_table_delete"),
+    path('timetables/change', views.time_table_change, name="time_table_change"),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
