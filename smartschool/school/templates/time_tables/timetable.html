@@ -29,14 +29,15 @@
                             <sup>
                                 <i class="far fa-trash-alt fa-sm pointer" data-bs-toggle="modal" data-bs-target="#delete_lesson{{ timetable.M.lesson.time_table }}"></i>
                             </sup>
-                            {% include "time_tables/timetable_ud_modals.html" with lesson=timetable.M.lesson %}
+                            {% include "time_tables/delete.html" with lesson=timetable.M.lesson %}
+                            {% include "time_tables/update.html" with lesson=timetable.M.lesson %}
                         {% endif %}
                     </td>
                 {% else %}
                     <td>
                         {% if perms.school.change_timetable %}
                             <i class="far fa-plus-square pointer add-lesson" data-bs-toggle="modal" data-bs-target="#add_lesson{{ timetable.M.lesson_no.lesson_table }}{{ timetable.M.day }}{{ timetable.M.squad.squad }}"></i>
-                            {% include "time_tables/timetable_c_modals.html" with lesson_no=timetable.M.lesson_no day=timetable.M.day squad=timetable.M.squad %}
+                            {% include "time_tables/create.html" with lesson_no=timetable.M.lesson_no day=timetable.M.day squad=timetable.M.squad %}
                         {% endif %}
                     </td>
                 {% endif %}
