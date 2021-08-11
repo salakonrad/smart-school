@@ -291,6 +291,9 @@ class Squad(models.Model):
     def get_subjects(self):
         return SquadSubject.objects.filter(squad=self)
 
+    def add_lesson(self, day, lesson, subject):
+        TimeTable.add_lesson(self, day, lesson, subject)
+
 class Subject(models.Model):
     subject = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
@@ -337,6 +340,12 @@ class SquadSubject(models.Model):
     def __str__(self):
         return f"{ self.squad } - { self.subject } | { self.teacher }"
 
+    def get_by_id(id):
+        if SquadSubject.objects.filter(squad_subject = id).exists():
+            return SquadSubject.objects.get(squad_subject = id)
+        else:
+            return None
+
 class LessonTable(models.Model):
     lesson_table = models.AutoField(primary_key=True)
     number = models.IntegerField()
@@ -351,6 +360,12 @@ class LessonTable(models.Model):
 
     def get_all():
         return LessonTable.objects.all().order_by('number')
+
+    def get_by_id(id):
+        if LessonTable.objects.filter(lesson_table = id).exists():
+            return LessonTable.objects.get(lesson_table = id)
+        else:
+            return None
 
 class TimeTable(models.Model):
     time_table = models.AutoField(primary_key=True)
@@ -413,3 +428,12 @@ class TimeTable(models.Model):
                 },
             })  
         return ready_time_table
+
+    def add_lesson(squad, day, lesson, subject):
+        new_lesson = TimeTable()
+        new_lesson.day = day
+        new_lesson.lesson_number = lesson
+        new_lesson.squad = squad
+        new_lesson.subject = subject
+        new_lesson.save()
+        return new_lesson.time_table

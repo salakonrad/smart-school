@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 
 from .forms import *
-from .models import LessonTable, Squad, ClassProfile, Student, Parent, Subject, TimeTable
+from .models import LessonTable, Squad, ClassProfile, SquadSubject, Student, Parent, Subject, TimeTable
 
 
 # /
@@ -387,7 +387,6 @@ def parent_list_view(request):
     return render(request, 'users/parent_list.html', {'data': data})
 
 
-
 # /parents/add
 @login_required
 @permission_required('school.add_parent', raise_exception=True)
@@ -496,13 +495,20 @@ def time_table_view(request, id):
 
 # /timetables/add
 @login_required
-@permission_required('school.add_time_table', raise_exception=True)
+@permission_required('school.change_time_table', raise_exception=True)
 def time_table_add(request):
-    requested_class = Squad.get_by_id(id)
-    time_tables = TimeTable.get_by_class(requested_class)
-    subjects = requested_class.get_subjects()
-    data = {
-        'time_tables': time_tables,
-        'subjects': subjects
-    }
-    return render(request, 'time_tables/timetable.html', {'data': data})
+    if request.method == 'POST':
+        form = AddLessonForm(request.POST)
+        if form.is_valid():
+            squad = Squad.get_by_id(form.cleaned_data['squad_id'])
+            squad.add_lesson(*[
+                form.cleaned_data['day'],
+                LessonTable.get_by_id(form.cleaned_data['lesson_id']),                
+                SquadSubject.get_by_id(form.cleaned_data['subject_id'])
+            ])
+            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
