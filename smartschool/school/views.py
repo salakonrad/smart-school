@@ -531,3 +531,23 @@ def time_table_delete(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /timetables/change
+@login_required
+@permission_required('school.change_time_table', raise_exception=True)
+def time_table_change(request):
+    if request.method == 'POST':
+        form = ChangeLessonForm(request.POST)
+        if form.is_valid():
+            squad = Squad.get_by_id(form.cleaned_data['squad_id'])
+            squad.change_lesson(*[
+                form.cleaned_data['time_table_id'],
+                form.cleaned_data['subject_id']
+            ])
+            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
