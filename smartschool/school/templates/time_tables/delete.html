@@ -7,10 +7,11 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Usuń lekcję</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="" method="POST" class="settings-form">
+            <form action="{% url 'time_table_delete' %}" method="POST" class="settings-form">
                 {% csrf_token %}
                 <div class="modal-body">
                     <input type="hidden" name="time_table_id" value="{{ lesson.time_table }}" />
+                    <input type="hidden" name="squad_id" value="{{ lesson.squad.squad }}" />
                     <p>Czy na pewno chcesz usunąć tą lekcję?</p>
                     <p><strong>Numer lekcji: </strong> {{ lesson.lesson_number.number }}</p>
                     <p><strong>Przedmiot: </strong> {{ lesson.subject.subject.name }}</p>                    
