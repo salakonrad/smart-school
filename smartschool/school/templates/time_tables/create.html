@@ -7,10 +7,10 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Dodaj lekcję</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="" method="POST" class="settings-form">
+            <form action="{% url 'time_table_add' %}" method="POST" class="settings-form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="hidden" name="day_id" value="{{ day }}" />
+                    <input type="hidden" name="day" value="{{ day }}" />
                     <input type="hidden" name="lesson_id" value="{{ lesson_no.lesson_table }}" />
                     <input type="hidden" name="squad_id" value="{{ squad.squad }}" />
                     <p><strong>Godziny: </strong> Od {{ lesson_no.start }} do {{ lesson_no.end }}</p>

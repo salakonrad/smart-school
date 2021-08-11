@@ -99,7 +99,7 @@ class ChangeParentForm(forms.Form):
 # Time Tables
 
 class AddLessonForm(forms.Form):
-    day_id = forms.IntegerField()
+    day = forms.CharField(max_length=1)
     lesson_id = forms.IntegerField()
     squad_id = forms.IntegerField()
     subject_id = forms.IntegerField()
