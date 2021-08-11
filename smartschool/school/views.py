@@ -512,3 +512,22 @@ def time_table_add(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /timetables/delete
+@login_required
+@permission_required('school.change_time_table', raise_exception=True)
+def time_table_delete(request):
+    if request.method == 'POST':
+        form = DeleteLessonForm(request.POST)
+        if form.is_valid():
+            squad = Squad.get_by_id(form.cleaned_data['squad_id'])
+            squad.delete_lesson(*[
+                form.cleaned_data['time_table_id']
+            ])
+            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

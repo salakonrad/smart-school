@@ -103,3 +103,7 @@ class AddLessonForm(forms.Form):
     lesson_id = forms.IntegerField()
     squad_id = forms.IntegerField()
     subject_id = forms.IntegerField()
+
+class DeleteLessonForm(forms.Form):
+    time_table_id = forms.IntegerField()
+    squad_id = forms.IntegerField()

@@ -292,7 +292,13 @@ class Squad(models.Model):
         return SquadSubject.objects.filter(squad=self)
 
     def add_lesson(self, day, lesson, subject):
-        TimeTable.add_lesson(self, day, lesson, subject)
+        TimeTable.add(self, day, lesson, subject)
+
+    def delete_lesson(self, id):
+        if TimeTable.objects.filter(squad=self, time_table=id).exists:
+            TimeTable.objects.get(squad=self, time_table=id).delete()
+        else:
+            return False
 
 class Subject(models.Model):
     subject = models.AutoField(primary_key=True)
@@ -429,7 +435,7 @@ class TimeTable(models.Model):
             })  
         return ready_time_table
 
-    def add_lesson(squad, day, lesson, subject):
+    def add(squad, day, lesson, subject):
         new_lesson = TimeTable()
         new_lesson.day = day
         new_lesson.lesson_number = lesson
@@ -437,3 +443,6 @@ class TimeTable(models.Model):
         new_lesson.subject = subject
         new_lesson.save()
         return new_lesson.time_table
+
+    def delete(self):
+        super(TimeTable, self).delete()
