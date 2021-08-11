@@ -94,3 +94,12 @@ class ChangeParentForm(forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
     email = forms.CharField(required=False)
+
+
+# Time Tables
+
+class AddLessonForm(forms.Form):
+    day_id = forms.IntegerField()
+    lesson_id = forms.IntegerField()
+    squad_id = forms.IntegerField()
+    subject_id = forms.IntegerField()
