@@ -480,6 +480,20 @@ def parent_change(request):
         return student_list_view(request)
 
 
+# /timetables
+@login_required
+def time_table_list_view(request):
+    if request.user.groups.filter(name="Principal").exists():
+        print("YOU ARE PRINCIPAL")
+    elif request.user.groups.filter(name="Teacher").exists():
+        print("YOU ARE TEACHER")
+    elif request.user.groups.filter(name="Parent").exists():
+        print("YOU ARE PARENT")
+    elif request.user.groups.filter(name="Student").exists():
+        print("YOU ARE STUDENT")
+    else:
+        print("WTF")
+
 # /timetables/details/id
 @login_required
 def time_table_view(request, id):

@@ -33,6 +33,7 @@ urlpatterns = [
     path('parents/assign/delete', views.parent_assign_delete, name="parent_assign_delete"),
     path('parents/change', views.parent_change, name="parent_change"),
     # Time Tables
+    path('timetables', views.time_table_list_view, name="time_table_list"),
     path('timetables/details/<int:id>', views.time_table_view, name="time_table"),
     path('timetables/add', views.time_table_add, name="time_table_add"),
     path('timetables/delete', views.time_table_delete, name="time_table_delete"),
