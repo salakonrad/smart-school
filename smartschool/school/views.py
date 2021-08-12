@@ -483,16 +483,39 @@ def parent_change(request):
 # /timetables
 @login_required
 def time_table_list_view(request):
-    if request.user.groups.filter(name="Principal").exists():
-        print("YOU ARE PRINCIPAL")
-    elif request.user.groups.filter(name="Teacher").exists():
-        print("YOU ARE TEACHER")
-    elif request.user.groups.filter(name="Parent").exists():
-        print("YOU ARE PARENT")
-    elif request.user.groups.filter(name="Student").exists():
-        print("YOU ARE STUDENT")
+    print(request.user.groups)
+    if request.user.groups.filter(name="Principals").exists():
+        # Show all classes
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'time_tables/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Teachers").exists():
+        # Show all classes
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'time_tables/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Parents").exists():
+        # Show only kids classes
+        parent = Parent.get_by_id(request.user.id)
+        students = parent.get_students()
+        available_classes = [student.student.get_class() for student in students]
+        data = {
+            'classes': available_classes
+        }
+        return render(request, 'time_tables/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Students").exists():
+        # Show only student class
+        student = Student.get_by_id(request.user.id)
+        squad = student.get_class()
+        return time_table_view(request, squad.squad)
     else:
-        print("WTF")
+        # Show all classes
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'time_tables/class_list.html', {'data': data})
 
 # /timetables/details/id
 @login_required
