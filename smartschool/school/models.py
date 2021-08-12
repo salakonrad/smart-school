@@ -151,6 +151,9 @@ class Student(User):
     def get_parents(self):
         return StudentParent.objects.filter(student=self)
 
+    def get_class(self):
+        return self.squad_set.first()
+
 class StudentParent(models.Model):
     student_parent = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
@@ -280,7 +283,7 @@ class Squad(models.Model):
             return None
 
     def get_all():
-        return Squad.objects.all().order_by('name')
+        return Squad.objects.filter(active=True).order_by('name')
 
     def get_profiles():
         return ClassProfile.get_all()
