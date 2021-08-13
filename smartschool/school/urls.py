@@ -30,6 +30,12 @@ urlpatterns = [
     path('students/add', views.student_add, name="student_add"),
     path('students/delete', views.student_delete, name="student_delete"),
     path('students/change', views.student_change, name="student_change"),
+    # Teachers
+    path('teachers', views.teacher_list_view, name="teacher_list"),
+    path('teachers/details/<int:id>', views.teacher_view, name="teacher"),
+    path('teachers/add', views.teacher_add, name="teacher_add"),
+    path('teachers/delete', views.teacher_delete, name="teacher_delete"),
+    path('teachers/change', views.teacher_change, name="teacher_change"),
     # Parents
     path('parents', views.parent_list_view, name="parent_list"),
     path('parents/details/<int:id>', views.parent_view, name="parent"),

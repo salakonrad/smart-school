@@ -36,3 +36,7 @@ table thead .timetable {
 .class_choice:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
+
+.teacher {
+    color: rgba(0, 0, 0, 0.45);
+}
