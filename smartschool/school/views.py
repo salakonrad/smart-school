@@ -185,6 +185,18 @@ def class_profile_change(request, error_message=None):
         return class_list_view(request)
 
 
+# /class_subject/class/id
+@login_required
+@permission_required('school.view_squadsubject', raise_exception=True)
+def class_subject_list_view(request, id):
+    squad = Squad.get_by_id(id)
+    data = {
+        'squad': squad,
+        'class_subjects': squad.get_subjects()
+    }
+    return render(request, 'class/class_subjects.html', {'data': data})
+
+
 # /subjects
 @login_required
 @permission_required('school.view_subject', raise_exception=True)
@@ -319,7 +331,7 @@ def student_add(request):
 
 # /students/delete
 @login_required
-@permission_required('school.delete_classprofile', raise_exception=True)
+@permission_required('school.delete_student', raise_exception=True)
 def student_delete(request):
     if request.method == 'POST':
         form = DeleteStudentForm(request.POST)
@@ -408,6 +420,23 @@ def parent_add(request):
             return student_list_view(request)
     else:
         return student_list_view(request)
+
+
+# /parents/delete
+@login_required
+@permission_required('school.delete_parent', raise_exception=True)
+def parent_delete(request):
+    if request.method == 'POST':
+        form = DeleteParentForm(request.POST)
+        if form.is_valid():
+            Parent.delete(*[
+                Parent.get_by_id(form.cleaned_data['parent_id'])
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # /parents/assign
@@ -517,6 +546,7 @@ def time_table_list_view(request):
         }
         return render(request, 'time_tables/class_list.html', {'data': data})
 
+
 # /timetables/details/id
 @login_required
 def time_table_view(request, id):
@@ -524,6 +554,7 @@ def time_table_view(request, id):
     time_tables = TimeTable.get_by_class(requested_class)
     subjects = requested_class.get_subjects()
     data = {
+        'squad': requested_class,
         'time_tables': time_tables,
         'subjects': subjects
     }
@@ -532,7 +563,7 @@ def time_table_view(request, id):
 
 # /timetables/add
 @login_required
-@permission_required('school.change_time_table', raise_exception=True)
+@permission_required('school.change_timetable', raise_exception=True)
 def time_table_add(request):
     if request.method == 'POST':
         form = AddLessonForm(request.POST)
@@ -553,7 +584,7 @@ def time_table_add(request):
 
 # /timetables/delete
 @login_required
-@permission_required('school.change_time_table', raise_exception=True)
+@permission_required('school.change_timetable', raise_exception=True)
 def time_table_delete(request):
     if request.method == 'POST':
         form = DeleteLessonForm(request.POST)
@@ -572,7 +603,7 @@ def time_table_delete(request):
 
 # /timetables/change
 @login_required
-@permission_required('school.change_time_table', raise_exception=True)
+@permission_required('school.change_timetable', raise_exception=True)
 def time_table_change(request):
     if request.method == 'POST':
         form = ChangeLessonForm(request.POST)
