@@ -16,6 +16,9 @@ urlpatterns = [
     path('class_profile/change', views.class_profile_change, name="class_profile_change"),
     # Class Subjects
     path('class_subject/class/<int:id>', views.class_subject_list_view, name="class_subject_list"),
+    path('class_subject/add', views.class_subject_add, name="class_subject_add"),
+    path('class_subject/delete', views.class_subject_delete, name="class_subject_delete"),
+    path('class_subject/change', views.class_subject_change, name="class_subject_change"),
     # Subjects
     path('subjects', views.subject_list_view, name="subject_list"),
     path('subjects/add', views.subject_add, name="subject_add"),
