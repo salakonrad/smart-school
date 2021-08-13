@@ -426,6 +426,112 @@ def student_change(request):
         return student_list_view(request)
 
 
+# /teachers
+@login_required
+@permission_required('school.view_teacher', raise_exception=True)
+def teacher_list_view(request):
+    # Search
+    if request.GET.get('search'):
+        teachers_list = Teacher.find(request.GET.get('search'))
+    else:
+        teachers_list = Teacher.get_all()
+
+    # Paginator
+    paginator = Paginator(teachers_list, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
+    teachers_page = paginator.get_page(page_number)
+    paginator = {
+        'actual_page': page_number,
+        'has_next': teachers_page.has_next(),
+        'has_prev': teachers_page.has_previous()
+    }
+    if paginator['has_next']: 
+        paginator['next_page'] = teachers_page.next_page_number()
+    if paginator['has_prev']: 
+        paginator['prev_page'] = teachers_page.previous_page_number()
+
+    data = {
+        'teachers': teachers_page,
+        'paginator': paginator
+    }
+    return render(request, 'users/teacher_list.html', {'data': data})
+
+
+# /teachers/details/id
+@login_required
+@permission_required('school.view_teacher', raise_exception=True)
+def teacher_view(request, id):
+    teacher = Teacher.get_by_id(id)
+    data = {
+        'teacher': teacher,
+        'parents': teacher.get_parents(),
+        'classes': Squad.get_all(),
+        'parents_list': Parent.get_all()
+    }
+    return render(request, 'users/teacher.html', {'data': data})
+
+
+# /teachers/add
+@login_required
+@permission_required('school.add_teacher', raise_exception=True)
+def teacher_add(request):
+    if request.method == 'POST':
+        form = AddTeacherForm(request.POST)
+        if form.is_valid():
+            teacher_id = Teacher.add({
+                'username': form.cleaned_data['username'],
+                'password': form.cleaned_data['password'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'squad': form.cleaned_data['squad']
+            })
+            return HttpResponseRedirect(f'/teachers/details/{teacher_id}')
+        else:
+            return teacher_list_view(request)
+    else:
+        return teacher_list_view(request)
+
+
+# /teachers/delete
+@login_required
+@permission_required('school.delete_teacher', raise_exception=True)
+def teacher_delete(request):
+    if request.method == 'POST':
+        form = DeleteTeacherForm(request.POST)
+        if form.is_valid():
+            teacher_id = form.cleaned_data['teacher_id']
+            Teacher.remove(teacher_id)
+            return HttpResponseRedirect('/teachers')
+        else:
+            return teacher_list_view(request)
+    else:
+        return teacher_list_view(request)
+
+
+# /teachers/change
+@login_required
+@permission_required('school.change_teacher', raise_exception=True)
+def teacher_change(request):
+    if request.method == 'POST':
+        form = ChangeTeacherForm(request.POST)
+        if form.is_valid():
+            teacher_id = form.cleaned_data['teacher_id']
+            Teacher.edit({
+                'teacher_id': teacher_id,
+                'username': form.cleaned_data['username'],
+                'first_name': form.cleaned_data['first_name'],
+                'last_name': form.cleaned_data['last_name'],
+                'email': form.cleaned_data['email'],
+                'squad': form.cleaned_data['squad']
+            })
+            return HttpResponseRedirect(f'/teachers/details/{teacher_id}')
+        else:
+            return teacher_view(request, form.cleaned_data['teacher_id'])
+    else:
+        return teacher_list_view(request)
+
+
 # /parents
 @login_required
 @permission_required('school.view_parent', raise_exception=True)
