@@ -79,6 +79,9 @@ class Parent(User):
         else:
             return False
 
+    def delete(self):
+        super(Parent, self).delete()
+
     def assign(parent_data):
         pass
 

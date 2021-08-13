@@ -83,6 +83,9 @@ class AddParentForm(forms.Form):
     email = forms.CharField(required=False)
     student_id = forms.IntegerField()
 
+class DeleteParentForm(forms.Form):
+    parent_id = forms.IntegerField()
+
 class AssignParentForm(forms.Form):
     student_id = forms.IntegerField()
     parent_id = forms.IntegerField()

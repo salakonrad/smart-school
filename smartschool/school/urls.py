@@ -14,6 +14,8 @@ urlpatterns = [
     path('class_profile/add', views.class_profile_add, name="class_profile_add"),
     path('class_profile/delete', views.class_profile_delete, name="class_profile_delete"),
     path('class_profile/change', views.class_profile_change, name="class_profile_change"),
+    # Class Subjects
+    path('class_subject/class/<int:id>', views.class_subject_list_view, name="class_subject_list"),
     # Subjects
     path('subjects', views.subject_list_view, name="subject_list"),
     path('subjects/add', views.subject_add, name="subject_add"),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('parents', views.parent_list_view, name="parent_list"),
     path('parents/details/<int:id>', views.parent_view, name="parent"),
     path('parents/add', views.parent_add, name="parent_add"),
+    path('parents/delete', views.parent_delete, name="parent_delete"),
     path('parents/assign', views.parent_assign, name="parent_assign"),
     path('parents/assign/delete', views.parent_assign_delete, name="parent_assign_delete"),
     path('parents/change', views.parent_change, name="parent_change"),

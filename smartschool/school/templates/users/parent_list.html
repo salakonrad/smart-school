@@ -151,15 +151,13 @@
           <h5 class="modal-title" id="staticBackdropLabel">Usuń opiekuna</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="" method="POST" class="settings-form">
+        <form action="{% url 'parent_delete' %}" method="POST" class="settings-form">
           {% csrf_token %}
           <div class="modal-body">
-            <input type="hidden" name="class_id" value="{{ class.squad }}"/>
-            <p>Czy na pewno chcesz usunąć tę klasę?</p>
-            <p><strong>Nazwa: </strong> {{ class.name }}</p>
-            <p><strong>Profil: </strong> {{ class.profile }}</p>
-            <p><strong>Wychowawca: </strong> {{ class.supervisor }}</p>
-            <p>Utworzona <strong>{{ class.created }}</strong> przez użytkownika <strong>{{ class.supervisor }}</strong></p>
+            <input type="hidden" name="parent_id" value="{{ parent.id }}"/>
+            <p>Czy na pewno chcesz usunąć tego opiekuna?</p>
+            <p><strong>Nazwa: </strong> {{ parent.first_name }} {{ parent.last_name }}</p>
+            <p><strong>Login: </strong> {{ parent.username }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>

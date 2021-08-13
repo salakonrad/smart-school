@@ -1,0 +1,150 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+  <div class="col-auto">
+    <h1 class="app-page-title mb-0">Przedmioty w klasie</h1>
+  </div>
+  <div class="col-auto">
+    <div class="page-utilities">
+      <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+        {% if perms.school.view_squad %}
+        <div class="col-auto">
+          <a href="{% url 'time_table' id=data.squad.squad %}" class="btn app-btn-secondary">
+            Powrót do planu lekcji
+          </a>
+        </div>
+        {% endif %}
+        {% if perms.school.add_classprofile %}
+        <div class="col-auto">
+          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_profile">
+            Dodaj nowy profil
+          </button>
+        </div>
+        {% endif %}        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profiles table -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nazwa profilu</th>
+      {% if perms.school.change_classprofile %}
+        <th scope="col"></th>
+      {% endif %}
+      {% if perms.school.delete_classprofile %}
+        <th scope="col"></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for profile in data.class_profiles %}
+      <tr>
+        <td>{{ profile.name }}</td>
+        {% if perms.school.change_classprofile %}
+          <td class="table-btn">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_classprofile{{ profile.class_profile }}">
+              Edytuj
+            </button>
+          </td>
+        {% endif %}
+        {% if perms.school.delete_classprofile %}
+          <td class="table-btn">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_classprofile{{ profile.class_profile }}">
+              Usuń
+            </button>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Add new profile Modal -->
+<div class="modal fade" id="add_profile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nowy profil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'class_profile_add' %}" method="POST" class="settings-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="app-card-settings">
+            <!-- Profile name -->
+            <div class="mb-3">
+              <label for="add-squad-1" class="form-label">Nazwa profilu</label>
+              <input name="name" type="text" class="form-control" id="add-squad-1" value="" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modals for every class -->
+{% for profile in data.class_profiles %}
+  <!-- Delete profile modal -->
+  <div class="modal fade" id="delete_classprofile{{ profile.class_profile }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń profil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'class_profile_delete' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="class_profile_id" value="{{ profile.class_profile }}"/>
+            <p>Czy na pewno chcesz usunąć ten profil?</p>
+            <p><strong>Nazwa: </strong> {{ profile.name }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-danger" value="Usuń">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit profile modal -->
+  <div class="modal fade" id="change_classprofile{{ profile.class_profile }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edytuj profil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'class_profile_change' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="app-card-settings">
+              <input type="hidden" name="class_profile_id" value="{{ profile.class_profile }}"/>
+              <!-- Profile name -->
+              <div class="mb-3">
+                <label for="change-squad-1" class="form-label">Nazwa profilu</label>
+                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ profile.name }}" required>
+              </div>              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}
