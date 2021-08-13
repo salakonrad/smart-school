@@ -68,7 +68,6 @@ class Teacher(User):
         else:
             return False
     
-
 class Parent(User):
     class Meta:
         proxy = True
@@ -193,7 +192,7 @@ class Student(User):
         return self.squad_set.first()
 
 class StudentParent(models.Model):
-    student_parent = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
     parent = models.ForeignKey(Parent, related_name='%(class)s_parent', on_delete=models.CASCADE)
 
@@ -206,9 +205,9 @@ class StudentParent(models.Model):
             connector.student = student
             connector.parent = parent
             connector.save()
-            return connector.student_parent
+            return connector.id
         else:
-            return StudentParent.objects.get(student=student, parent=parent).student_parent
+            return StudentParent.objects.get(student=student, parent=parent).id
 
     def disconnect(student, parent):
         if not StudentParent.objects.filter(student=student, parent=parent).exists():
@@ -219,7 +218,7 @@ class StudentParent(models.Model):
             return True
 
 class ClassProfile(models.Model):
-    class_profile = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
 
     class Meta:
@@ -234,15 +233,15 @@ class ClassProfile(models.Model):
         profile.save()
 
     def remove(profile_id):
-        if ClassProfile.objects.filter(class_profile = profile_id).exists():
-            ClassProfile.objects.get(class_profile = profile_id).delete()
+        if ClassProfile.objects.filter(id = profile_id).exists():
+            ClassProfile.objects.get(id = profile_id).delete()
             return True
         else:
             return False
 
     def edit(profile_data):
-        if ClassProfile.objects.filter(class_profile = profile_data['class_profile_id']).exists():
-            profile = ClassProfile.objects.get(class_profile = profile_data['class_profile_id'])
+        if ClassProfile.objects.filter(id = profile_data['class_profile_id']).exists():
+            profile = ClassProfile.objects.get(id = profile_data['class_profile_id'])
             profile.name = profile_data['name']
             profile.save()
             return True
@@ -250,8 +249,8 @@ class ClassProfile(models.Model):
             return False
 
     def get_by_id(id):
-        if ClassProfile.objects.filter(class_profile = id).exists():
-            return ClassProfile.objects.get(class_profile = id)
+        if ClassProfile.objects.filter(id = id).exists():
+            return ClassProfile.objects.get(id = id)
         else:
             return None
 
@@ -259,7 +258,7 @@ class ClassProfile(models.Model):
         return ClassProfile.objects.all()
 
 class Squad(models.Model):
-    squad = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
     profile = models.ForeignKey(ClassProfile, on_delete=DO_NOTHING, null=True, blank=True)
     supervisor = models.ForeignKey(Teacher, related_name='%(class)s_supervisor', on_delete=DO_NOTHING, null=True, blank=True)
@@ -289,15 +288,15 @@ class Squad(models.Model):
         squad.save()
     
     def remove(class_id):
-        if Squad.objects.filter(squad = class_id).exists():
-            Squad.objects.get(squad = class_id).delete()
+        if Squad.objects.filter(id = class_id).exists():
+            Squad.objects.get(id = class_id).delete()
             return True
         else:
             return False
 
     def edit(class_data, editor):
-        if Squad.objects.filter(squad = class_data['class_id']).exists():
-            squad = Squad.objects.get(squad = class_data['class_id'])
+        if Squad.objects.filter(id = class_data['class_id']).exists():
+            squad = Squad.objects.get(id = class_data['class_id'])
             squad.name = class_data['name']
             squad.profile = ClassProfile.get_by_id(class_data['profile'])
             squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
@@ -315,8 +314,8 @@ class Squad(models.Model):
         self.members.remove(student)
 
     def get_by_id(id):
-        if Squad.objects.filter(squad = id).exists():
-            return Squad.objects.get(squad = id)
+        if Squad.objects.filter(id = id).exists():
+            return Squad.objects.get(id = id)
         else:
             return None
 
@@ -336,14 +335,14 @@ class Squad(models.Model):
         TimeTable.add(self, day, lesson, subject)
 
     def delete_lesson(self, id):
-        if TimeTable.objects.filter(squad=self, time_table=id).exists:
-            TimeTable.objects.get(squad=self, time_table=id).delete()
+        if TimeTable.objects.filter(squad=self, id=id).exists:
+            TimeTable.objects.get(squad=self, id=id).delete()
         else:
             return False
 
     def change_lesson(self, lesson_id, subject_id):
-        if TimeTable.objects.filter(squad=self, time_table=lesson_id).exists:
-            TimeTable.objects.get(squad=self, time_table=lesson_id).change(subject_id)
+        if TimeTable.objects.filter(squad=self, id=lesson_id).exists:
+            TimeTable.objects.get(squad=self, id=lesson_id).change(subject_id)
         else:
             return False
 
@@ -351,7 +350,7 @@ class Squad(models.Model):
         SquadSubject.create(self, subject, teacher)
 
 class Subject(models.Model):
-    subject = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
 
     class Meta:
@@ -364,8 +363,8 @@ class Subject(models.Model):
         return Subject.objects.all().order_by('name')
 
     def get_by_id(id):
-        if Subject.objects.filter(subject = id).exists():
-            return Subject.objects.get(subject = id)
+        if Subject.objects.filter(id = id).exists():
+            return Subject.objects.get(id = id)
         else:
             return None
 
@@ -375,15 +374,15 @@ class Subject(models.Model):
         subject.save()
 
     def remove(subject_id):
-        if Subject.objects.filter(subject = subject_id).exists():
-            Subject.objects.get(subject = subject_id).delete()
+        if Subject.objects.filter(id = subject_id).exists():
+            Subject.objects.get(id = subject_id).delete()
             return True
         else:
             return False
 
     def edit(subject_data):
-        if Subject.objects.filter(subject = subject_data['subject_id']).exists():
-            subject = Subject.objects.get(subject = subject_data['subject_id'])
+        if Subject.objects.filter(id = subject_data['subject_id']).exists():
+            subject = Subject.objects.get(id = subject_data['subject_id'])
             subject.name = subject_data['name']
             subject.save()
             return True
@@ -391,7 +390,7 @@ class Subject(models.Model):
             return False
 
 class SquadSubject(models.Model):
-    squad_subject = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     squad = models.ForeignKey(Squad, related_name='%(class)s_class', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='%(class)s_subject', on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, related_name='%(class)s_teacher', on_delete=models.CASCADE)
@@ -403,8 +402,8 @@ class SquadSubject(models.Model):
         return f"{ self.squad } - { self.subject } | { self.teacher }"
 
     def get_by_id(id):
-        if SquadSubject.objects.filter(squad_subject = id).exists():
-            return SquadSubject.objects.get(squad_subject = id)
+        if SquadSubject.objects.filter(id = id).exists():
+            return SquadSubject.objects.get(id = id)
         else:
             return None
 
@@ -423,7 +422,7 @@ class SquadSubject(models.Model):
         return self
 
 class LessonTable(models.Model):
-    lesson_table = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     number = models.IntegerField()
     start = models.TimeField()
     end = models.TimeField()
@@ -438,13 +437,13 @@ class LessonTable(models.Model):
         return LessonTable.objects.all().order_by('number')
 
     def get_by_id(id):
-        if LessonTable.objects.filter(lesson_table = id).exists():
-            return LessonTable.objects.get(lesson_table = id)
+        if LessonTable.objects.filter(id = id).exists():
+            return LessonTable.objects.get(id = id)
         else:
             return None
 
 class TimeTable(models.Model):
-    time_table = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     DAY_CHOICES = [
         ('M', 'Poniedziałek'),
         ('T', 'Wtorek'),
@@ -512,7 +511,7 @@ class TimeTable(models.Model):
         new_lesson.squad = squad
         new_lesson.subject = subject
         new_lesson.save()
-        return new_lesson.time_table
+        return new_lesson.id
 
     def delete(self):
         super(TimeTable, self).delete()

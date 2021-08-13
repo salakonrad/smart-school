@@ -126,7 +126,7 @@
               <label for="add-parent-6" class="form-label">Klasa</label>
               <select name="squad" class="form-select" id="add-parent-6" aria-label="Wybór klasy">
                 {% for class in data.classes %}
-                  <option value="{{ class.squad }}">{{ class.name }}</option>
+                  <option value="{{ class.id }}">{{ class.name }}</option>
                 {% endfor %}
               </select>
             </div>

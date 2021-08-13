@@ -118,13 +118,13 @@
                             </div>
                             <div class="col text-end">
                                 <a class="btn-sm app-btn-secondary" href="{% url 'parent' id=parent.parent.id %}">Szczegóły</a>
-                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ parent.student_parent }}">Usuń powiązanie</button>
+                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ parent.id }}">Usuń powiązanie</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Delete assign modal -->
-                    <div class="modal fade" id="delete_parent_assign{{ parent.student_parent }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="delete_parent_assign{{ parent.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -246,10 +246,10 @@
                             <label for="add-student-5" class="form-label">Klasa</label>
                             <select name="squad" class="form-select" id="add-student-5" aria-label="Wybór klasy">
                                 {% for class in data.classes %}
-                                {% if class.squad == data.student.squad_set.first.squad %}
-                                <option value="{{ class.squad }}" selected>{{ class.name }}</option>
+                                {% if class.id == data.student.squad_set.first.id %}
+                                <option value="{{ class.id }}" selected>{{ class.name }}</option>
                                 {% else %}
-                                <option value="{{ class.squad }}">{{ class.name }}</option>
+                                <option value="{{ class.id }}">{{ class.name }}</option>
                                 {% endif %}
                                 {% endfor %}
                             </select>

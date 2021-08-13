@@ -24,7 +24,7 @@
     </thead>
     <tbody>
         {% for class in data.classes %}
-        <tr class="class_choice pointer" onclick="location.href='{% url 'time_table' id=class.squad %}';">
+        <tr class="class_choice pointer" onclick="location.href='{% url 'time_table' id=class.id %}';">
             <td>{{ class.name }}</td>
             <td>{{ class.year_start }}-{{ class.year_end }}</td>
             <td>{{ class.supervisor }}</td>            
