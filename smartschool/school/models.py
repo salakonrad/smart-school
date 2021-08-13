@@ -312,6 +312,9 @@ class Squad(models.Model):
         else:
             return False
 
+    def create_subject(self, subject, teacher):
+        SquadSubject.create(self, subject, teacher)
+
 class Subject(models.Model):
     subject = models.AutoField(primary_key=True)
     name = models.CharField(max_length=36)
@@ -324,6 +327,12 @@ class Subject(models.Model):
 
     def get_all():
         return Subject.objects.all().order_by('name')
+
+    def get_by_id(id):
+        if Subject.objects.filter(subject = id).exists():
+            return Subject.objects.get(subject = id)
+        else:
+            return None
 
     def add(subject_data):
         subject = Subject()
@@ -363,6 +372,14 @@ class SquadSubject(models.Model):
             return SquadSubject.objects.get(squad_subject = id)
         else:
             return None
+
+    def create(squad, subject, teacher):
+        new = SquadSubject()
+        new.squad = squad
+        new.subject = subject
+        new.teacher = teacher
+        new.save()
+        return new
 
 class LessonTable(models.Model):
     lesson_table = models.AutoField(primary_key=True)

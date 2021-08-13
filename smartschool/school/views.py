@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 
 from .forms import *
-from .models import LessonTable, Squad, ClassProfile, SquadSubject, Student, Parent, Subject, TimeTable
+from .models import *
 
 
 # /
@@ -192,9 +192,68 @@ def class_subject_list_view(request, id):
     squad = Squad.get_by_id(id)
     data = {
         'squad': squad,
-        'class_subjects': squad.get_subjects()
+        'class_subjects': squad.get_subjects(),
+        'subjects': Subject.get_all(),
+        'teachers': Teacher.get_all()
     }
     return render(request, 'class/class_subjects.html', {'data': data})
+
+
+# /class_subjects/add
+@login_required
+@permission_required('school.add_classprofile', raise_exception=True)
+def class_subject_add(request):
+    if request.method == 'POST':
+        form = AddClassSubjectForm(request.POST)
+        if form.is_valid():
+            squad = Squad.get_by_id(form.cleaned_data['squad_id'])
+            squad.create_subject(*[
+                Subject.get_by_id(form.cleaned_data['subject_id']),
+                Teacher.get_by_id(form.cleaned_data['teacher_id'])
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /class_subjects/delete
+@login_required
+@permission_required('school.delete_classprofile', raise_exception=True)
+def class_subject_delete(request):
+    if request.method == 'POST':
+        form = DeleteClassSubjectForm(request.POST)
+        if form.is_valid():
+            squad_subject = SquadSubject.get_by_id(form.cleaned_data['squad_subject_id'])
+            squad_subject.delete()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /class_subjects/change
+@login_required
+@permission_required('school.change_classprofile', raise_exception=True)
+def class_subject_change(request, error_message=None):
+    if request.method == 'POST':
+        form = ChangeProfileForm(request.POST)
+        if form.is_valid():
+            profile_id = form.cleaned_data['class_subject_id']
+            profile_name = form.cleaned_data['name']
+            ClassProfile.edit({
+                'class_subject_id': profile_id,
+                'name': profile_name
+            })
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # /subjects

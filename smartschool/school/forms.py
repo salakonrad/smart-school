@@ -25,6 +25,17 @@ class ChangeSquadForm(forms.Form):
     year_start = forms.IntegerField()
 
 
+# Class subjects
+
+class AddClassSubjectForm(forms.Form):
+    squad_id = forms.IntegerField()
+    teacher_id = forms.IntegerField()
+    subject_id = forms.IntegerField()
+
+class DeleteClassSubjectForm(forms.Form):
+    squad_subject_id = forms.IntegerField()
+
+
 # Class profiles
 
 class AddProfileForm(forms.Form):
