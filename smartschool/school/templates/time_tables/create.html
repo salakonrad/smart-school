@@ -1,5 +1,5 @@
 <!-- Add new lesson modal -->
-<div class="modal fade" id="add_lesson{{ lesson_no.lesson_table }}{{ day }}{{ squad.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+<div class="modal fade" id="add_lesson{{ lesson_no.id }}{{ day }}{{ squad.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,15 +11,15 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <input type="hidden" name="day" value="{{ day }}" />
-                    <input type="hidden" name="lesson_id" value="{{ lesson_no.lesson_table }}" />
-                    <input type="hidden" name="squad_id" value="{{ squad.squad }}" />
+                    <input type="hidden" name="lesson_id" value="{{ lesson_no.id }}" />
+                    <input type="hidden" name="squad_id" value="{{ squad.id }}" />
                     <p><strong>Godziny: </strong> Od {{ lesson_no.start }} do {{ lesson_no.end }}</p>
                     <!-- Lesson -->
                     <div class="mb-3">
                         <label for="add-lesson-1" class="form-label">Przedmiot</label>
                         <select name="subject_id" class="form-select" id="add-lesson-1" aria-label="Wybór przedmiotu">
                         {% for subject in data.subjects %}
-                            <option value="{{ subject.squad_subject }}" selected>{{ subject.subject }} ({{ subject.teacher }})</option>
+                            <option value="{{ subject.id }}" selected>{{ subject.subject }} ({{ subject.teacher }})</option>
                         {% endfor %}
                         </select>
                     </div>

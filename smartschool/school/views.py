@@ -697,7 +697,7 @@ def time_table_list_view(request):
         # Show only student class
         student = Student.get_by_id(request.user.id)
         squad = student.get_class()
-        return time_table_view(request, squad.squad)
+        return time_table_view(request, squad.id)
     else:
         # Show all classes
         data = {
@@ -733,7 +733,7 @@ def time_table_add(request):
                 LessonTable.get_by_id(form.cleaned_data['lesson_id']),                
                 SquadSubject.get_by_id(form.cleaned_data['subject_id'])
             ])
-            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+            return HttpResponseRedirect(f'/timetables/details/{ squad.id }')
         else:
             print(form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -752,7 +752,7 @@ def time_table_delete(request):
             squad.delete_lesson(*[
                 form.cleaned_data['time_table_id']
             ])
-            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+            return HttpResponseRedirect(f'/timetables/details/{ squad.id }')
         else:
             print(form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -772,7 +772,7 @@ def time_table_change(request):
                 form.cleaned_data['time_table_id'],
                 form.cleaned_data['subject_id']
             ])
-            return HttpResponseRedirect(f'/timetables/details/{ squad.squad }')
+            return HttpResponseRedirect(f'/timetables/details/{ squad.id }')
         else:
             print(form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -104,13 +104,13 @@
                             </div>
                             <div class="col text-end">
                                 <a class="btn-sm app-btn-secondary" href="{% url 'student' id=student.student.id %}">Szczegóły</a>
-                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ student.student_parent }}">Usuń powiązanie</button>
+                                <button class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent_assign{{ student.id }}">Usuń powiązanie</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Delete assign modal -->
-                    <div class="modal fade" id="delete_parent_assign{{ student.student_parent }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="delete_parent_assign{{ student.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">

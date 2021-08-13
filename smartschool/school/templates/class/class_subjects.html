@@ -11,7 +11,7 @@
       <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
         {% if perms.school.view_squad %}
         <div class="col-auto">
-          <a href="{% url 'time_table' id=data.squad.squad %}" class="btn app-btn-secondary">
+          <a href="{% url 'time_table' id=data.squad.id %}" class="btn app-btn-secondary">
             Powrót do planu lekcji
           </a>
         </div>
@@ -50,7 +50,7 @@
       {% if perms.school.change_squadsubject %}
       <td class="table-btn">
         <button type="button" class="btn app-btn-primary" data-bs-toggle="modal"
-          data-bs-target="#change_squadsubject{{ subject.squad_subject }}">
+          data-bs-target="#change_squadsubject{{ subject.id }}">
           Edytuj
         </button>
       </td>
@@ -58,7 +58,7 @@
       {% if perms.school.delete_squadsubject %}
       <td class="table-btn">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-          data-bs-target="#delete_squadsubject{{ subject.squad_subject }}">
+          data-bs-target="#delete_squadsubject{{ subject.id }}">
           Usuń
         </button>
       </td>
@@ -81,13 +81,13 @@
         {% csrf_token %}
         <div class="modal-body">
           <div class="app-card-settings">
-            <input name="squad_id" type="hidden" value="{{ data.squad.squad }}" required>
+            <input name="squad_id" type="hidden" value="{{ data.squad.id }}" required>
 
             <div class="mb-3">
               <label for="add-subject-1" class="form-label">Przedmiot</label>
               <select name="subject_id" class="form-select" id="add-subject-1" aria-label="Wybór przedmiotu">
                 {% for subject in data.subjects %}
-                <option value="{{ subject.subject }}" selected>{{ subject.name }}</option>
+                <option value="{{ subject.id }}" selected>{{ subject.name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -115,7 +115,7 @@
 <!-- Modals for every class -->
 {% for subject in data.class_subjects %}
 <!-- Delete profile modal -->
-<div class="modal fade" id="delete_squadsubject{{ subject.squad_subject }}" tabindex="-1"
+<div class="modal fade" id="delete_squadsubject{{ subject.id }}" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -126,7 +126,7 @@
       <form action="{% url 'class_subject_delete' %}" method="POST" class="settings-form">
         {% csrf_token %}
         <div class="modal-body">
-          <input type="hidden" name="squad_subject_id" value="{{ subject.squad_subject }}" />
+          <input type="hidden" name="squad_subject_id" value="{{ subject.id }}" />
           <p>Czy na pewno chcesz usunąć ten przedmiot?</p>
           <p><strong>Przedmiot: </strong> {{ subject.subject.name }}</p>
           <p><strong>Nauczyciel: </strong> {{ subject.teacher.first_name }} {{ subject.teacher.last_name }}</p>
@@ -141,7 +141,7 @@
 </div>
 
 <!-- Edit profile modal -->
-<div class="modal fade" id="change_squadsubject{{ subject.squad_subject }}" data-bs-backdrop="static"
+<div class="modal fade" id="change_squadsubject{{ subject.id }}" data-bs-backdrop="static"
   data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -154,17 +154,17 @@
         <div class="modal-body">
           <div class="app-card-settings">
 
-            <input name="squad_id" type="hidden" value="{{ data.squad.squad }}" required>
-            <input type="hidden" name="squad_subject_id" value="{{ subject.squad_subject }}" />
+            <input name="squad_id" type="hidden" value="{{ data.squad.id }}" required>
+            <input type="hidden" name="squad_subject_id" value="{{ subject.id }}" />
 
             <div class="mb-3">
               <label for="add-subject-1" class="form-label">Przedmiot</label>
               <select name="subject_id" class="form-select" id="add-subject-1" aria-label="Wybór przedmiotu">
                 {% for subject_ in data.subjects %}
-                {% if subject.subject.subject == subject_.subject %}
-                <option value="{{ subject_.subject }}" selected>{{ subject_.name }}</option>
+                {% if subject.subject.id == subject_.id %}
+                <option value="{{ subject_.id }}" selected>{{ subject_.name }}</option>
                 {% else %}
-                <option value="{{ subject_.subject }}">{{ subject_.name }}</option>
+                <option value="{{ subject_.id }}">{{ subject_.name }}</option>
                 {% endif %}
                 {% endfor %}
               </select>

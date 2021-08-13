@@ -1,5 +1,5 @@
 <!-- Delete lesson modal -->
-<div class="modal fade" id="delete_lesson{{ lesson.time_table }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+<div class="modal fade" id="delete_lesson{{ lesson.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,8 +10,8 @@
             <form action="{% url 'time_table_delete' %}" method="POST" class="settings-form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="hidden" name="time_table_id" value="{{ lesson.time_table }}" />
-                    <input type="hidden" name="squad_id" value="{{ lesson.squad.squad }}" />
+                    <input type="hidden" name="time_table_id" value="{{ lesson.id }}" />
+                    <input type="hidden" name="squad_id" value="{{ lesson.squad.id }}" />
                     <p>Czy na pewno chcesz usunąć tą lekcję?</p>
                     <p><strong>Numer lekcji: </strong> {{ lesson.lesson_number.number }}</p>
                     <p><strong>Przedmiot: </strong> {{ lesson.subject.subject.name }}</p>                    

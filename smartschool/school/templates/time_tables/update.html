@@ -1,5 +1,5 @@
 <!-- Change lesson modal -->
-<div class="modal fade" id="change_lesson{{ lesson.time_table }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+<div class="modal fade" id="change_lesson{{ lesson.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,8 +10,8 @@
             <form action="{% url 'time_table_change' %}" method="POST" class="settings-form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="hidden" name="time_table_id" value="{{ lesson.time_table }}" />
-                    <input type="hidden" name="squad_id" value="{{ lesson.squad.squad }}" />
+                    <input type="hidden" name="time_table_id" value="{{ lesson.id }}" />
+                    <input type="hidden" name="squad_id" value="{{ lesson.squad.id }}" />
                     <!-- Lesson -->
                     <div class="mb-3">
                         <p><strong>Dzień tygodnia: </strong> {{ lesson.get_day_display }}</p>
@@ -19,10 +19,10 @@
                         <label for="add-lesson-1" class="form-label">Przedmiot</label>
                         <select name="subject_id" class="form-select" id="add-lesson-1" aria-label="Wybór przedmiotu">
                         {% for subject in data.subjects %}
-                            {% if subject.squad_subject == lesson.subject.squad_subject %}
-                                <option value="{{ subject.squad_subject }}" selected>{{ subject.subject }} ({{ subject.teacher }})</option>
+                            {% if subject.id == lesson.subject.id %}
+                                <option value="{{ subject.id }}" selected>{{ subject.subject }} ({{ subject.teacher }})</option>
                             {% else %}
-                                <option value="{{ subject.squad_subject }}">{{ subject.subject }} ({{ subject.teacher }})</option>
+                                <option value="{{ subject.id }}">{{ subject.subject }} ({{ subject.teacher }})</option>
                             {% endif %}
                         {% endfor %}
                         </select>

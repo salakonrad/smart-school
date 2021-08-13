@@ -53,14 +53,14 @@
         <td>{{ class.supervisor }}</td>
         {% if perms.school.change_squad %}
           <td class="table-btn">
-            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.squad }}">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.id }}">
               Edytuj
             </button>
           </td>
         {% endif %}
         {% if perms.school.delete_squad %}
           <td class="table-btn">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.squad }}">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_squad{{ class.id }}">
               Usuń
             </button>
           </td>
@@ -97,7 +97,7 @@
               <label for="add-squad-2" class="form-label">Profil klasy</label>
               <select name="profile" class="form-select" id="add-squad-2" aria-label="Wybór profilu klasy">
                 {% for profile in data.profiles %}
-                  <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                  <option value="{{ profile.id }}">{{ profile.name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -124,7 +124,7 @@
 <!-- Modals for every class -->
 {% for class in data.classes %}
   <!-- Delete class modal -->
-  <div class="modal fade" id="delete_squad{{ class.squad }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="delete_squad{{ class.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -134,7 +134,7 @@
         <form action="{% url 'class_delete' %}" method="POST" class="settings-form">
           {% csrf_token %}
           <div class="modal-body">
-            <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+            <input type="hidden" name="class_id" value="{{ class.id }}"/>
             <p>Czy na pewno chcesz usunąć tę klasę?</p>
             <p><strong>Nazwa: </strong> {{ class.name }}</p>
             <p><strong>Rocznik: </strong> {{ class.year_start }}-{{ class.year_end }}</p>
@@ -152,7 +152,7 @@
   </div>
 
   <!-- Edit class modal -->
-  <div class="modal fade" id="change_squad{{ class.squad }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="change_squad{{ class.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -163,7 +163,7 @@
           {% csrf_token %}
           <div class="modal-body">
             <div class="app-card-settings">
-              <input type="hidden" name="class_id" value="{{ class.squad }}"/>
+              <input type="hidden" name="class_id" value="{{ class.id }}"/>
               <!-- Class name -->
               <div class="mb-3">
                 <label for="change-squad-1" class="form-label">Nazwa klasy</label>
@@ -179,10 +179,10 @@
                 <label for="change-squad-2" class="form-label">Profil klasy</label>
                 <select name="profile" class="form-select" id="change-squad-2" aria-label="Wybór profilu klasy">
                   {% for profile in data.profiles %}
-                    {% if profile.class_profile == class.profile.class_profile %}
-                      <option value="{{ profile.class_profile }}" selected>{{ profile.name }}</option>
+                    {% if profile.id == class.profile.id %}
+                      <option value="{{ profile.id }}" selected>{{ profile.name }}</option>
                     {% else %}
-                      <option value="{{ profile.class_profile }}">{{ profile.name }}</option>
+                      <option value="{{ profile.id }}">{{ profile.name }}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
