@@ -201,7 +201,7 @@ def class_subject_list_view(request, id):
 
 # /class_subjects/add
 @login_required
-@permission_required('school.add_classprofile', raise_exception=True)
+@permission_required('school.add_squadsubject', raise_exception=True)
 def class_subject_add(request):
     if request.method == 'POST':
         form = AddClassSubjectForm(request.POST)
@@ -221,7 +221,7 @@ def class_subject_add(request):
 
 # /class_subjects/delete
 @login_required
-@permission_required('school.delete_classprofile', raise_exception=True)
+@permission_required('school.delete_squadsubject', raise_exception=True)
 def class_subject_delete(request):
     if request.method == 'POST':
         form = DeleteClassSubjectForm(request.POST)
@@ -238,17 +238,16 @@ def class_subject_delete(request):
 
 # /class_subjects/change
 @login_required
-@permission_required('school.change_classprofile', raise_exception=True)
-def class_subject_change(request, error_message=None):
+@permission_required('school.change_squadsubject', raise_exception=True)
+def class_subject_change(request):
     if request.method == 'POST':
-        form = ChangeProfileForm(request.POST)
+        form = ChangeClassSubjectForm(request.POST)
         if form.is_valid():
-            profile_id = form.cleaned_data['class_subject_id']
-            profile_name = form.cleaned_data['name']
-            ClassProfile.edit({
-                'class_subject_id': profile_id,
-                'name': profile_name
-            })
+            squad_subject = SquadSubject.get_by_id(form.cleaned_data['squad_subject_id'])
+            squad_subject.change(*[
+                Subject.get_by_id(form.cleaned_data['subject_id']),
+                Teacher.get_by_id(form.cleaned_data['teacher_id'])
+            ])
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

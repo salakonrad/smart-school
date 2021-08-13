@@ -381,6 +381,12 @@ class SquadSubject(models.Model):
         new.save()
         return new
 
+    def change(self, subject, teacher):
+        self.subject = subject
+        self.teacher = teacher
+        self.save()
+        return self
+
 class LessonTable(models.Model):
     lesson_table = models.AutoField(primary_key=True)
     number = models.IntegerField()
