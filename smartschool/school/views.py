@@ -463,10 +463,7 @@ def teacher_list_view(request):
 def teacher_view(request, id):
     teacher = Teacher.get_by_id(id)
     data = {
-        'teacher': teacher,
-        'parents': teacher.get_parents(),
-        'classes': Squad.get_all(),
-        'parents_list': Parent.get_all()
+        'teacher': teacher
     }
     return render(request, 'users/teacher.html', {'data': data})
 
@@ -483,8 +480,7 @@ def teacher_add(request):
                 'password': form.cleaned_data['password'],
                 'first_name': form.cleaned_data['first_name'],
                 'last_name': form.cleaned_data['last_name'],
-                'email': form.cleaned_data['email'],
-                'squad': form.cleaned_data['squad']
+                'email': form.cleaned_data['email']
             })
             return HttpResponseRedirect(f'/teachers/details/{teacher_id}')
         else:
@@ -522,8 +518,7 @@ def teacher_change(request):
                 'username': form.cleaned_data['username'],
                 'first_name': form.cleaned_data['first_name'],
                 'last_name': form.cleaned_data['last_name'],
-                'email': form.cleaned_data['email'],
-                'squad': form.cleaned_data['squad']
+                'email': form.cleaned_data['email']
             })
             return HttpResponseRedirect(f'/teachers/details/{teacher_id}')
         else:

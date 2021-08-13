@@ -90,6 +90,26 @@ class ChangeStudentForm(forms.Form):
     squad = forms.IntegerField()
 
 
+# Teachers
+
+class AddTeacherForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    email = forms.CharField(required=False)
+
+class DeleteTeacherForm(forms.Form):
+    teacher_id = forms.IntegerField()
+
+class ChangeTeacherForm(forms.Form):
+    teacher_id = forms.IntegerField()
+    username = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    email = forms.CharField(required=False)
+
+
 # Parents
 
 class AddParentForm(forms.Form):

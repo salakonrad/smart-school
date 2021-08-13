@@ -34,6 +34,41 @@ class Teacher(User):
     def get_initials(self):
         return f"{self.first_name[:1]}{self.last_name[:1]}"
 
+    def find(search):
+        teachers = Teacher.objects.filter(groups__name='teachers')
+        for term in search.split(' '):
+            teachers = teachers.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term) | Q(squad__name__icontains = term))
+        return teachers
+
+    def add(teacher_data):
+        teacher = Teacher.objects.create_user(teacher_data['username'], teacher_data['email'], teacher_data['password'])
+        teacher.first_name = teacher_data['first_name']
+        teacher.last_name = teacher_data['last_name']
+        teacher.save()
+        teacher_group = Group.objects.get(name='Teachers')
+        teacher.groups.add(teacher_group)
+        return teacher.id
+
+    def remove(teacher_id):
+        if Teacher.objects.filter(id = teacher_id, groups__name='Teachers').exists():
+            Teacher.objects.get(id = teacher_id, groups__name='Teachers').delete()
+            return True
+        else:
+            return False
+
+    def edit(teacher_data):
+        if Teacher.objects.filter(id = teacher_data['teacher_id']).exists():
+            teacher = Teacher.objects.get(id = teacher_data['teacher_id'])
+            teacher.first_name = teacher_data['first_name']
+            teacher.last_name = teacher_data['last_name']
+            teacher.email = teacher_data['email']
+            teacher.username = teacher_data['username']
+            teacher.save()     
+            return True
+        else:
+            return False
+    
+
 class Parent(User):
     class Meta:
         proxy = True
