@@ -149,7 +149,7 @@
         <h5 class="modal-title" id="staticBackdropLabel">Edytuj przedmiot</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{% url 'class_profile_change' %}" method="POST" class="settings-form">
+      <form action="{% url 'class_subject_change' %}" method="POST" class="settings-form">
         {% csrf_token %}
         <div class="modal-body">
           <div class="app-card-settings">
