@@ -538,7 +538,6 @@ class TimeTable(models.Model):
 
 class Grade(models.Model):
     id = models.AutoField(primary_key=True)
-    squad = models.ForeignKey(Squad, related_name='%(class)s_class', on_delete=models.CASCADE)
     subject = models.ForeignKey(SquadSubject, related_name='%(class)s_subject', on_delete=models.CASCADE)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
     grade = models.CharField(max_length=4)
