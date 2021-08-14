@@ -152,3 +152,12 @@ class ChangeLessonForm(forms.Form):
     time_table_id = forms.IntegerField()
     squad_id = forms.IntegerField()
     subject_id = forms.IntegerField()
+
+
+# Grades
+
+class AddGradeForm(forms.Form):
+    student_id = forms.IntegerField()
+    subject_id = forms.IntegerField()
+    grade = forms.CharField(max_length=4)
+    description = forms.CharField(max_length=64)

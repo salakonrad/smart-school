@@ -51,7 +51,9 @@ urlpatterns = [
     path('timetables/delete', views.time_table_delete, name="time_table_delete"),
     path('timetables/change', views.time_table_change, name="time_table_change"),
     # Grades
-    path('grades/student/<int:id>', views.grade_view, name="grade_view"),
+    path('grades', views.grade_list_view, name="grade_list"),
+    path('grades/student/<int:id>', views.grade_view, name="grade"),
+    path('grades/add', views.grade_add, name='grade_add'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
