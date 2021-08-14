@@ -785,6 +785,7 @@ def time_table_change(request):
 def grade_view(request, id):
     student = Student.get_by_id(id)
     data = {
+        'student': student,
         'grades': student.get_grades()
     }
     return render(request, 'grades/grades.html', {'data': data})
