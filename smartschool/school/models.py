@@ -191,6 +191,22 @@ class Student(User):
     def get_class(self):
         return self.squad_set.first()
 
+    def get_grade(self, subject):
+        return Grade.objects.filter(student=self, subject=subject)
+
+    def get_grades(self):
+        subjects = self.get_class().get_subjects()
+        grades_list = []
+        for subject in subjects:
+            grades_list.append(
+                {
+                    'subject': subject,
+                    'grades': self.get_grade(subject)
+                }
+            )
+        print(grades_list)
+        return grades_list
+
 class StudentParent(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)

@@ -778,3 +778,13 @@ def time_table_change(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /grades/student/id
+@login_required
+def grade_view(request, id):
+    student = Student.get_by_id(id)
+    data = {
+        'grades': student.get_grades()
+    }
+    return render(request, 'grades/grades.html', {'data': data})
