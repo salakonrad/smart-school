@@ -47,17 +47,14 @@
                                     </td>
                                     <td class="cell text-right">
                                         {% if perms.school.add_grade %}
-                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_grade">Dodaj ocenę</a>
+                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_grade{{ subject.subject.id }}">Dodaj ocenę</a>
                                         {% endif %}
                                     </td>
                                 </tr>
-                                {% comment %}
-                                <!-- Change machine Modal -->
-                                {% include "machine/change.html" with machine=machine %}
 
-                                <!-- Delete machine Modal -->
-                                {% include "machine/delete.html" with machine=machine %}
-                                {% endcomment %}
+                                <!-- Add grade Modal -->
+                                {% include "grades/create.html" with subject=subject %}
+
                             {% endfor %}
                         </tbody>
                     </table>

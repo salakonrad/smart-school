@@ -671,7 +671,6 @@ def parent_change(request):
 # /timetables
 @login_required
 def time_table_list_view(request):
-    print(request.user.groups)
     if request.user.groups.filter(name="Principals").exists():
         # Show all classes
         data = {
@@ -780,6 +779,24 @@ def time_table_change(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+# /grades
+@login_required
+@permission_required('school.view_grade', raise_exception=True)
+def grade_list_view(request):
+    if request.user.groups.filter(name="Principals").exists():
+        pass
+    elif request.user.groups.filter(name="Teachers").exists():
+        pass
+    elif request.user.groups.filter(name="Parents").exists():
+        pass
+    elif request.user.groups.filter(name="Students").exists():
+        # Show only student grades
+        student = Student.get_by_id(request.user.id)
+        return grade_view(request, student.id)
+    else:
+        pass
+
+
 # /grades/student/id
 @login_required
 def grade_view(request, id):
@@ -789,3 +806,24 @@ def grade_view(request, id):
         'grades': student.get_grades()
     }
     return render(request, 'grades/grades.html', {'data': data})
+
+
+# /grades/add
+@login_required
+@permission_required('school.add_grade', raise_exception=True)
+def grade_add(request):
+    if request.method == 'POST':
+        form = AddGradeForm(request.POST)
+        if form.is_valid():
+            student = Student.get_by_id(form.cleaned_data['student_id'])
+            student.add_grade(*[
+                SquadSubject.get_by_id(form.cleaned_data['subject_id']),
+                form.cleaned_data['grade'],
+                form.cleaned_data['description']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

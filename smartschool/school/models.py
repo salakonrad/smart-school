@@ -204,8 +204,11 @@ class Student(User):
                     'grades': self.get_grade(subject)
                 }
             )
-        print(grades_list)
         return grades_list
+
+    def add_grade(self, squad_subject, grade, description):
+        Grade.add(self, squad_subject, grade, description)
+
 
 class StudentParent(models.Model):
     id = models.AutoField(primary_key=True)
@@ -549,3 +552,12 @@ class Grade(models.Model):
 
     def __str__(self):
         return f"{ self.grade }"
+
+    def add(student, subject, grade, description):
+        new = Grade()
+        new.subject = subject
+        new.student = student
+        new.grade = grade
+        new.description = description
+        new.save()
+        return new.id
