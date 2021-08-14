@@ -160,4 +160,4 @@ class AddGradeForm(forms.Form):
     student_id = forms.IntegerField()
     subject_id = forms.IntegerField()
     grade = forms.CharField(max_length=4)
-    description = forms.CharField(max_length=64)
+    description = forms.CharField(max_length=64, required=False)
