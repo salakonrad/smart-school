@@ -519,3 +519,18 @@ class TimeTable(models.Model):
     def change(self, subject_id):
         self.subject = SquadSubject.get_by_id(subject_id)
         self.save()
+
+class Grade(models.Model):
+    id = models.AutoField(primary_key=True)
+    squad = models.ForeignKey(Squad, related_name='%(class)s_class', on_delete=models.CASCADE)
+    subject = models.ForeignKey(SquadSubject, related_name='%(class)s_subject', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
+    grade = models.CharField(max_length=4)
+    description = models.CharField(max_length=64, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'grades'
+
+    def __str__(self):
+        return f"{ self.grade }"
