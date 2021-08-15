@@ -556,11 +556,12 @@ class Grade(models.Model):
     def __str__(self):
         return f"{ self.grade }"
 
-    def add(student, subject, grade, description):
+    def add(issuer, student, subject, grade, description):
         new = Grade()
         new.subject = subject
         new.student = student
         new.grade = grade
         new.description = description
+        new.issued_by = issuer
         new.save()
         return new.id
