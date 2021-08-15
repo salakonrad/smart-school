@@ -206,8 +206,8 @@ class Student(User):
             )
         return grades_list
 
-    def add_grade(self, squad_subject, grade, description):
-        Grade.add(self, squad_subject, grade, description)
+    def add_grade(self, issuer, squad_subject, grade, description):
+        Grade.add(issuer, self, squad_subject, grade, description)
 
 
 class StudentParent(models.Model):
