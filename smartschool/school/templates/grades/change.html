@@ -1,0 +1,32 @@
+<!-- Edit grade modal -->
+<div class="modal fade" id="change_grade{{ grade.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edytuj ocenę</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'grade_change' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="grade_id" value="{{ grade.id }}" />
+
+                    <div class="mb-3">
+                        <label for="edit-grade-1" class="form-label">Ocena</label>
+                        <input name="grade" type="text" class="form-control" id="edit-grade-1" value="{{ grade.grade }}" required maxlength="4">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit-grade-2" class="form-label">Opis</label>
+                        <textarea name="description" type="text" class="form-control" id="edit-grade-2" maxlength="64">{{ grade.description | default:'' }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Edytuj">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

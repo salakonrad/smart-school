@@ -54,6 +54,8 @@ urlpatterns = [
     path('grades', views.grade_list_view, name="grade_list"),
     path('grades/student/<int:id>', views.grade_view, name="grade"),
     path('grades/add', views.grade_add, name='grade_add'),
+    path('grades/delete', views.grade_delete, name='grade_delete'),
+    path('grades/change', views.grade_change, name='grade_change'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
