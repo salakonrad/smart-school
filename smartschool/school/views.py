@@ -828,3 +828,41 @@ def grade_add(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /grades/change
+@login_required
+@permission_required('school.change_grade', raise_exception=True)
+def grade_change(request):
+    if request.method == 'POST':
+        form = ChangeGradeForm(request.POST)
+        if form.is_valid():
+            grade = Grade.get_by_id(form.cleaned_data['grade_id'])
+            grade.change(*[
+                request.user,
+                form.cleaned_data['grade'],
+                form.cleaned_data['description']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /grades/delete
+@login_required
+@permission_required('school.delete_grade', raise_exception=True)
+def grade_delete(request):
+    if request.method == 'POST':
+        form = DeleteGradeForm(request.POST)
+        if form.is_valid():
+            grade = Grade.get_by_id(form.cleaned_data['grade_id'])
+            grade.delete()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

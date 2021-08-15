@@ -42,7 +42,8 @@
                                     <td class="cell">{{ subject.subject.teacher }}</td>
                                     <td class="cell">
                                         {% for grade in subject.grades %}
-                                            <span class="badge bg-success">{{ grade }}</span>
+                                            <span class="badge bg-success pointer" data-bs-toggle="modal" data-bs-target="#grade_details{{ grade.id }}">{{ grade }}</span>
+                                            {% include "grades/details.html" with grade=grade %}
                                         {% endfor %}
                                     </td>
                                     <td class="cell text-right">

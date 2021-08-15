@@ -556,6 +556,12 @@ class Grade(models.Model):
     def __str__(self):
         return f"{ self.grade }"
 
+    def get_by_id(id):
+        if Grade.objects.filter(id=id).exists():
+            return Grade.objects.get(id=id)
+        else:
+            return False
+
     def add(issuer, student, subject, grade, description):
         new = Grade()
         new.subject = subject
@@ -564,4 +570,12 @@ class Grade(models.Model):
         new.description = description
         new.issued_by = issuer
         new.save()
-        return new.id
+        return new
+
+    def change(self, editor, grade, description):
+        self.grade = grade
+        self.description = description
+        self.edited_by = editor
+        self.edit_date = datetime.now()
+        self.save()
+        return self

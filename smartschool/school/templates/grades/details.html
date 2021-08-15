@@ -1,0 +1,33 @@
+<!-- Grade details modal -->
+<div class="modal fade" id="grade_details{{ grade.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Szczegóły oceny</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="app-card-settings">
+                    <div class="mb-3">
+                        <p class="text-center display-5">Ocena: <strong>{{ grade }}</strong></p>
+                        {% if grade.description %}
+                        <p class="fs-5">Opis: <strong>{{ grade.description }}</strong></p>
+                        {% endif %}
+                        <p>Wystawiona <strong>{{ grade.issue_date }}</strong> przez {{ grade.issued_by }}</p>
+                        {% if grade.edited_by %}
+                        <p>Edytowana <strong>{{ grade.edit_date }}</strong> przez {{ grade.edited_by }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_grade{{ grade.id }}">Usuń</button>
+                {% include "grades/delete.html" with grade=grade %}
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#change_grade{{ grade.id }}">Edytuj</button>
+                {% include "grades/change.html" with grade=grade %}
+            </div>
+        </div>
+    </div>
+</div>
