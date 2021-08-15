@@ -545,7 +545,10 @@ class Grade(models.Model):
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
     grade = models.CharField(max_length=4)
     description = models.CharField(max_length=64, null=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
+    issue_date = models.DateTimeField(auto_now_add=True)
+    issued_by = models.ForeignKey(Teacher, related_name='%(class)s_issued_by', on_delete=models.CASCADE)
+    edit_date = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    edited_by = models.ForeignKey(Teacher, related_name='%(class)s_edited_by', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = 'grades'
