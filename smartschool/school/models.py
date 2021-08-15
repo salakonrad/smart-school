@@ -209,7 +209,6 @@ class Student(User):
     def add_grade(self, issuer, squad_subject, grade, description):
         Grade.add(issuer, self, squad_subject, grade, description)
 
-
 class StudentParent(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
@@ -321,6 +320,8 @@ class Squad(models.Model):
             squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
             squad.edited = datetime.now()
             squad.edited_by = editor
+            squad.year_start = class_data['year_start']
+            squad.year_end = squad.year_start + 1
             squad.save()
             return True
         else:
