@@ -817,6 +817,7 @@ def grade_add(request):
         if form.is_valid():
             student = Student.get_by_id(form.cleaned_data['student_id'])
             student.add_grade(*[
+                request.user,
                 SquadSubject.get_by_id(form.cleaned_data['subject_id']),
                 form.cleaned_data['grade'],
                 form.cleaned_data['description']
