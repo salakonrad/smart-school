@@ -342,6 +342,9 @@ class Squad(models.Model):
     def get_all():
         return Squad.objects.filter(active=True).order_by('name')
 
+    def get_all_students(self):
+        return self.members.all()
+
     def get_profiles():
         return ClassProfile.get_all()
 
