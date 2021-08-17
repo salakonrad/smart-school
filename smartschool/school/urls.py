@@ -53,6 +53,7 @@ urlpatterns = [
     # Grades
     path('grades', views.grade_list_view, name="grade_list"),
     path('grades/student/<int:id>', views.grade_view, name="grade"),
+    path('grades/class/<int:id>', views.grade_class_view, name="grade_class"),
     path('grades/add', views.grade_add, name='grade_add'),
     path('grades/delete', views.grade_delete, name='grade_delete'),
     path('grades/change', views.grade_change, name='grade_change'),

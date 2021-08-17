@@ -783,26 +783,48 @@ def time_table_change(request):
 @login_required
 def grade_list_view(request):
     if request.user.groups.filter(name="Principals").exists():
-        pass
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'grades/class_list.html', {'data': data})
     elif request.user.groups.filter(name="Teachers").exists():
-        pass
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'grades/class_list.html', {'data': data})
     elif request.user.groups.filter(name="Parents").exists():
         parent = Parent.get_by_id(request.user.id)
         students = parent.get_students()
+        students = [student.student for student in students]
         data = {
             'students': students
         }
+        print(data)
         return render(request, 'grades/student_list.html', {'data': data})
     elif request.user.groups.filter(name="Students").exists():
-        # Show only student grades
         student = Student.get_by_id(request.user.id)
         return grade_view(request, student.id)
     else:
-        pass
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'grades/class_list.html', {'data': data})
+
+
+# /grades/class/id
+@login_required
+@permission_required('school.view_grade', raise_exception=True)
+def grade_class_view(request, id):
+    squad = Squad.get_by_id(id)
+    data = {
+        'students': squad.get_all_students()
+    }
+    return render(request, 'grades/student_list.html', {'data': data})
 
 
 # /grades/student/id
 @login_required
+@permission_required('school.view_grade', raise_exception=True)
 def grade_view(request, id):
     student = Student.get_by_id(id)
     data = {
