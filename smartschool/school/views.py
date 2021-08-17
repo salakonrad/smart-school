@@ -781,14 +781,18 @@ def time_table_change(request):
 
 # /grades
 @login_required
-@permission_required('school.view_grade', raise_exception=True)
 def grade_list_view(request):
     if request.user.groups.filter(name="Principals").exists():
         pass
     elif request.user.groups.filter(name="Teachers").exists():
         pass
     elif request.user.groups.filter(name="Parents").exists():
-        pass
+        parent = Parent.get_by_id(request.user.id)
+        students = parent.get_students()
+        data = {
+            'students': students
+        }
+        return render(request, 'grades/student_list.html', {'data': data})
     elif request.user.groups.filter(name="Students").exists():
         # Show only student grades
         student = Student.get_by_id(request.user.id)
