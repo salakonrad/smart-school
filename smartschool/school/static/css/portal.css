@@ -40,3 +40,7 @@ table thead .timetable {
 .teacher {
     color: rgba(0, 0, 0, 0.45);
 }
+
+.error {
+    color: rgba(255, 10, 10, 0.65);
+}

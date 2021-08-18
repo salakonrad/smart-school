@@ -322,7 +322,7 @@ def subject_change(request):
 # /students
 @login_required
 @permission_required('school.view_student', raise_exception=True)
-def student_list_view(request):
+def student_list_view(request, error_message=None):
     # Search
     if request.GET.get('search'):
         students_list = Student.find(request.GET.get('search'))
@@ -346,7 +346,8 @@ def student_list_view(request):
     data = {
         'students': students_page,
         'classes': Squad.get_all(),
-        'paginator': paginator
+        'paginator': paginator,
+        'error': error_message
     }
     return render(request, 'users/student_list.html', {'data': data})
 
@@ -354,13 +355,14 @@ def student_list_view(request):
 # /students/details/id
 @login_required
 @permission_required('school.view_student', raise_exception=True)
-def student_view(request, id):
+def student_view(request, id, error_message=None):
     student = Student.get_by_id(id)
     data = {
         'student': student,
         'parents': student.get_parents(),
         'classes': Squad.get_all(),
-        'parents_list': Parent.get_all()
+        'parents_list': Parent.get_all(),
+        'error': error_message
     }
     return render(request, 'users/student.html', {'data': data})
 
@@ -372,6 +374,8 @@ def student_add(request):
     if request.method == 'POST':
         form = AddStudentForm(request.POST)
         if form.is_valid():
+            if Student.objects.filter(username=form.cleaned_data['username']).exists():
+                return student_list_view(request, 'username')
             student_id = Student.add({
                 'username': form.cleaned_data['username'],
                 'password': form.cleaned_data['password'],
@@ -411,6 +415,8 @@ def student_change(request):
         form = ChangeStudentForm(request.POST)
         if form.is_valid():
             student_id = form.cleaned_data['student_id']
+            if Student.objects.filter(username=form.cleaned_data['username']).exists():
+                return student_view(request, student_id, 'username')
             Student.edit({
                 'student_id': student_id,
                 'username': form.cleaned_data['username'],
@@ -429,7 +435,7 @@ def student_change(request):
 # /teachers
 @login_required
 @permission_required('school.view_teacher', raise_exception=True)
-def teacher_list_view(request):
+def teacher_list_view(request, error_message=None):
     # Search
     if request.GET.get('search'):
         teachers_list = Teacher.find(request.GET.get('search'))
@@ -452,7 +458,8 @@ def teacher_list_view(request):
 
     data = {
         'teachers': teachers_page,
-        'paginator': paginator
+        'paginator': paginator,
+        'error': error_message
     }
     return render(request, 'users/teacher_list.html', {'data': data})
 
@@ -460,10 +467,11 @@ def teacher_list_view(request):
 # /teachers/details/id
 @login_required
 @permission_required('school.view_teacher', raise_exception=True)
-def teacher_view(request, id):
+def teacher_view(request, id, error_message=None):
     teacher = Teacher.get_by_id(id)
     data = {
-        'teacher': teacher
+        'teacher': teacher,
+        'error': error_message
     }
     return render(request, 'users/teacher.html', {'data': data})
 
@@ -475,6 +483,8 @@ def teacher_add(request):
     if request.method == 'POST':
         form = AddTeacherForm(request.POST)
         if form.is_valid():
+            if Teacher.objects.filter(username=form.cleaned_data['username']).exists():
+                return teacher_list_view(request, 'username')
             teacher_id = Teacher.add({
                 'username': form.cleaned_data['username'],
                 'password': form.cleaned_data['password'],
@@ -513,6 +523,8 @@ def teacher_change(request):
         form = ChangeTeacherForm(request.POST)
         if form.is_valid():
             teacher_id = form.cleaned_data['teacher_id']
+            if Teacher.objects.filter(username=form.cleaned_data['username']).exists():
+                return teacher_view(request, teacher_id, 'username')
             Teacher.edit({
                 'teacher_id': teacher_id,
                 'username': form.cleaned_data['username'],
@@ -530,7 +542,7 @@ def teacher_change(request):
 # /parents
 @login_required
 @permission_required('school.view_parent', raise_exception=True)
-def parent_list_view(request):
+def parent_list_view(request, error_message=None):
     # Search
     if request.GET.get('search'):
         parents_list = Parent.find(request.GET.get('search'))
@@ -553,7 +565,8 @@ def parent_list_view(request):
 
     data = {
         'parents': parents_page,
-        'paginator': paginator
+        'paginator': paginator,
+        'error': error_message
     }
     return render(request, 'users/parent_list.html', {'data': data})
 
@@ -566,6 +579,8 @@ def parent_add(request):
         form = AddParentForm(request.POST)
         if form.is_valid():
             student_id = form.cleaned_data['student_id']
+            if Parent.objects.filter(username=form.cleaned_data['username']).exists():
+                return student_view(request, student_id, 'username')
             Parent.add({
                 'username': form.cleaned_data['username'],
                 'password': form.cleaned_data['password'],
@@ -637,11 +652,12 @@ def parent_assign_delete(request):
 # /parents/details/id
 @login_required
 @permission_required('school.view_parent', raise_exception=True)
-def parent_view(request, id):
+def parent_view(request, id, error_message=None):
     parent = Parent.get_by_id(id)
     data = {
         'parent': parent,
-        'students': parent.get_students()
+        'students': parent.get_students(),
+        'error': error_message
     }
     return render(request, 'users/parent.html', {'data': data})
 
@@ -654,6 +670,8 @@ def parent_change(request):
         form = ChangeParentForm(request.POST)
         if form.is_valid():
             parent_id = form.cleaned_data['parent_id']
+            if Parent.objects.filter(username=form.cleaned_data['username']).exists():
+                return parent_view(request, parent_id, 'username')
             Parent.edit({
                 'parent_id': parent_id,
                 'username': form.cleaned_data['username'],

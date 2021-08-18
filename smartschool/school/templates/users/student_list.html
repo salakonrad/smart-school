@@ -57,6 +57,14 @@
 
 </div>
 
+{% if data.error %}
+<div class="error">
+  {% if data.error == 'username' %}
+  <p class="text-center fs-4">Użytkownik o takiej nazwie użytkownika już istnieje!</p>
+  {% endif %}
+</div>
+{% endif %}
+
 <!-- Students table -->
 <table class="table">
   <thead>
