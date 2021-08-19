@@ -910,3 +910,120 @@ def grade_delete(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /attendance
+@login_required
+def attendance_list_view(request):
+    if request.user.groups.filter(name="Principals").exists():
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'attendance/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Teachers").exists():
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'attendance/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Parents").exists():
+        parent = Parent.get_by_id(request.user.id)
+        students = parent.get_students()
+        students = [student.student for student in students]
+        data = {
+            'students': students
+        }
+        return render(request, 'attendance/student_list.html', {'data': data})
+    elif request.user.groups.filter(name="Students").exists():
+        student = Student.get_by_id(request.user.id)
+        return attendance_view(request, student.id)
+    else:
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'attendance/class_list.html', {'data': data})
+
+
+# /attendance/class/id
+@login_required
+@permission_required('school.view_attendance', raise_exception=True)
+def attendance_class_view(request, id):
+    squad = Squad.get_by_id(id)
+    data = {
+        'students': squad.get_all_students()
+    }
+    return render(request, 'attendance/student_list.html', {'data': data})
+
+
+# /attendance/student/id
+@login_required
+@permission_required('school.view_attendance', raise_exception=True)
+def attendance_view(request, id):
+    student = Student.get_by_id(id)
+    data = {
+        'student': student,
+        'lessons': LessonTable.get_all(),
+        'event_types': Attendance.get_event_types(),
+        'attendances': student.get_attendance()
+    }
+    return render(request, 'attendance/attendances.html', {'data': data})
+
+
+# /attendance/add
+@login_required
+@permission_required('school.add_attendance', raise_exception=True)
+def attendance_add(request):
+    if request.method == 'POST':
+        form = AddAttendanceForm(request.POST)
+        if form.is_valid():
+            student = Student.get_by_id(form.cleaned_data['student_id'])
+            student.add_attendance(*[
+                request.user,
+                LessonTable.get_by_id(form.cleaned_data['lesson_id']),
+                form.cleaned_data['event'],
+                form.cleaned_data['date']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /attendance/change
+@login_required
+@permission_required('school.change_attendance', raise_exception=True)
+def attendance_change(request):
+    if request.method == 'POST':
+        form = ChangeAttendanceForm(request.POST)
+        if form.is_valid():
+            attendance = Attendance.get_by_id(form.cleaned_data['attendance_id'])
+            attendance.change(*[
+                request.user,
+                LessonTable.get_by_id(form.cleaned_data['lesson_id']),
+                form.cleaned_data['event'],
+                form.cleaned_data['date']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /attendance/delete
+@login_required
+@permission_required('school.delete_attendance', raise_exception=True)
+def attendance_delete(request):
+    if request.method == 'POST':
+        form = DeleteAttendanceForm(request.POST)
+        if form.is_valid():
+            attendance = Attendance.get_by_id(form.cleaned_data['attendance_id'])
+            attendance.delete()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

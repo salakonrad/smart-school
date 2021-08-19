@@ -169,3 +169,21 @@ class ChangeGradeForm(forms.Form):
     grade_id = forms.IntegerField()
     grade = forms.CharField(max_length=4)
     description = forms.CharField(max_length=64, required=False)
+
+
+# Attendance
+
+class AddAttendanceForm(forms.Form):
+    student_id = forms.IntegerField()
+    lesson_id = forms.IntegerField()
+    event = forms.CharField(max_length=2)
+    date = forms.DateField()
+
+class DeleteAttendanceForm(forms.Form):
+    attendance_id = forms.IntegerField()
+
+class ChangeAttendanceForm(forms.Form):
+    attendance_id = forms.IntegerField()
+    lesson_id = forms.IntegerField()
+    event = forms.CharField(max_length=2)
+    date = forms.DateField()
