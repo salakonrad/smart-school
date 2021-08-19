@@ -583,3 +583,18 @@ class Grade(models.Model):
         self.edit_date = datetime.now()
         self.save()
         return self
+
+class Attendance(models.Model):
+    id = models.AutoField(primary_key=True)
+    lesson = models.ForeignKey(LessonTable, related_name='%(class)s_lesson_number', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
+    EVENT_CHOICES = [
+        ('SP', 'Spóźnienie'),
+        ('NB', 'Nieobecność'),
+        ('NU', 'Nieobecność usprawiedliwiona')
+    ]
+    event = models.CharField(max_length=2, choices=EVENT_CHOICES)
+    date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'attendance_events'
