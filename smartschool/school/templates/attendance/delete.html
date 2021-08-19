@@ -1,0 +1,33 @@
+<!-- Delete attendance modal -->
+<div class="modal fade" id="delete_attendance{{ event.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Usuń wydarzenie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'attendance_delete' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="attendance_id" value="{{ event.id }}" />
+
+                    <p>Czy na pewno chcesz usunąć to wydarzenie?</p>
+
+
+                    <p>Lekcja: <strong>{{ event.lesson.start }} - {{ event.lesson.end }}</strong></p>
+                    <p>Typ: <strong>{{ event.get_event_display }}</strong></p>
+
+                    <p>Wystawiona <strong>{{ event.issue_date }}</strong> przez {{ event.issued_by }}</p>
+                    {% if event.edited_by %}
+                    <p>Edytowana <strong>{{ event.edit_date }}</strong> przez {{ event.edited_by }}</p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-danger" value="Usuń">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

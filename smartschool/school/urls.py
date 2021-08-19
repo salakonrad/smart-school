@@ -57,6 +57,13 @@ urlpatterns = [
     path('grades/add', views.grade_add, name='grade_add'),
     path('grades/delete', views.grade_delete, name='grade_delete'),
     path('grades/change', views.grade_change, name='grade_change'),
+    # Attendance
+    path('attendance', views.attendance_list_view, name="attendance_list"),
+    path('attendance/student/<int:id>', views.attendance_view, name="attendance"),
+    path('attendance/class/<int:id>', views.attendance_class_view, name="attendance_class"),
+    path('attendance/add', views.attendance_add, name='attendance_add'),
+    path('attendance/delete', views.attendance_delete, name='attendance_delete'),
+    path('attendance/change', views.attendance_change, name='attendance_change'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

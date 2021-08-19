@@ -1,0 +1,35 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Frekwencja</h1>
+    </div>
+    <div class="col-auto">
+        <div class="page-utilities">
+            
+        </div>
+    </div>
+</div>
+
+<!-- Classes table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Klasa</th>
+            <th scope="col">Rocznik</th>
+            <th scope="col">Wychowawca</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class in data.classes %}
+        <tr class="class_choice pointer" onclick="location.href='{% url 'attendance_class' id=class.id %}';">
+            <td>{{ class.name }}</td>
+            <td>{{ class.year_start }}-{{ class.year_end }}</td>
+            <td>{{ class.supervisor }}</td>            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

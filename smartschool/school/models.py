@@ -206,8 +206,14 @@ class Student(User):
             )
         return grades_list
 
+    def get_attendance(self):
+        return Attendance.objects.filter(student=self).order_by('-date', '-lesson__number')
+
     def add_grade(self, issuer, squad_subject, grade, description):
         Grade.add(issuer, self, squad_subject, grade, description)
+
+    def add_attendance(self, creator, lesson, event, date):
+        Attendance.add(creator, self, lesson, event, date)
 
 class StudentParent(models.Model):
     id = models.AutoField(primary_key=True)
@@ -595,6 +601,41 @@ class Attendance(models.Model):
     ]
     event = models.CharField(max_length=2, choices=EVENT_CHOICES)
     date = models.DateField(auto_now_add=True)
+    issue_date = models.DateTimeField(auto_now_add=True)
+    issued_by = models.ForeignKey(Teacher, related_name='%(class)s_issued_by', on_delete=models.CASCADE)
+    edit_date = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    edited_by = models.ForeignKey(Teacher, related_name='%(class)s_edited_by', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = 'attendance_events'
+
+    def get_by_id(id):
+        if Attendance.objects.filter(id=id).exists():
+            return Attendance.objects.get(id=id)
+        else:
+            return False
+
+    def get_event_types():
+        return Attendance.EVENT_CHOICES
+
+    def add(creator, student, lesson, event, date):
+        new = Attendance()
+        new.lesson = lesson
+        new.student = student
+        new.event = event
+        new.date = date
+        new.issued_by = creator
+        new.save()
+        return new
+
+    def delete(self):
+        super(Attendance, self).delete()
+
+    def change(self, editor, lesson, event, date):
+        self.lesson = lesson
+        self.event = event
+        self.date = date
+        self.edit_date = datetime.now()
+        self.edited_by = editor
+        self.save()
+        return self
