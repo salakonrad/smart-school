@@ -415,8 +415,10 @@ def student_change(request):
         form = ChangeStudentForm(request.POST)
         if form.is_valid():
             student_id = form.cleaned_data['student_id']
-            if Student.objects.filter(username=form.cleaned_data['username']).exists():
-                return student_view(request, student_id, 'username')
+            student = Student.get_by_id(student_id)
+            if student.username != form.cleaned_data['username']:
+                if Student.objects.filter(username=form.cleaned_data['username']).exists():
+                    return student_view(request, student_id, 'username')
             Student.edit({
                 'student_id': student_id,
                 'username': form.cleaned_data['username'],
@@ -523,8 +525,10 @@ def teacher_change(request):
         form = ChangeTeacherForm(request.POST)
         if form.is_valid():
             teacher_id = form.cleaned_data['teacher_id']
-            if Teacher.objects.filter(username=form.cleaned_data['username']).exists():
-                return teacher_view(request, teacher_id, 'username')
+            teacher = Teacher.get_by_id(teacher_id)
+            if teacher.username != form.cleaned_data['username']:
+                if Teacher.objects.filter(username=form.cleaned_data['username']).exists():
+                    return teacher_view(request, teacher_id, 'username')
             Teacher.edit({
                 'teacher_id': teacher_id,
                 'username': form.cleaned_data['username'],
@@ -670,8 +674,10 @@ def parent_change(request):
         form = ChangeParentForm(request.POST)
         if form.is_valid():
             parent_id = form.cleaned_data['parent_id']
-            if Parent.objects.filter(username=form.cleaned_data['username']).exists():
-                return parent_view(request, parent_id, 'username')
+            parent = Parent.get_by_id(parent_id)
+            if parent.username != form.cleaned_data['username']:
+                if Parent.objects.filter(username=form.cleaned_data['username']).exists():
+                    return parent_view(request, parent_id, 'username')
             Parent.edit({
                 'parent_id': parent_id,
                 'username': form.cleaned_data['username'],
