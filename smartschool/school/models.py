@@ -600,7 +600,7 @@ class Attendance(models.Model):
         ('NU', 'Nieobecność usprawiedliwiona')
     ]
     event = models.CharField(max_length=2, choices=EVENT_CHOICES)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(auto_now_add=False)
     issue_date = models.DateTimeField(auto_now_add=True)
     issued_by = models.ForeignKey(Teacher, related_name='%(class)s_issued_by', on_delete=models.CASCADE)
     edit_date = models.DateTimeField(auto_now_add=False, null=True, blank=True)
