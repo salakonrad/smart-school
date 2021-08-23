@@ -639,3 +639,19 @@ class Attendance(models.Model):
         self.edited_by = editor
         self.save()
         return self
+
+    def get_subject(self):
+        days = {
+            0: 'M',
+            1: 'T',
+            2: 'W',
+            3: 'C',
+            4: 'F',
+            5: None,
+            6: None
+        }
+        week_day = self.date.weekday()
+        if TimeTable.objects.filter(day=days[week_day], lesson_number=self.lesson, squad=self.student.get_class()).exists():
+            return TimeTable.objects.filter(day=days[week_day], lesson_number=self.lesson, squad=self.student.get_class()).first().subject.subject
+        else:
+            return None
