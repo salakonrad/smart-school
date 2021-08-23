@@ -32,6 +32,7 @@
                             <tr>
                                 <th class="cell">Data</th>
                                 <th class="cell">Lekcja</th>
+                                <th class="cell">Przedmiot</th>
                                 <th class="cell">Rodzaj</th>
                                 <th class="cell">Nauczyciel</th>
                                 <th class="cell"></th>
@@ -42,6 +43,7 @@
                             <tr>
                                 <td class="cell">{{ event.date }}</td>
                                 <td class="cell">{{ event.lesson.start }} - {{ event.lesson.end }}</td>
+                                <td class="cell">{{ event.get_subject | default:"-" }}</td>
                                 <td class="cell">{{ event.get_event_display }}</td>
                                 <td class="cell">{{ event.issued_by }}</td>
                                 <td class="cell text-right">
