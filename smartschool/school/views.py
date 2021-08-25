@@ -1033,3 +1033,51 @@ def attendance_delete(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /message/list
+@login_required
+@permission_required('school.view_message', raise_exception=True)
+def message_list_view(request):
+    user = MyUser.get_by_id(request.user.id)
+    data = {
+        'user': request.user,
+        'messages': user.get_all_messages_list(),
+        'principals': Principal.get_all(),
+        'teachers': Teacher.get_all(),
+        'parents': Parent.get_all(),
+        'students': Student.get_all()
+    }
+    return render(request, 'messages/messages_list.html', {'data': data})
+
+
+# /messages
+@login_required
+@permission_required('school.view_message', raise_exception=True)
+def messages_view(request):
+    data = {
+        
+    }
+    return render(request, 'messages/messages.html', {'data': data})
+
+
+# /message/send
+@login_required
+@permission_required('school.add_message', raise_exception=True)
+def message_send(request):
+    if request.method == 'POST':
+        form = NewMessageForm(request.POST)
+        if form.is_valid():
+            sender = MyUser.get_by_id(form.cleaned_data['sender_id'])
+            recipient = MyUser.get_by_id(form.cleaned_data['recipient_id'])
+            Message.send(*[
+                sender,
+                recipient,
+                form.cleaned_data['message']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
