@@ -64,6 +64,10 @@ urlpatterns = [
     path('attendance/add', views.attendance_add, name='attendance_add'),
     path('attendance/delete', views.attendance_delete, name='attendance_delete'),
     path('attendance/change', views.attendance_change, name='attendance_change'),
+    # Messages
+    path('message/list', views.message_list_view, name='message_list'),
+    path('message/send', views.message_send, name='message_send'),
+    path('messages', views.messages_view, name='messages'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

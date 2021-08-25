@@ -1,11 +1,27 @@
 from django.db.models.functions import Concat
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
 from datetime import datetime
 
 from django.contrib.auth.models import Group, User
+
+
+class MyUser(User):
+    class Meta:
+        proxy = True
+
+    def get_by_id(id):
+        if MyUser.objects.filter(id = id).exists():
+            return MyUser.objects.get(id = id)
+        else:
+            return None
+
+    def get_all_messages_list(self):
+        messages = Message.objects.filter(Q(sender=self) | Q(recipient=self)).values('recipient', 'sender').annotate(mcount=Count('message')).order_by()
+        print(messages)
+
 
 
 class Principal(User):
@@ -14,6 +30,9 @@ class Principal(User):
 
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
+
+    def get_all():
+        return Principal.objects.filter(groups__name='Principals').order_by('last_name', 'first_name')
 
 class Teacher(User):
     class Meta:
@@ -29,7 +48,7 @@ class Teacher(User):
             return None
 
     def get_all():
-        return Teacher.objects.filter(groups__name='Teachers')
+        return Teacher.objects.filter(groups__name='Teachers').order_by('last_name', 'first_name')
 
     def get_initials(self):
         return f"{self.first_name[:1]}{self.last_name[:1]}"
@@ -655,3 +674,23 @@ class Attendance(models.Model):
             return TimeTable.objects.filter(day=days[week_day], lesson_number=self.lesson, squad=self.student.get_class()).first().subject.subject
         else:
             return None
+    
+class Message(models.Model):
+    id = models.AutoField(primary_key=True)
+    sender = models.ForeignKey(User, related_name='%(class)s_sender', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='%(class)s_recipient', on_delete=models.CASCADE)
+    message = models.CharField(max_length=2048)
+    date = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "message"
+
+    def send(sender, recipient, message):
+        new = Message()
+        new.sender = sender
+        new.recipient = recipient
+        new.message = message
+        new.save()
+
+    

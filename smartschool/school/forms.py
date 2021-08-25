@@ -187,3 +187,11 @@ class ChangeAttendanceForm(forms.Form):
     lesson_id = forms.IntegerField()
     event = forms.CharField(max_length=2)
     date = forms.DateField()
+
+
+# Messages
+
+class NewMessageForm(forms.Form):
+    sender_id = forms.IntegerField()
+    recipient_id = forms.IntegerField()
+    message = forms.CharField(max_length=2048)
