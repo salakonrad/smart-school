@@ -18,6 +18,10 @@ class MyUser(User):
         else:
             return None
 
+    def get_all_messages(self, recipient_user):
+        messages = Message.objects.filter((Q(sender=self) & Q(recipient=recipient_user)) | (Q(sender=recipient_user) & Q(recipient=self))).order_by('-date')
+        return messages
+
     def get_all_messages_list(self):
         messages = Message.objects.filter(Q(sender=self) | Q(recipient=self)).values('recipient', 'sender').annotate(mcount=Count('message')).order_by()
         messages = messages.order_by('date')
