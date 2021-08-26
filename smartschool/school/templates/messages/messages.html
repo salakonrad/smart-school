@@ -25,7 +25,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="sender_id" value="{{ data.active_user.id }}" />
                                 <input type="hidden" name="recipient_id" value="{{ data.recipient_user.id }}" />
-                                <input type="text" name="message" class="form-control" placeholder="Wiadomość...">
+                                <input type="text" name="message" class="form-control" placeholder="Wiadomość..." maxlength="2048">
                             </div>
                         </form>
                     </div>
