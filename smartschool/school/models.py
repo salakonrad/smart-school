@@ -20,7 +20,30 @@ class MyUser(User):
 
     def get_all_messages_list(self):
         messages = Message.objects.filter(Q(sender=self) | Q(recipient=self)).values('recipient', 'sender').annotate(mcount=Count('message')).order_by()
-        print(messages)
+        messages = messages.order_by('date')
+        msg_return = []
+        for message in messages:
+            recipient = MyUser.get_by_id(message['recipient'])
+            sender = MyUser.get_by_id(message['sender'])
+            if recipient == self:
+                user_data = {
+                    'person': sender,
+                    'last_message': Message.get_latest_message(recipient, sender),
+                    'date': Message.get_latest_message(recipient, sender).date
+                }
+                if user_data not in msg_return:
+                    msg_return.append(user_data)
+            elif sender == self:
+                user_data = {
+                    'person': recipient,
+                    'last_message': Message.get_latest_message(recipient, sender),
+                    'date': Message.get_latest_message(recipient, sender).date
+                }
+                if user_data not in msg_return:
+                    msg_return.append(user_data)
+        msg_return_sorted = sorted(msg_return, key=lambda k: k['date'], reverse=True)
+        return msg_return_sorted
+
 
 
 
@@ -692,5 +715,8 @@ class Message(models.Model):
         new.recipient = recipient
         new.message = message
         new.save()
+
+    def get_latest_message(person, person_2):
+        return Message.objects.filter((Q(sender=person) & Q(recipient=person_2)) | (Q(sender=person_2) & Q(recipient=person))).order_by('-date').first()
 
     
