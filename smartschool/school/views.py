@@ -1054,9 +1054,13 @@ def message_list_view(request):
 # /messages
 @login_required
 # @permission_required('school.view_message', raise_exception=True)
-def messages_view(request):
+def messages_view(request, id):
+    actual_user = MyUser.get_by_id(request.user.id)
+    recipient_user = MyUser.get_by_id(id)
     data = {
-        
+        'active_user': actual_user,
+        'recipient_user': recipient_user,
+        'messages': actual_user.get_all_messages(recipient_user)
     }
     return render(request, 'messages/messages.html', {'data': data})
 

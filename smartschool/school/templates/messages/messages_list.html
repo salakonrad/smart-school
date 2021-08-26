@@ -31,9 +31,9 @@
     </thead>
     <tbody>
         {% for message in data.messages %}
-        <tr class="class_choice pointer" onclick="location.href=''">
+        <tr class="class_choice pointer" onclick="location.href='{% url 'messages' id=message.person.id %}'">
             <td>{{ message.person.first_name }} {{ message.person.last_name }}</td>
-            <td>{{ message.last_message.message }}</td>
+            <td><span class="truncate">{{ message.last_message.message }}</span></td>
             <td>{{ message.date }}</td>
         </tr>
         {% endfor %}
