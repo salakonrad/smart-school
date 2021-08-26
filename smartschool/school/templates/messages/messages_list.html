@@ -10,18 +10,35 @@
     <div class="col-auto">
         <div class="page-utilities">
             <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-                {% if perms.school.add_message %}
                 <div class="col-auto">
                     <a data-bs-toggle="modal"
                     data-bs-target="#new_message" class="btn app-btn-secondary">
                         Nowa wiadomość
                     </a>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Użytkownik</th>
+            <th scope="col">Ostatnia wiadomość</th>
+            <th scope="col">Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in data.messages %}
+        <tr class="class_choice pointer" onclick="location.href=''">
+            <td>{{ message.person.first_name }} {{ message.person.last_name }}</td>
+            <td>{{ message.last_message.message }}</td>
+            <td>{{ message.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <!-- Add Modal -->
 {% include "messages/create.html" %}

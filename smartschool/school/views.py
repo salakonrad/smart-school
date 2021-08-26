@@ -1037,7 +1037,7 @@ def attendance_delete(request):
 
 # /message/list
 @login_required
-@permission_required('school.view_message', raise_exception=True)
+# @permission_required('school.view_message', raise_exception=True)
 def message_list_view(request):
     user = MyUser.get_by_id(request.user.id)
     data = {
@@ -1053,7 +1053,7 @@ def message_list_view(request):
 
 # /messages
 @login_required
-@permission_required('school.view_message', raise_exception=True)
+# @permission_required('school.view_message', raise_exception=True)
 def messages_view(request):
     data = {
         
@@ -1063,7 +1063,7 @@ def messages_view(request):
 
 # /message/send
 @login_required
-@permission_required('school.add_message', raise_exception=True)
+# @permission_required('school.add_message', raise_exception=True)
 def message_send(request):
     if request.method == 'POST':
         form = NewMessageForm(request.POST)
