@@ -31,7 +31,11 @@
     </thead>
     <tbody>
         {% for message in data.messages %}
-        <tr class="class_choice pointer" onclick="location.href='{% url 'messages' id=message.person.id %}'">
+            {% if message.last_rec_message.read == False and message.last_rec_message %}
+            <tr class="class_choice pointer not-read" onclick="location.href='{% url 'messages' id=message.person.id %}'">            
+            {% else %}
+            <tr class="class_choice pointer" onclick="location.href='{% url 'messages' id=message.person.id %}'"> 
+            {% endif %}
             <td>{{ message.person.first_name }} {{ message.person.last_name }}</td>
             <td>{{ message.last_message.message | slice:":100" }}</td>
             <td>{{ message.date }}</td>

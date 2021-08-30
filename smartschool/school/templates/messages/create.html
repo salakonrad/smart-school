@@ -15,16 +15,16 @@
                         <label for="new-msg-1" class="form-label">Odbiorca</label>
                         <select name="recipient_id" class="form-select" id="new-msg-1">
                             {% for principal in data.principals %}
-                                <option value="{{ principal.id }}">Dyrektor - {{ principal.first_name }} {{ principal.last_name }}</option>
+                                <option value="{{ principal.id }}">Dyrektor - {{ principal.last_name }} {{ principal.first_name }}</option>
                             {% endfor %}
                             {% for teacher in data.teachers %}
-                                <option value="{{ teacher.id }}">Nauczyciel - {{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                <option value="{{ teacher.id }}">Nauczyciel - {{ teacher.last_name }} {{ teacher.first_name }}</option>
                             {% endfor %}
                             {% for parent in data.parents %}
-                                <option value="{{ parent.id }}">Opiekun - {{ parent.first_name }} {{ parent.last_name }}</option>
+                                <option value="{{ parent.id }}">Opiekun - {{ parent.last_name }} {{ parent.first_name }}</option>
                             {% endfor %}
                             {% for student in data.students %}
-                                <option value="{{ student.id }}">Student - {{ student.first_name }} {{ student.last_name }}</option>
+                                <option value="{{ student.id }}">Student - {{ student.last_name }} {{ student.first_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
