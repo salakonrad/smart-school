@@ -1057,6 +1057,7 @@ def message_list_view(request):
 def messages_view(request, id):
     actual_user = MyUser.get_by_id(request.user.id)
     recipient_user = MyUser.get_by_id(id)
+    Message.mark_read(recipient_user, actual_user)
     data = {
         'active_user': actual_user,
         'recipient_user': recipient_user,

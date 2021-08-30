@@ -33,6 +33,7 @@ class MyUser(User):
                 user_data = {
                     'person': sender,
                     'last_message': Message.get_latest_message(recipient, sender),
+                    'last_rec_message': Message.get_last_rec_message(recipient, sender),
                     'date': Message.get_latest_message(recipient, sender).date
                 }
                 if user_data not in msg_return:
@@ -41,6 +42,7 @@ class MyUser(User):
                 user_data = {
                     'person': recipient,
                     'last_message': Message.get_latest_message(recipient, sender),
+                    'last_rec_message': Message.get_last_rec_message(sender, recipient),
                     'date': Message.get_latest_message(recipient, sender).date
                 }
                 if user_data not in msg_return:
@@ -722,5 +724,11 @@ class Message(models.Model):
 
     def get_latest_message(person, person_2):
         return Message.objects.filter((Q(sender=person) & Q(recipient=person_2)) | (Q(sender=person_2) & Q(recipient=person))).order_by('-date').first()
+
+    def get_last_rec_message(recipient, sender):
+        return Message.objects.filter(Q(sender=sender) & Q(recipient=recipient)).order_by('-date').first()
+
+    def mark_read(sender, recipient):
+        Message.objects.filter(Q(sender=sender) & Q(recipient=recipient)).update(read=True)
 
     

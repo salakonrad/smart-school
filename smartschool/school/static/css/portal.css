@@ -44,3 +44,7 @@ table thead .timetable {
 .error {
     color: rgba(255, 10, 10, 0.65);
 }
+
+.not-read {
+    font-weight: 700;
+}
