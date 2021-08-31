@@ -68,6 +68,13 @@ urlpatterns = [
     path('message/list', views.message_list_view, name='message_list'),
     path('message/send', views.message_send, name='message_send'),
     path('messages/<int:id>', views.messages_view, name='messages'),
+    # Payments
+    path('payment', views.payment_list_view, name="payment_list"),
+    path('payment/student/<int:id>', views.payment_view, name="payment"),
+    path('payment/class/<int:id>', views.payment_class_view, name="payment_class"),
+    path('payment/add', views.payment_add, name='payment_add'),
+    path('payment/delete', views.payment_delete, name='payment_delete'),
+    path('payment/change', views.payment_change, name='payment_change'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")

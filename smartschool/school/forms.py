@@ -195,3 +195,22 @@ class NewMessageForm(forms.Form):
     sender_id = forms.IntegerField()
     recipient_id = forms.IntegerField()
     message = forms.CharField(max_length=2048)
+
+
+# Payment
+
+class AddPaymentForm(forms.Form):
+    student_id = forms.IntegerField(required=False)
+    squad_id = forms.IntegerField(required=False)
+    email = forms.CharField(max_length=128)
+    amount = forms.DecimalField(max_digits=5, decimal_places=2)
+    message = forms.CharField(max_length=2048, required=False)
+
+class DeletePaymentForm(forms.Form):
+    payment_id = forms.IntegerField()
+
+class ChangePaymentForm(forms.Form):
+    payment_id = forms.IntegerField()
+    email = forms.CharField(max_length=128)
+    amount = forms.DecimalField(max_digits=5, decimal_places=2)
+    message = forms.CharField(max_length=2048, required=False)
