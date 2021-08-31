@@ -1,0 +1,46 @@
+<!-- Add new lesson modal -->
+<div class="modal fade" id="add_payment" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Dodaj płatność</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'payment_add' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% if target == 'Student' %}
+                    <input type="hidden" name="student_id" value="{{ data.student.id }}" />
+                    {% elif target == 'Squad' %}
+                    <input type="hidden" name="squad_id" value="{{ data.squad.id }}" />
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="add-payment-1" class="form-label">E-Mail odbiorcy płatności</label>
+                        <input type="email" name="email" class="form-control" id="add-payment-1" value="{{ data.actual_user.email }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="add-payment-2" class="form-label">Kwota</label>
+                        <input type="number" name="amount" class="form-control" id="add-payment-2">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="add-payment-3" class="form-label">Wiadomość</label>
+                        <textarea name="message" type="text" class="form-control" id="add-payment-3" value="" maxlength="2048" style="height: 200px;"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Dodaj">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('add-payment-3').valueAsDate = new Date();
+</script>

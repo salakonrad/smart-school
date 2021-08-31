@@ -50,9 +50,6 @@ class MyUser(User):
         msg_return_sorted = sorted(msg_return, key=lambda k: k['date'], reverse=True)
         return msg_return_sorted
 
-
-
-
 class Principal(User):
     class Meta:
         proxy = True
@@ -263,6 +260,12 @@ class Student(User):
     def add_attendance(self, creator, lesson, event, date):
         Attendance.add(creator, self, lesson, event, date)
 
+    def get_payments(self):
+        return Payment.objects.filter(target=self).order_by('paid', '-date')
+
+    def add_payment(self, event):
+        Payment.add(self, event)
+
 class StudentParent(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
@@ -425,6 +428,9 @@ class Squad(models.Model):
 
     def create_subject(self, subject, teacher):
         SquadSubject.create(self, subject, teacher)
+
+    def get_payments(self):
+        return PayEvent.objects.filter(squad=self).order_by('-date')
 
 class Subject(models.Model):
     id = models.AutoField(primary_key=True)
@@ -731,4 +737,60 @@ class Message(models.Model):
     def mark_read(sender, recipient):
         Message.objects.filter(Q(sender=sender) & Q(recipient=recipient)).update(read=True)
 
-    
+class PayEvent(models.Model):
+    id = models.AutoField(primary_key=True)
+    creator = models.ForeignKey(User, related_name='%(class)s_creator', on_delete=models.CASCADE)
+    email = models.CharField(max_length=128)
+    squad = models.ForeignKey(Squad, related_name='%(class)s_squad', on_delete=models.CASCADE, null=True, blank=True)
+    message = models.CharField(max_length=2048)
+    amount = models.DecimalField(max_digits=5, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "pay_event"
+
+    def add_payment(creator, email, squad, student, message, amount):
+        if squad:
+            new = PayEvent()
+            new.creator = creator
+            new.email = email
+            new.squad = squad
+            new.message = message
+            new.amount = amount
+            new.save()
+            [student_.add_payment(new) for student_ in squad.get_all_students()]
+        elif student:
+            new = PayEvent()
+            new.creator = creator
+            new.email = email
+            new.message = message
+            new.amount = amount
+            new.save()
+            student.add_payment(new)
+        return True
+
+    def count_targets(self):
+        return Payment.objects.filter(event=self).aggregate(Count('target'))['target__count']
+
+    def paid_targets(self):
+        return Payment.objects.filter(event=self, paid=True).aggregate(Count('target'))['target__count']
+
+    def get_budget(self):
+        return self.amount * self.count_targets()
+
+class Payment(models.Model):
+    id = models.AutoField(primary_key=True)
+    event = models.ForeignKey(PayEvent, related_name='%(class)s_event', on_delete=models.CASCADE)
+    target = models.ForeignKey(Student, related_name='%(class)s_target', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    paid = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "payment"
+
+    def add(student, event):
+        new = Payment()
+        new.event = event
+        new.target = student
+        new.save()
+        

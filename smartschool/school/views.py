@@ -1086,3 +1086,127 @@ def message_send(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /payment
+@login_required
+def payment_list_view(request):
+    if request.user.groups.filter(name="Principals").exists():
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'payments/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Teachers").exists():
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'payments/class_list.html', {'data': data})
+    elif request.user.groups.filter(name="Parents").exists():
+        parent = Parent.get_by_id(request.user.id)
+        students = parent.get_students()
+        students = [student.student for student in students]
+        data = {
+            'students': students
+        }
+        return render(request, 'payments/student_list.html', {'data': data})
+    elif request.user.groups.filter(name="Students").exists():
+        student = Student.get_by_id(request.user.id)
+        return payment_view(request, student.id)
+    else:
+        data = {
+            'classes': Squad.get_all()
+        }
+        return render(request, 'payments/class_list.html', {'data': data})
+
+
+# /payment/class/id
+@login_required
+@permission_required('school.view_payment', raise_exception=True)
+def payment_class_view(request, id):
+    squad = Squad.get_by_id(id)
+    data = {
+        'students': squad.get_all_students(),
+        'squad': squad,
+        'payments': squad.get_payments(),
+        'actual_user': request.user
+    }
+    return render(request, 'payments/student_list.html', {'data': data})
+
+
+# /payment/student/id
+@login_required
+@permission_required('school.view_payment', raise_exception=True)
+def payment_view(request, id):
+    student = Student.get_by_id(id)
+    data = {
+        'student': student,
+        'lessons': LessonTable.get_all(),
+        'payments': student.get_payments(),
+        'actual_user': request.user
+    }
+    return render(request, 'payments/payments.html', {'data': data})
+
+
+# /payment/add
+@login_required
+@permission_required('school.add_payment', raise_exception=True)
+def payment_add(request):
+    if request.method == 'POST':
+        form = AddPaymentForm(request.POST)
+        if form.is_valid():
+            student = Student.get_by_id(form.cleaned_data['student_id'])
+            squad = Squad.get_by_id(form.cleaned_data['squad_id'])
+            print(student, squad)
+            PayEvent.add_payment(*[
+                request.user,
+                form.cleaned_data['email'],
+                squad,
+                student,
+                form.cleaned_data['message'],
+                form.cleaned_data['amount']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /payment/change
+@login_required
+@permission_required('school.change_payment', raise_exception=True)
+def payment_change(request):
+    if request.method == 'POST':
+        form = ChangePaymentForm(request.POST)
+        if form.is_valid():
+            payment = payment.get_by_id(form.cleaned_data['payment_id'])
+            payment.change(*[
+                request.user,
+                LessonTable.get_by_id(form.cleaned_data['lesson_id']),
+                form.cleaned_data['event'],
+                form.cleaned_data['date']
+            ])
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /payment/delete
+@login_required
+@permission_required('school.delete_payment', raise_exception=True)
+def payment_delete(request):
+    if request.method == 'POST':
+        form = DeletePaymentForm(request.POST)
+        if form.is_valid():
+            payment = payment.get_by_id(form.cleaned_data['payment_id'])
+            payment.delete()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
