@@ -749,6 +749,12 @@ class PayEvent(models.Model):
     class Meta:
         db_table = "pay_event"
 
+    def get_by_id(id):
+        if PayEvent.objects.filter(id = id).exists():
+            return PayEvent.objects.get(id = id)
+        else:
+            return None
+
     def add_payment(creator, email, squad, student, message, amount):
         if squad:
             new = PayEvent()
@@ -788,9 +794,20 @@ class Payment(models.Model):
     class Meta:
         db_table = "payment"
 
+    def get_by_id(id):
+        if Payment.objects.filter(id = id).exists():
+            return Payment.objects.get(id = id)
+        else:
+            return None
+
     def add(student, event):
         new = Payment()
         new.event = event
         new.target = student
         new.save()
+
+    def mark_as_paid(self):
+        self.paid = True
+        self.date = datetime.now()
+        self.save()
         

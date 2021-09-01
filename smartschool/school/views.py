@@ -1173,20 +1173,15 @@ def payment_add(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# /payment/change
+# /payment/mark_paid
 @login_required
 @permission_required('school.change_payment', raise_exception=True)
-def payment_change(request):
+def payment_mark_paid(request):
     if request.method == 'POST':
-        form = ChangePaymentForm(request.POST)
+        form = DeletePaymentForm(request.POST)
         if form.is_valid():
-            payment = payment.get_by_id(form.cleaned_data['payment_id'])
-            payment.change(*[
-                request.user,
-                LessonTable.get_by_id(form.cleaned_data['lesson_id']),
-                form.cleaned_data['event'],
-                form.cleaned_data['date']
-            ])
+            payment = Payment.get_by_id(form.cleaned_data['payment_id'])
+            payment.mark_as_paid()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             print(form.errors)
@@ -1202,7 +1197,10 @@ def payment_delete(request):
     if request.method == 'POST':
         form = DeletePaymentForm(request.POST)
         if form.is_valid():
-            payment = payment.get_by_id(form.cleaned_data['payment_id'])
+            if form.cleaned_data['payment_id']:
+                payment = Payment.get_by_id(form.cleaned_data['payment_id'])
+            else:
+                payment = PayEvent.get_by_id(form.cleaned_data['event_id'])
             payment.delete()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:

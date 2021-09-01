@@ -207,7 +207,8 @@ class AddPaymentForm(forms.Form):
     message = forms.CharField(max_length=2048, required=False)
 
 class DeletePaymentForm(forms.Form):
-    payment_id = forms.IntegerField()
+    payment_id = forms.IntegerField(required=False)
+    event_id = forms.IntegerField(required=False)
 
 class ChangePaymentForm(forms.Form):
     payment_id = forms.IntegerField()
