@@ -11,8 +11,7 @@
             <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
                 {% if perms.school.add_payment %}
                 <div class="col-auto">
-                    <a data-bs-toggle="modal"
-                    data-bs-target="#add_payment" class="btn app-btn-secondary">
+                    <a data-bs-toggle="modal" data-bs-target="#add_payment" class="btn app-btn-secondary">
                         Dodaj płatność
                     </a>
                 </div>
@@ -41,20 +40,24 @@
                                 <td class="cell">{{ payment.event.message }}</td>
                                 <td class="cell">{{ payment.event.amount }} PLN</td>
                                 <td class="cell text-right">
-                                    {% if payment.paid %}
-                                    <a class="btn-sm app-btn-secondary disabled">Zapłacono</a>
-                                    {% else %}
-                                    <a class="btn-sm app-btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#pay{{ payment.id }}">Zapłać</a>
-                                    {% if perms.school.change_payment %}
-                                    <a class="btn-sm app-btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#mark_paid{{ payment.id }}">Oznacz jako zapłacone</a>
-                                    {% endif %}
-                                    {% endif %}                                    
-                                    {% if perms.school.delete_payment %}
-                                    <a class="btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#delete_payment{{ payment.id }}">Usuń</a>
-                                    {% endif %}
+                                    <form action="{% url 'payment_pay' %}" method="POST">                                        
+                                        {% if payment.paid %}
+                                            <a class="btn-sm app-btn-secondary disabled">Zapłacono</a>
+                                        {% else %}                                        
+                                            {% if perms.school.change_payment %}
+                                                <a class="btn-sm app-btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#mark_paid{{ payment.id }}">Oznacz jako zapłacone</a>
+                                            {% else %}
+                                                {% csrf_token %}
+                                                <input type="hidden" name="payment_id" value="{{ payment.id }}" />
+                                                <input type="submit" class="btn btn-sm app-btn-primary btn-pay" value="Zapłać">
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if perms.school.delete_payment %}
+                                        <a class="btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#delete_payment{{ payment.id }}">Usuń</a>
+                                        {% endif %}
+                                    </form>
                                 </td>
                             </tr>
 

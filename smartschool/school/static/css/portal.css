@@ -48,3 +48,8 @@ table thead .timetable {
 .not-read {
     font-weight: 700;
 }
+
+.btn-pay{
+    font-weight: 200;
+    display: inline-block;
+}
