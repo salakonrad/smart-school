@@ -58,6 +58,10 @@
                                 </td>
                             </tr>
 
+                            <!-- Pay Modal -->
+                            {% include "payments/pay.html" with payment=payment %}
+
+                            <!-- Mark paid Modal -->
                             {% include "payments/mark_paid.html" with payment=payment target='Student' %}
 
                             <!-- Delete Modal -->

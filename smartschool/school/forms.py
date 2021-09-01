@@ -206,12 +206,9 @@ class AddPaymentForm(forms.Form):
     amount = forms.DecimalField(max_digits=5, decimal_places=2)
     message = forms.CharField(max_length=2048, required=False)
 
+class PayForm(forms.Form):
+    payment_id = forms.IntegerField(required=False)
+
 class DeletePaymentForm(forms.Form):
     payment_id = forms.IntegerField(required=False)
     event_id = forms.IntegerField(required=False)
-
-class ChangePaymentForm(forms.Form):
-    payment_id = forms.IntegerField()
-    email = forms.CharField(max_length=128)
-    amount = forms.DecimalField(max_digits=5, decimal_places=2)
-    message = forms.CharField(max_length=2048, required=False)

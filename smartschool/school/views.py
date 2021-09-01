@@ -3,6 +3,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.views.generic import FormView
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
+from django.views.decorators.csrf import csrf_exempt
+from paypal.standard.ipn.signals import invalid_ipn_received, valid_ipn_received
+from django.dispatch import receiver
 
 from .forms import *
 from .models import *
@@ -1208,3 +1214,73 @@ def payment_delete(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def payment_pay(request):
+    if request.method == 'POST':
+        form = PayForm(request.POST)
+        if form.is_valid():
+            payment = Payment.get_by_id(form.cleaned_data['payment_id'])
+            host = request.get_host()
+            paypal_dict = {
+                'business': payment.event.email,
+                'amount': payment.event.amount,
+                'item_name': f'{ payment.target.first_name } { payment.target.last_name } - { payment.event.message }',
+                'invoice': str(payment.id),
+                'currency_code': 'PLN',
+                'notify_url': 'http://{}{}'.format(host,
+                                                reverse('paypal-ipn')),
+                'return_url': 'http://{}{}'.format(host,
+                                                reverse('payment_done')),
+                'cancel_return': 'http://{}{}'.format(host,
+                                                    reverse('payment_cancelled')),
+            }
+            form = PayPalPaymentsForm(initial=paypal_dict)
+            return render(request, 'payments/paypal_form.html', {'payment': payment, 'form': form})
+        else:
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@csrf_exempt
+def payment_done(request):
+    print(request)
+    return render(request, 'payments/payment_done.html')
+
+
+@csrf_exempt
+def payment_canceled(request):
+    return render(request, 'ecommerce_app/payment_cancelled.html')
+
+
+# SIGNALS
+
+
+@receiver(valid_ipn_received)
+def payment_notification(sender, **kwargs):
+    ipn = sender
+
+    if ipn.payment_status == 'Completed':
+        # payment was successful
+        payment = Payment.get_by_id(ipn.invoice)
+        if payment.event.amount == ipn.mc_gross:
+            # mark the order as paid
+            payment.paid = True
+            payment.save()
+
+
+@receiver(invalid_ipn_received)
+def payment_notification(sender, **kwargs):
+    ipn = sender
+
+    if ipn.payment_status == 'Completed':
+        payment = Payment.get_by_id(ipn.invoice)
+        if payment:
+            if ipn.business == payment.event.email:
+                # payment was successful            
+                if payment.event.amount == ipn.mc_gross:
+                    # mark the order as paid
+                    payment.paid = True
+                    payment.save()
