@@ -1,3 +1,4 @@
+from django.conf.urls import include
 from django.urls import path
 
 from . import views
@@ -75,6 +76,11 @@ urlpatterns = [
     path('payment/add', views.payment_add, name='payment_add'),
     path('payment/delete', views.payment_delete, name='payment_delete'),
     path('payment/mark_paid', views.payment_mark_paid, name='payment_mark_paid'),
+    path('payment/pay', views.payment_pay, name='payment_pay'),
+    # PayPal
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payment-done', views.payment_done, name='payment_done'),
+    path('payment-cancelled', views.payment_canceled, name='payment_cancelled'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
     path('accounts/logout/', views.logout_view, name="logout")
