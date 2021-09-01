@@ -67,19 +67,12 @@
                                 <td class="cell">{{ payment.count_targets }}</td>
                                 <td class="cell">{{ payment.get_budget }} PLN</td>
                                 <td class="cell text-right">
-                                    {% if perms.school.change_payment %}
-                                    <a class="btn-sm app-btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#edit_payment{{ payment.id }}">Edytuj</a>
-                                    {% endif %}
                                     {% if perms.school.delete_payment %}
                                     <a class="btn-sm btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#delete_payment{{ payment.id }}">Usuń</a>
                                     {% endif %}
                                 </td>
                             </tr>
-
-                            <!-- Change Modal -->
-                            {% include "payments/change.html" with payment=payment target='Squad' %}
 
                             <!-- Delete Modal -->
                             {% include "payments/delete.html" with payment=payment target='Squad' %}
