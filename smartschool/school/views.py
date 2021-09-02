@@ -1114,7 +1114,7 @@ def payment_list_view(request):
         data = {
             'students': students
         }
-        return render(request, 'payments/student_list.html', {'data': data})
+        return render(request, 'payments/parent_view.html', {'data': data})
     elif request.user.groups.filter(name="Students").exists():
         student = Student.get_by_id(request.user.id)
         return payment_view(request, student.id)
