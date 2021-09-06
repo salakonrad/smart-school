@@ -1,0 +1,85 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Płatności - {{ data.student }}</h1>
+    </div>
+    <div class="col-auto">
+        <div class="page-utilities">
+            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                {% if perms.school.add_payment %}
+                <div class="col-auto">
+                    <a data-bs-toggle="modal" data-bs-target="#add_payment" class="btn app-btn-secondary">
+                        Dodaj płatność
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="orders-table-tab-content">
+    <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+        <div class="app-card app-card-orders-table shadow-sm mb-5">
+            <div class="app-card-body">
+                <div class="table-responsive">
+                    <table class="table app-table-hover mb-0 text-left table-striped">
+                        <thead>
+                            <tr>
+                                <th class="cell">Opis płatności</th>
+                                <th class="cell">Kwota</th>
+                                <th class="cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in data.payments %}
+                            <tr>
+                                <td class="cell">{{ payment.event.message }}</td>
+                                <td class="cell">{{ payment.event.amount }} PLN</td>
+                                <td class="cell text-right">
+                                    <form action="{% url 'payment_pay' %}" method="POST">                                        
+                                        {% if payment.paid %}
+                                            <a class="btn-sm app-btn-secondary disabled">Zapłacono</a>
+                                        {% else %}                                        
+                                            {% if perms.school.change_payment %}
+                                                <a class="btn-sm app-btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#mark_paid{{ payment.id }}">Oznacz jako zapłacone</a>
+                                            {% else %}
+                                                {% csrf_token %}
+                                                <input type="hidden" name="payment_id" value="{{ payment.id }}" />
+                                                <input type="submit" class="btn btn-sm app-btn-primary btn-pay" value="Zapłać">
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if perms.school.delete_payment %}
+                                        <a class="btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#delete_payment{{ payment.id }}">Usuń</a>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <!-- Pay Modal -->
+                            {% include "payments/pay.html" with payment=payment %}
+
+                            <!-- Mark paid Modal -->
+                            {% include "payments/mark_paid.html" with payment=payment target='Student' %}
+
+                            <!-- Delete Modal -->
+                            {% include "payments/delete.html" with payment=payment target='Student' %}
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Modal -->
+{% include "payments/create.html" with target='Student' %}
+
+{% endblock %}

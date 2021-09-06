@@ -1,0 +1,143 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+  <div class="col-auto">
+    <h1 class="app-page-title mb-0">Przedmioty</h1>
+  </div>
+  <div class="col-auto">
+    <div class="page-utilities">
+      <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+        {% if perms.school.add_subject %}
+        <div class="col-auto">
+          <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_subject">
+            Dodaj nowy przedmiot
+          </button>
+        </div>
+        {% endif %}        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Subjects table -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nazwa przedmiotu</th>
+      {% if perms.school.change_subject %}
+        <th scope="col"></th>
+      {% endif %}
+      {% if perms.school.delete_subject %}
+        <th scope="col"></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for subject in data.subjects %}
+      <tr>
+        <td>{{ subject.name }}</td>
+        {% if perms.school.change_subject %}
+          <td class="table-btn">
+            <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_subject{{ subject.id }}">
+              Edytuj
+            </button>
+          </td>
+        {% endif %}
+        {% if perms.school.delete_subject %}
+          <td class="table-btn">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_subject{{ subject.id }}">
+              Usuń
+            </button>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Add new subject Modal -->
+<div class="modal fade" id="add_subject" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nowy przedmiot</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'subject_add' %}" method="POST" class="settings-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="app-card-settings">
+            <!-- Subject name -->
+            <div class="mb-3">
+              <label for="add-subject-1" class="form-label">Nazwa przedmiotu</label>
+              <input name="name" type="text" class="form-control" id="add-subject-1" value="" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modals for every class -->
+{% for subject in data.subjects %}
+  <!-- Delete subject modal -->
+  <div class="modal fade" id="delete_subject{{ subject.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń przedmiot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'subject_delete' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="subject_id" value="{{ subject.id }}"/>
+            <p>Czy na pewno chcesz usunąć ten przedmiot?</p>
+            <p><strong>Nazwa: </strong> {{ subject.name }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-danger" value="Usuń">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit subject modal -->
+  <div class="modal fade" id="change_subject{{ subject.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edytuj przedmiot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'subject_change' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="app-card-settings">
+              <input type="hidden" name="subject_id" value="{{ subject.id }}"/>
+              <!-- Subject name -->
+              <div class="mb-3">
+                <label for="change-squad-1" class="form-label">Nazwa profilu</label>
+                <input name="name" type="text" class="form-control" id="change-squad-1" value="{{ subject.name }}" required>
+              </div>              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

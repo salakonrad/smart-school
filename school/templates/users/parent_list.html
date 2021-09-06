@@ -1,0 +1,171 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+  <div class="col-auto">
+    <h1 class="app-page-title mb-0">Opiekunowie</h1>
+  </div>
+  <div class="col-auto">
+    <div class="page-utilities">
+      <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+        {% if perms.school.view_student %}
+        <div class="col-auto">
+          <a href="{% url 'student_list' %}" class="btn app-btn-secondary">
+            Uczniowie
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+  <nav aria-label="Parents table navigation" class="col-md-5">
+    <ul class="pagination">
+      {% if data.paginator.has_prev %}
+        <li class="page-item"><a class="page-link" href="{% url 'parent_list'%}?page={{ data.paginator.prev_page }}">Poprzednia strona</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="{% url 'parent_list'%}?page={{ data.paginator.prev_page }}">Poprzednia strona</a></li>
+      {% endif %}
+      <li class="page-item disabled"><a class="page-link" href="#">{{ data.paginator.actual_page }}</a></li>
+      {% if data.paginator.has_next %}
+        <li class="page-item"><a class="page-link" href="{% url 'parent_list'%}?page={{ data.paginator.next_page }}">Następna strona</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="{% url 'parent_list'%}?page={{ data.paginator.next_page }}">Następna strona</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="app-search-box col-md-7">
+    <form action="{% url 'parent_list' %}" method="GET" class="app-search-form">
+      <input type="text" placeholder="Szukaj..." name="search"
+        class="form-control search-input">
+      <button type="submit" class="btn search-btn btn-primary" value="Search"><i
+          class="fas fa-search"></i></button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Students table -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      <th scipe="col"></th>
+      {% if perms.school.delete_parent %}
+        <th scope="col"></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for parent in data.parents %}
+      <tr>
+        <td>{{ parent.first_name }}</td>
+        <td>{{ parent.last_name }}</td>
+        <td class="table-btn">
+          <a href="{% url 'parent' id=parent.id %}" type="button" class="btn app-btn-secondary">
+            Szczegóły
+          </a>
+        </td>
+        {% if perms.school.delete_parent %}
+          <td class="table-btn">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_parent{{ class.parent }}">
+              Usuń
+            </button>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Add new parent Modal STILL TO DO -->
+<div class="modal fade" id="add_parent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Dodaj nowego ucznia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'parent_add' %}" method="POST" class="settings-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="app-card-settings">
+            <!-- parent first name -->
+            <div class="mb-3">
+              <label for="add-parent-1" class="form-label">Imię</label>
+              <input name="first_name" type="text" class="form-control" id="add-parent-1" value="" required>
+            </div>
+            <!-- parent last name -->
+            <div class="mb-3">
+              <label for="add-parent-2" class="form-label">Nazwisko</label>
+              <input name="last_name" type="text" class="form-control" id="add-parent-2" value="" required>
+            </div>
+            <!-- parent e-mail -->
+            <div class="mb-3">
+              <label for="add-parent-3" class="form-label">E-mail</label>
+              <input name="email" type="email" class="form-control" id="add-parent-3" value="">
+            </div>
+            <!-- parent username -->
+            <div class="mb-3">
+              <label for="add-parent-4" class="form-label">Nazwa użytkownika</label>
+              <input name="username" type="text" class="form-control" id="add-parent-4" value="" required>
+            </div>
+            <!-- parent password -->
+            <div class="mb-3">
+              <label for="add-parent-5" class="form-label">Hasło</label>
+              <input name="password" type="password" class="form-control" id="add-parent-5" value="" required>
+            </div>
+            <!-- Class -->
+            <div class="mb-3">
+              <label for="add-parent-6" class="form-label">Klasa</label>
+              <select name="squad" class="form-select" id="add-parent-6" aria-label="Wybór klasy">
+                {% for class in data.classes %}
+                  <option value="{{ class.id }}">{{ class.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modals for every parent -->
+{% for parent in data.parents %}
+  <!-- Delete parent modal STILL TO DO -->
+  <div class="modal fade" id="delete_parent{{ class.parent }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Usuń opiekuna</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'parent_delete' %}" method="POST" class="settings-form">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="parent_id" value="{{ parent.id }}"/>
+            <p>Czy na pewno chcesz usunąć tego opiekuna?</p>
+            <p><strong>Nazwa: </strong> {{ parent.first_name }} {{ parent.last_name }}</p>
+            <p><strong>Login: </strong> {{ parent.username }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <input type="submit" class="btn btn-danger" value="Usuń">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,53 @@
+<!-- Edit grade modal -->
+<div class="modal fade" id="edit_attendance{{ event.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edytuj wydarzenie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'attendance_change' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="attendance_id" value="{{ event.id }}" />
+
+                    <div class="mb-3">
+                        <label for="change-attendance-1" class="form-label">Lekcja</label>
+                        <select name="lesson_id" class="form-select" id="change-attendance-1">
+                            {% for lesson in data.lessons %}
+                                {% if lesson.id == event.lesson.id %}
+                                    <option value="{{ lesson.id }}" selected>{{ lesson.start }}-{{ lesson.end }}</option>
+                                {% else %}
+                                    <option value="{{ lesson.id }}">{{ lesson.start }}-{{ lesson.end }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="change-attendance-2" class="form-label">Typ</label>
+                        <select name="event" class="form-select" id="change-attendance-2">
+                            {% for type in data.event_types %}
+                                {% if type.0 == event.event %}
+                                    <option value="{{ type.0 }}" selected>{{ type.1 }}</option>
+                                {% else %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="change-attendance-3" class="form-label">Data</label>
+                        <input type="date" name="date" class="form-control" id="change-attendance-3" value="{{ event.date | date:'Y-m-d' }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Edytuj">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

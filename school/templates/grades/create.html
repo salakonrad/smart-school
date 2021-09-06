@@ -1,0 +1,33 @@
+<!-- Add new lesson modal -->
+<div class="modal fade" id="add_grade{{ subject.subject.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Dodaj ocenę</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'grade_add' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="student_id" value="{{ data.student.id }}" />
+                    <input type="hidden" name="subject_id" value="{{ subject.subject.id }}" />
+
+                    <div class="mb-3">
+                        <label for="add-grade-1" class="form-label">Ocena</label>
+                        <input name="grade" type="text" class="form-control" id="add-grade-1" value="" required maxlength="4">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="add-grade-2" class="form-label">Opis</label>
+                        <textarea name="description" type="text" class="form-control" id="add-grade-2" value="" maxlength="64"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Dodaj">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

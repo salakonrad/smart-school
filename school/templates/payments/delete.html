@@ -1,0 +1,31 @@
+<!-- Delete attendance modal -->
+<div class="modal fade" id="delete_payment{{ payment.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Usuń płatność</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'payment_delete' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% if target == 'Student' %}
+                    <input type="hidden" name="payment_id" value="{{ payment.id }}" />
+                    {% elif target == 'Squad' %}
+                    <input type="hidden" name="event_id" value="{{ payment.id }}" />
+                    {% endif %}
+
+                    <p>Czy na pewno chcesz usunąć tę płatność?</p>
+
+                    <p>Opis: <strong>{{ payment.message }}</strong></p>
+                    <p>Kwota: <strong>{{ payment.amount }} PLN</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-danger" value="Usuń">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
