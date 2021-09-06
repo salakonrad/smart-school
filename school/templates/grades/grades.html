@@ -1,0 +1,68 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Oceny - {{ data.student }}</h1>
+    </div>
+    <div class="col-auto">
+        <div class="page-utilities">
+            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                <!-- {% if perms.school.view_squadsubject %}
+          <div class="col-auto">
+            <a href="" class="btn app-btn-secondary">
+              Przedmioty w klasie
+            </a>
+          </div>
+          {% endif %} -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="orders-table-tab-content">
+    <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+        <div class="app-card app-card-orders-table shadow-sm mb-5">
+            <div class="app-card-body">
+                <div class="table-responsive">
+                    <table class="table app-table-hover mb-0 text-left table-striped">
+                        <thead>
+                            <tr>
+                                <th class="cell">Przedmiot</th>
+                                <th class="cell">Nauczyciel</th>
+                                <th class="cell">Oceny</th>
+                                <th class="cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in data.grades %}
+                                <tr>
+                                    <td class="cell"><span class="truncate">{{ subject.subject.subject.name }}</span></td>
+                                    <td class="cell">{{ subject.subject.teacher }}</td>
+                                    <td class="cell">
+                                        {% for grade in subject.grades %}
+                                            <span class="badge bg-success pointer" data-bs-toggle="modal" data-bs-target="#grade_details{{ grade.id }}">{{ grade }}</span>
+                                            {% include "grades/details.html" with grade=grade %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="cell text-right">
+                                        {% if perms.school.add_grade %}
+                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_grade{{ subject.subject.id }}">Dodaj ocenę</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <!-- Add grade Modal -->
+                                {% include "grades/create.html" with subject=subject %}
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

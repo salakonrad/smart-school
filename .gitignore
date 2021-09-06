@@ -114,5 +114,11 @@ GitHub.sublime-settings
 !.vscode/settings.json 
 !.vscode/tasks.json 
 !.vscode/launch.json 
-!.vscode/extensions.json 
+!.vscode/extensions.json
 .history
+smartschool.code-workspace
+
+ngrok.exe
+
+.idea/
+.DS_Store
