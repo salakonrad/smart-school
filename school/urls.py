@@ -45,6 +45,10 @@ urlpatterns = [
     path('parents/assign', views.parent_assign, name="parent_assign"),
     path('parents/assign/delete', views.parent_assign_delete, name="parent_assign_delete"),
     path('parents/change', views.parent_change, name="parent_change"),
+    # Users
+    path('account', views.account_view, name="account"),
+    path('password/change', views.password_change, name="password_change"),
+    path('password/random', views.password_random, name="password_random"),
     # Time Tables
     path('timetables', views.time_table_list_view, name="time_table_list"),
     path('timetables/details/<int:id>', views.time_table_view, name="time_table"),
@@ -83,5 +87,8 @@ urlpatterns = [
     path('payment-cancelled', views.payment_canceled, name='payment_cancelled'),
     # Authorization
     path('accounts/login/', views.login_view, name="login"),
-    path('accounts/logout/', views.logout_view, name="logout")
+    path('accounts/logout/', views.logout_view, name="logout"),
+    path('accounts/reset_password', views.reset_password, name="reset_password"),
+    path('accounts/reset_password_step_2/<str:code>/', views.reset_password_step_2),
+    path('accounts/reset_password_step_2/', views.reset_password_step_2, name="reset_password_step_2"),
 ]
