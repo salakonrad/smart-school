@@ -1,10 +1,46 @@
 # Smart School Application
-```
-docker-compose up -d
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
+## Running on local machine with manual backend from command line
+Run MySQL database and phpMyAdmin  
+`docker-compose -f docker-compose-dev.yml up -d`
+
+Setup Virtualenv  
+`python -m venv venv`
+
+Activate Virtualenv  
+`source venv/bin/activate`
+
+Install dependencies  
+`pip install -r requirements.txt`
+
+Create Database in MySQL called **smart_school_db**.  
+You can open http://127.0.0.1:8082/ and click on **New**
+
+Create migrations for Database  
+`python manage.py migrate`
+
+Create superuser for Django Admin Panel  
+`python manage.py createsuperuser`
+
+Run Django Backend  
+`python manage.py runserver`
+
+## Running whole stack using Docker
+Start whole stack  
+`docker-compose up -d`
+
+Create Database in MySQL called **smart_school_db**.
+You can open http://127.0.0.1:8082/ and click on **New**
+
+Create migrations for Database  
+`docker-compose run backend python manage.py migrate`
+
+Create superuser for Django Admin Panel  
+`docker-compose run backend python manage.py createsuperuser`
+
+Recreate whole stack in order to retry connection to MySQL  
+`docker-compose up --force-recreate --build -d`
+
+App is now ready! You can visit http://127.0.0.1:8000
+
+## Force redeploy  
+`docker-compose up --force-recreate --build -d`
