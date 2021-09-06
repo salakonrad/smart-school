@@ -2,6 +2,8 @@ version: "3.8"
 services:
   mysql:
     image: mysql:latest
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
     volumes:
@@ -20,9 +22,9 @@ services:
     depends_on:
       - mysql
 
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - mysql
+#  backend:
+#    build: .
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - mysql

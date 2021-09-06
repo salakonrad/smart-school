@@ -4,7 +4,7 @@
 <!-- Page header -->
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">Konto nauczyciela</h1>
+        <h1 class="app-page-title mb-0">Konto</h1>
     </div>
 </div>
 
@@ -12,6 +12,10 @@
 <div class="error">
   {% if data.error == 'username' %}
   <p class="text-center fs-4">Użytkownik o takiej nazwie użytkownika już istnieje!</p>
+  {% elif data.error == 'password' %}
+  <p class="text-center fs-4">Wystąpił błąd podczas próby zmiany hasła. Czy na pewno wprowadziłeś poprawne aktualne hasło?</p>
+  {% else %}
+  <p class="text-center fs-4">{{ data.error }}</p>
   {% endif %}
 </div>
 {% endif %}
@@ -41,50 +45,29 @@
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Imię i nazwisko</strong></div>
-                            <div class="item-data">{{ data.teacher.first_name }} {{ data.teacher.last_name }}</div>
+                            <div class="item-data">{{ data.user.first_name }} {{ data.user.last_name }}</div>
                         </div>
-                        {% if perms.school.change_teacher %}
-                        <div class="col text-end">
-                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_teacher">Edytuj</button>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
                 <div class="item border-bottom py-3">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Email</strong></div>
-                            <div class="item-data">{{ data.teacher.email }}</div>
+                            <div class="item-data">{{ data.user.email }}</div>
                         </div>
-                        {% if perms.school.change_teacher %}
-                        <div class="col text-end">
-                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_teacher">Edytuj</button>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
                 <div class="item border-bottom py-3">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Login</strong></div>
-                            <div class="item-data">{{ data.teacher.username }}</div>
+                            <div class="item-data">{{ data.user.username }}</div>
                         </div>
-                        {% if perms.school.change_teacher %}
-                        <div class="col text-end">
-                            <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#change_teacher">Edytuj</button>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row gy-4">
-    <!-- Security -->
     <div class="col-12 col-lg-6">
         <div class="app-card app-card-account shadow-sm d-flex flex-column align-items-start">
             <div class="app-card-header p-3 border-bottom-0">
@@ -110,20 +93,12 @@
                     <div class="row justify-content-between align-items-center">
                         <div class="col-auto">
                             <div class="item-label"><strong>Hasło</strong></div>
-                            <div class="item-data">
-                                {% if data.password %}
-                                {{ data.password}}
-                                {% else %}
-                                ••••••••••••
-                                {% endif %}
-                            </div>
+                            <div class="item-data">••••••••••••</div>
                         </div>
-                        {% if perms.school.change_teacher %}
                         <div class="col text-end">
                             <button class="btn-sm app-btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#new_password">Wygeneruj nowe hasło</button>
+                                data-bs-target="#change_password">Zmień hasło</button>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -131,55 +106,40 @@
     </div>
 </div>
 
-<!-- Edit teacher Modal -->
-<div class="modal fade" id="change_teacher" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<!-- Edit user Modal -->
+<div class="modal fade" id="change_password" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Edytuj nauczyciela</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Zmień hasło</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{% url 'teacher_change' %}" method="POST" class="settings-form">
+            <form action="{% url 'password_change' %}" method="POST" class="settings-form">
                 {% csrf_token %}
-                <input type="hidden" name="teacher_id" value="{{ data.teacher.id }}">
                 <div class="modal-body">
                     <div class="app-card-settings">
-                        <!-- teacher first name -->
+                        <!-- user old password -->
                         <div class="mb-3">
-                            <label for="add-teacher-1" class="form-label">Imię</label>
-                            <input name="first_name" type="text" class="form-control" id="add-teacher-1"
-                                value="{{ data.teacher.first_name }}" required>
+                            <label for="change-password-1" class="form-label">Aktualne hasło</label>
+                            <input name="old_password" type="password" class="form-control" id="change-password-1"
+                                required>
                         </div>
-                        <!-- teacher last name -->
+
+                        <!-- user new password -->
                         <div class="mb-3">
-                            <label for="add-teacher-2" class="form-label">Nazwisko</label>
-                            <input name="last_name" type="text" class="form-control" id="add-teacher-2"
-                                value="{{ data.teacher.last_name }}" required>
-                        </div>
-                        <!-- teacher e-mail -->
-                        <div class="mb-3">
-                            <label for="add-teacher-3" class="form-label">E-mail</label>
-                            <input name="email" type="email" class="form-control" id="add-teacher-3"
-                                value="{{ data.teacher.email }}">
-                        </div>
-                        <!-- teacher username -->
-                        <div class="mb-3">
-                            <label for="add-teacher-4" class="form-label">Nazwa użytkownika</label>
-                            <input name="username" type="text" class="form-control" id="add-teacher-4"
-                                value="{{ data.teacher.username }}" required>
+                            <label for="change-password-2" class="form-label">Nowe hasło</label>
+                            <input name="new_password" type="password" class="form-control" id="change-password-2"
+                                required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <input type="submit" class="btn btn-primary" value="Zapisz">
+                    <input type="submit" class="btn btn-primary" value="Zmień">
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-{% include "users/password.html" with user=data.teacher %}
-
 {% endblock %}

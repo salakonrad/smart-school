@@ -1,6 +1,9 @@
 from django.db.models.functions import Concat
 from django.db import models
 from django.db.models import Q, Count
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
 from datetime import datetime
@@ -15,6 +18,18 @@ class MyUser(User):
     def get_by_id(id):
         if MyUser.objects.filter(id = id).exists():
             return MyUser.objects.get(id = id)
+        else:
+            return None
+
+    def get_by_email(email):
+        if MyUser.objects.filter(email = email).exists():
+            return MyUser.objects.get(email = email)
+        else:
+            return None
+
+    def find_by_code(code):
+        if MyUser.objects.filter(Q(password__endswith=code)).exists():
+            return MyUser.objects.get(Q(password__endswith=code))
         else:
             return None
 
@@ -49,6 +64,19 @@ class MyUser(User):
                     msg_return.append(user_data)
         msg_return_sorted = sorted(msg_return, key=lambda k: k['date'], reverse=True)
         return msg_return_sorted
+
+    def reset_password(self, request):
+        code = self.password[-20:]
+        url = 'http://' + request.get_host() + '/accounts/reset_password_step_2/'+str(code)
+        subject = 'SmartSchool - Password reset link'
+        message = f"Cześć! Tutaj jest link do resetu Twojego hasła w aplikacji SmartSchool: {url}"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [self.email,]
+        send_mail(subject, message, email_from, recipient_list)
+
+    def change_password(self, password):
+        self.set_password(password)
+        self.save()
 
 class Principal(User):
     class Meta:
