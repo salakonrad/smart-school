@@ -5,6 +5,13 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=48, label="Nazwa użytkownika")
     password = forms.CharField(max_length=64, label="Hasło")
 
+class ResetPasswordForm(forms.Form):
+    email = forms.CharField(max_length=75)
+
+class ResetPassword2Form(forms.Form):
+    user_id = forms.IntegerField()
+    password = forms.CharField(max_length=64)
+
 
 # Classes
 
@@ -134,6 +141,16 @@ class ChangeParentForm(forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
     email = forms.CharField(required=False)
+
+
+# Users
+
+class ChangePasswordForm(forms.Form):
+    old_password = forms.CharField(max_length=512)
+    new_password = forms.CharField(max_length=512)
+
+class RandomPasswordForm(forms.Form):
+    user_id = forms.IntegerField()
 
 
 # Time Tables

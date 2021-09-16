@@ -9,6 +9,8 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.ipn.signals import invalid_ipn_received, valid_ipn_received
 from django.dispatch import receiver
+import random
+import string
 
 from .forms import *
 from .models import *
@@ -38,6 +40,44 @@ def login_view(request):
             return render(request, 'auth/login.html', {'status': 'invalidform', 'error': form.errors})
     else:
         return render(request, 'auth/login.html')
+
+
+# /account/reset_password
+def reset_password(request):
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            user = MyUser.get_by_email(form.cleaned_data['email'])
+            if user:
+                user.reset_password(request)
+                return render(request, 'auth/email_sent.html', {'status': 'ok'})
+            else:
+                return render(request, 'auth/reset_password.html', {'status': 'noauth'})
+        else:
+            return render(request, 'auth/reset_password.html', {'status': 'invalidform', 'error': form.errors})
+    else:
+        return render(request, 'auth/reset_password.html')
+
+
+# /account/reset_password_step_2/code
+def reset_password_step_2(request, code=None):
+    if request.method == 'POST':
+        form = ResetPassword2Form(request.POST)
+        if form.is_valid():
+            user = MyUser.get_by_id(form.cleaned_data['user_id'])
+            if user:
+                user.change_password(form.cleaned_data['password'])
+                return render(request, 'auth/login.html')
+            else:
+                return render(request, 'auth/reset_password_2.html', {'status': 'noauth'})
+        else:
+            return render(request, 'auth/reset_password_2.html', {'status': 'invalidform', 'error': form.errors})
+    else:
+        user = MyUser.find_by_code(code)
+        if user:
+            return render(request, 'auth/reset_password_2.html', {'user_id': user.id})
+        else:
+            return login_view(request)
 
 
 # /accounts/logout
@@ -361,14 +401,15 @@ def student_list_view(request, error_message=None):
 # /students/details/id
 @login_required
 @permission_required('school.view_student', raise_exception=True)
-def student_view(request, id, error_message=None):
+def student_view(request, id, error_message=None, password=None):
     student = Student.get_by_id(id)
     data = {
         'student': student,
         'parents': student.get_parents(),
         'classes': Squad.get_all(),
         'parents_list': Parent.get_all(),
-        'error': error_message
+        'error': error_message,
+        'password': password
     }
     return render(request, 'users/student.html', {'data': data})
 
@@ -475,11 +516,12 @@ def teacher_list_view(request, error_message=None):
 # /teachers/details/id
 @login_required
 @permission_required('school.view_teacher', raise_exception=True)
-def teacher_view(request, id, error_message=None):
+def teacher_view(request, id, error_message=None, password=None):
     teacher = Teacher.get_by_id(id)
     data = {
         'teacher': teacher,
-        'error': error_message
+        'error': error_message,
+        'password': password
     }
     return render(request, 'users/teacher.html', {'data': data})
 
@@ -662,12 +704,13 @@ def parent_assign_delete(request):
 # /parents/details/id
 @login_required
 @permission_required('school.view_parent', raise_exception=True)
-def parent_view(request, id, error_message=None):
+def parent_view(request, id, error_message=None, password=None):
     parent = Parent.get_by_id(id)
     data = {
         'parent': parent,
         'students': parent.get_students(),
-        'error': error_message
+        'error': error_message,
+        'password': password
     }
     return render(request, 'users/parent.html', {'data': data})
 
@@ -696,6 +739,59 @@ def parent_change(request):
             return student_view(request, form.cleaned_data['parent_id'])
     else:
         return student_list_view(request)
+
+
+# /account
+@login_required
+def account_view(request, error=None):
+    data = {
+        'user': request.user, 
+        'error': error
+    }
+    return render(request, 'users/account.html', {'data': data})
+
+
+# /password/change
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            user = authenticate(username=request.user.username, password=form.cleaned_data['old_password'])
+            if user is not None:
+                user.set_password(form.cleaned_data['new_password'])            
+                user.save()    
+                return account_view(request) 
+            else:
+                return account_view(request, 'password')            
+        else:
+            return account_view(request, form.errors) 
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /password/random
+@login_required
+def password_random(request):
+    if request.method == 'POST':
+        form = RandomPasswordForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(id=form.cleaned_data['user_id'])
+            new_password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            user.set_password(new_password)
+            user.save()
+            if user.groups.filter(name="Teachers").exists():
+                return teacher_view(request, user.id, '', new_password)
+            elif user.groups.filter(name="Parents").exists():
+                return parent_view(request, user.id, '', new_password)
+            elif user.groups.filter(name="Students").exists():
+                return student_view(request, user.id, '', new_password)
+            else:
+                return index_view(request)
+        else:
+            return account_view(request, form.errors) 
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # /timetables
