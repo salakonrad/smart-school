@@ -71,7 +71,7 @@ class MyUser(User):
         subject = 'SmartSchool - Password reset link'
         message = f"Cześć! Tutaj jest link do resetu Twojego hasła w aplikacji SmartSchool: {url}"
         email_from = settings.EMAIL_HOST_USER
-        recipient_list = [self.email,]
+        recipient_list = [self.email]
         send_mail(subject, message, email_from, recipient_list)
 
     def change_password(self, password):
