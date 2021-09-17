@@ -21,6 +21,13 @@ Create migrations for Database
 Create superuser for Django Admin Panel  
 `python manage.py createsuperuser`
 
+Export Environment variables for email SMTP settings. In this case AWS SES is used
+```
+export AWS_ACCESS_KEY_ID="somekeyid"
+export AWS_SECRET_ACCESS_KEY="accesskey"
+export EMAIL_HOST_USER=""
+```
+
 Run Django Backend  
 `python manage.py runserver`
 
