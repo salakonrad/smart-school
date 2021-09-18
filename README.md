@@ -21,11 +21,16 @@ Create migrations for Database
 Create superuser for Django Admin Panel  
 `python manage.py createsuperuser`
 
-Export Environment variables for email SMTP settings. In this case AWS SES is used
+Export Environment variables for email SMTP settings depending on service used   
+- **AWS SES**
 ```
 export AWS_ACCESS_KEY_ID="somekeyid"
 export AWS_SECRET_ACCESS_KEY="accesskey"
-export EMAIL_HOST_USER=""
+```
+- **Normal SMTP**
+```
+export EMAIL_HOST_USER="xyz"
+export EMAIL_HOST_PASSWORD="xyz"
 ```
 
 Run Django Backend  
@@ -43,6 +48,18 @@ Create migrations for Database
 
 Create superuser for Django Admin Panel  
 `docker-compose run backend python manage.py createsuperuser`
+
+Export Environment variables for email SMTP settings depending on service used   
+- **AWS SES**
+```
+export AWS_ACCESS_KEY_ID="somekeyid"
+export AWS_SECRET_ACCESS_KEY="accesskey"
+```
+- **Normal SMTP**
+```
+export EMAIL_HOST_USER="xyz"
+export EMAIL_HOST_PASSWORD="xyz"
+```
 
 Recreate whole stack in order to retry connection to MySQL  
 `docker-compose up --force-recreate --build -d`
