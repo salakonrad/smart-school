@@ -55,6 +55,8 @@
 <div class="error">
   {% if data.error == 'username' %}
   <p class="text-center fs-4">Użytkownik o takiej nazwie użytkownika już istnieje!</p>
+  {% elif data.error == 'foreign_key_conflict' %}
+  <p class="text-center fs-4">Nie można usunąć nauczyciela gdyż jest przypisany do klasy!</p>
   {% endif %}
 </div>
 {% endif %}
