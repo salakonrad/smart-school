@@ -557,8 +557,10 @@ def teacher_delete(request):
         form = DeleteTeacherForm(request.POST)
         if form.is_valid():
             teacher_id = form.cleaned_data['teacher_id']
-            Teacher.remove(teacher_id)
-            return HttpResponseRedirect('/teachers')
+            if Teacher.remove(teacher_id):
+                return HttpResponseRedirect('/teachers')
+            else:
+                return teacher_list_view(request, error_message="foreign_key_conflict")
         else:
             return teacher_list_view(request)
     else:

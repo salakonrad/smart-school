@@ -123,7 +123,9 @@ class Teacher(User):
         return teacher.id
 
     def remove(teacher_id):
-        if Teacher.objects.filter(id = teacher_id, groups__name='Teachers').exists():
+        if Squad.objects.filter(supervisor=teacher_id).exists():
+            return False
+        elif Teacher.objects.filter(id = teacher_id, groups__name='Teachers').exists():
             Teacher.objects.get(id = teacher_id, groups__name='Teachers').delete()
             return True
         else:

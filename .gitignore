@@ -7,6 +7,8 @@
 *.pyc
 __pycache__
 school/__pycache__
+school/migrations/__pycache__
+smartschool/__pycache__
 db.sqlite3
 
 # Backup files # 
