@@ -34,7 +34,7 @@ class MyUser(User):
             return None
 
     def get_all_messages(self, recipient_user):
-        messages = Message.objects.filter((Q(sender=self) & Q(recipient=recipient_user)) | (Q(sender=recipient_user) & Q(recipient=self))).order_by('-date')
+        messages = Message.objects.filter((Q(sender=self) & Q(recipient=recipient_user)) | (Q(sender=recipient_user) & Q(recipient=self))).order_by('date')
         return messages
 
     def get_all_messages_list(self):
