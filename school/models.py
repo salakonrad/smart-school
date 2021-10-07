@@ -374,7 +374,7 @@ class Squad(models.Model):
     created_by = models.ForeignKey(User, related_name='%(class)s_created_by', on_delete=DO_NOTHING)
     active = models.BooleanField(default=True)
     year_start = models.IntegerField(default=datetime.now().year)
-    year_end = models.IntegerField(default=datetime.now().year+1)
+    year_end = models.IntegerField(default=datetime.now().year+4)
 
     class Meta:
         db_table = 'classes'
@@ -388,7 +388,7 @@ class Squad(models.Model):
         squad.profile = ClassProfile.get_by_id(class_data['profile'])
         squad.supervisor = Teacher.get_by_id(class_data['supervisor'])
         squad.year_start = class_data['year_start']
-        squad.year_end = squad.year_start + 1
+        squad.year_end = squad.year_start + 4
         squad.created_by = creator
         squad.save()
     
@@ -408,7 +408,7 @@ class Squad(models.Model):
             squad.edited = datetime.now()
             squad.edited_by = editor
             squad.year_start = class_data['year_start']
-            squad.year_end = squad.year_start + 1
+            squad.year_end = squad.year_start + 4
             squad.save()
             return True
         else:
