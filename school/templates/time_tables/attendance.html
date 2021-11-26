@@ -1,0 +1,52 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">{{ data.subject }}</h1>
+    </div>
+    <div class="col-auto">
+    </div>
+</div>
+
+<div class="tab-content" id="orders-table-tab-content">
+    <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+        <div class="app-card app-card-orders-table shadow-sm mb-5">
+            <div class="app-card-body">
+                <div class="table-responsive">
+                    <table class="table app-table-hover mb-0 text-left table-striped">
+                        <thead>
+                            <tr>
+                                <th class="cell">Imię</th>
+                                <th class="cell">Nazwisko</th>
+                                <th class="cell">Obecność</th>
+                                <th class="cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in data.attendance %}
+                                <tr>
+                                    <td class="cell"><span class="truncate">{{ student.student.first_name }}</span></td>
+                                    <td class="cell">{{ student.student.last_name }}</td>
+                                    <td class="cell">{{ student.attendance.get_event_display | default:"-" }}</td>
+                                    <td class="cell text-right">
+                                        {% if perms.school.add_grade %}
+                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_attendance{{ student.student.id }}">Zmień</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <!-- Add grade Modal -->
+                                {% include "time_tables/create_attendance.html" with student=student lesson=data.lesson %}
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

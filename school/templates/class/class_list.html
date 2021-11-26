@@ -51,6 +51,11 @@
         <td>{{ class.year_start }}-{{ class.year_end }}</td>
         <td>{{ class.profile }}</td>
         <td>{{ class.supervisor }}</td>
+        <td class="col-auto">
+          <a href="{% url 'class_students' class_id=class.id %}" class="btn app-btn-secondary">
+            Uczniowie
+          </a>
+        </td>
         {% if perms.school.change_squad %}
           <td class="table-btn">
             <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#change_squad{{ class.id }}">

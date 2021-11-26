@@ -21,6 +21,11 @@
                         <label for="edit-grade-2" class="form-label">Opis</label>
                         <textarea name="description" type="text" class="form-control" id="edit-grade-2" maxlength="64">{{ grade.description | default:'' }}</textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <input name="final" class="form-check-input" type="checkbox" id="add-grade-3" {% if grade.is_final %} checked {% endif %}></textarea>
+                        <label for="add-grade-3" class="form-label">Ocena końcowa</label>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>

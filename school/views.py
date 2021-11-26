@@ -368,12 +368,20 @@ def subject_change(request):
 # /students
 @login_required
 @permission_required('school.view_student', raise_exception=True)
-def student_list_view(request, error_message=None):
+def student_list_view(request, class_id=None, error_message=None):
     # Search
     if request.GET.get('search'):
-        students_list = Student.find(request.GET.get('search'))
+        if class_id:
+            squad = Squad.get_by_id(class_id)
+            students_list = Student.find_by_class(squad, request.GET.get('search'))
+        else:
+            students_list = Student.find(request.GET.get('search'))
     else:
-        students_list = Student.get_all()
+        if class_id:
+            squad = Squad.get_by_id(class_id)
+            students_list = Student.get_by_class(squad)
+        else:
+            students_list = Student.get_all()
 
     # Paginator
     paginator = Paginator(students_list, 10)
@@ -806,11 +814,10 @@ def time_table_list_view(request):
         }
         return render(request, 'time_tables/class_list.html', {'data': data})
     elif request.user.groups.filter(name="Teachers").exists():
-        # Show all classes
-        data = {
-            'classes': Squad.get_all()
-        }
-        return render(request, 'time_tables/class_list.html', {'data': data})
+        # Show only this teacher's lessons
+        teacher = Teacher.get_by_id(request.user.id)
+        return time_table_teacher_view(request, teacher.id)
+
     elif request.user.groups.filter(name="Parents").exists():
         # Show only kids classes
         parent = Parent.get_by_id(request.user.id)
@@ -845,6 +852,18 @@ def time_table_view(request, id):
         'subjects': subjects
     }
     return render(request, 'time_tables/timetable.html', {'data': data})
+
+
+# /timetables/teacher/details/id
+@login_required
+def time_table_teacher_view(request, id):
+    time_tables = TimeTable.get_by_teacher(Teacher.get_by_id(id))
+    weekday = datetime.today().isoweekday()
+    data = {
+        'time_tables': time_tables,
+        'weekday': weekday
+    }
+    return render(request, 'time_tables/timetable_teacher.html', {'data': data})
 
 
 # /timetables/add
@@ -905,6 +924,34 @@ def time_table_change(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# /timetables/grades/class_id/subject_id
+@login_required
+def time_table_grades_view(request, class_id, subject_id):
+    squad = Squad.get_by_id(class_id)
+    grades = squad.get_grades(subject_id)
+    data = {
+        'squad': squad,
+        'grades': grades
+    }
+    print(data)
+    return render(request, 'time_tables/grades.html', {'data': data})
+
+
+# /timetables/attendance/class_id/lesson_no
+@login_required
+def time_table_attendance_view(request, class_id, lesson_no):
+    squad = Squad.get_by_id(class_id)
+    attendance = squad.get_attendance(lesson_no)
+    data = {
+        'squad': squad,
+        'attendance': attendance,
+        'lesson': LessonTable.get_by_number(lesson_no),
+        'event_types': Attendance.get_event_types(),
+        'date': date.today().strftime('%Y-%m-%d')
+    }
+    return render(request, 'time_tables/attendance.html', {'data': data})
 
 
 # /grades
@@ -974,7 +1021,8 @@ def grade_add(request):
                 request.user,
                 SquadSubject.get_by_id(form.cleaned_data['subject_id']),
                 form.cleaned_data['grade'],
-                form.cleaned_data['description']
+                form.cleaned_data['description'],
+                form.cleaned_data['final']
             ])
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
@@ -995,7 +1043,8 @@ def grade_change(request):
             grade.change(*[
                 request.user,
                 form.cleaned_data['grade'],
-                form.cleaned_data['description']
+                form.cleaned_data['description'],
+                form.cleaned_data['final']
             ])
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:

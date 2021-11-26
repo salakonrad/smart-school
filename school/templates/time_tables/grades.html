@@ -4,20 +4,9 @@
 <!-- Page header -->
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">Oceny - {{ data.student }}</h1>
+        <h1 class="app-page-title mb-0">{{ data.subject }}</h1>
     </div>
     <div class="col-auto">
-        <div class="page-utilities">
-            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-                <!-- {% if perms.school.view_squadsubject %}
-          <div class="col-auto">
-            <a href="" class="btn app-btn-secondary">
-              Przedmioty w klasie
-            </a>
-          </div>
-          {% endif %} -->
-            </div>
-        </div>
     </div>
 </div>
 
@@ -29,20 +18,20 @@
                     <table class="table app-table-hover mb-0 text-left table-striped">
                         <thead>
                             <tr>
-                                <th class="cell">Przedmiot</th>
-                                <th class="cell">Nauczyciel</th>
+                                <th class="cell">Imię</th>
+                                <th class="cell">Nazwisko</th>
                                 <th class="cell">Oceny</th>
                                 <th class="cell">Ocena końcowa</th>
                                 <th class="cell"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for subject in data.grades %}
+                            {% for student in data.grades %}
                                 <tr>
-                                    <td class="cell"><span class="truncate">{{ subject.subject.subject.name }}</span></td>
-                                    <td class="cell">{{ subject.subject.teacher }}</td>
+                                    <td class="cell"><span class="truncate">{{ student.student.first_name }}</span></td>
+                                    <td class="cell">{{ student.student.last_name }}</td>
                                     <td class="cell">
-                                        {% for grade in subject.grades %}
+                                        {% for grade in student.grades %}
                                             {% if not grade.is_final %}
                                                 <span class="badge bg-success pointer" data-bs-toggle="modal" data-bs-target="#grade_details{{ grade.id }}">{{ grade }}</span>
                                                 {% include "grades/details.html" with grade=grade %}
@@ -50,7 +39,7 @@
                                         {% endfor %}
                                     </td>
                                     <td class="cell">
-                                        {% for grade in subject.grades %}
+                                        {% for grade in student.grades %}
                                             {% if grade.is_final %}
                                                 <span class="badge bg-secondary pointer" data-bs-toggle="modal" data-bs-target="#grade_details{{ grade.id }}">{{ grade }}</span>
                                                 {% include "grades/details.html" with grade=grade %}
@@ -59,13 +48,13 @@
                                     </td>
                                     <td class="cell text-right">
                                         {% if perms.school.add_grade %}
-                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_grade{{ subject.subject.id }}">Dodaj ocenę</a>
+                                            <a class="btn-sm app-btn-primary" data-bs-toggle="modal" data-bs-target="#add_grade{{ student.subject.id }}-{{ student.student.id }}">Dodaj ocenę</a>
                                         {% endif %}
                                     </td>
                                 </tr>
 
                                 <!-- Add grade Modal -->
-                                {% include "grades/create.html" with subject=subject %}
+                                {% include "time_tables/create_grade.html" with student=student %}
 
                             {% endfor %}
                         </tbody>

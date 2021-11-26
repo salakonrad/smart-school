@@ -10,6 +10,7 @@ urlpatterns = [
     path('classes/add', views.class_add, name="class_add"),
     path('classes/delete', views.class_delete, name="class_delete"),
     path('classes/change', views.class_change, name="class_change"),
+    path('class_students/<int:class_id>', views.student_list_view, name="class_students"),
     # Class Profiles
     path('class_profile', views.class_profile_list_view, name="class_profile_list"),
     path('class_profile/add', views.class_profile_add, name="class_profile_add"),
@@ -52,6 +53,10 @@ urlpatterns = [
     # Time Tables
     path('timetables', views.time_table_list_view, name="time_table_list"),
     path('timetables/details/<int:id>', views.time_table_view, name="time_table"),
+    path('timetables/teacher/details/<int:id>', views.time_table_teacher_view, name="time_table_teacher"),
+    path('timetables/grades/<int:class_id>/<int:subject_id>', views.time_table_grades_view, name="time_table_grades"),
+    path('timetables/attendance/<int:class_id>/<int:lesson_no>', views.time_table_attendance_view,
+         name="time_table_attendance"),
     path('timetables/add', views.time_table_add, name="time_table_add"),
     path('timetables/delete', views.time_table_delete, name="time_table_delete"),
     path('timetables/change', views.time_table_change, name="time_table_change"),

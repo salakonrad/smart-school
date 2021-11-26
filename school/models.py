@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models.deletion import DO_NOTHING
 from django.db.models.fields import AutoField
-from datetime import datetime
+from datetime import datetime, date
 
 from django.contrib.auth.models import Group, User
 
@@ -213,8 +213,17 @@ class Student(User):
     def get_all():
         return Student.objects.filter(groups__name='Students').order_by('last_name', 'first_name')
 
+    def get_by_class(squad):
+        return Squad.get_all_students(squad)
+
     def find(search):
         students = Student.objects.filter(groups__name='Students')
+        for term in search.split(' '):
+            students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term) | Q(squad__name__icontains = term))
+        return students
+
+    def find_by_class(squad, search):
+        students = Student.get_by_class(squad)
         for term in search.split(' '):
             students = students.filter( Q(first_name__icontains = term) | Q(last_name__icontains = term) | Q(squad__name__icontains = term))
         return students
@@ -267,7 +276,7 @@ class Student(User):
         return self.squad_set.first()
 
     def get_grade(self, subject):
-        return Grade.objects.filter(student=self, subject=subject)
+        return Grade.objects.filter(student=self, subject=subject).order_by('is_final', 'issue_date')
 
     def get_grades(self):
         subjects = self.get_class().get_subjects()
@@ -284,8 +293,8 @@ class Student(User):
     def get_attendance(self):
         return Attendance.objects.filter(student=self).order_by('-date', '-lesson__number')
 
-    def add_grade(self, issuer, squad_subject, grade, description):
-        Grade.add(issuer, self, squad_subject, grade, description)
+    def add_grade(self, issuer, squad_subject, grade, description, final):
+        Grade.add(issuer, self, squad_subject, grade, description, final)
 
     def add_attendance(self, creator, lesson, event, date):
         Attendance.add(creator, self, lesson, event, date)
@@ -438,6 +447,27 @@ class Squad(models.Model):
     def get_teachers():
         return Teacher.get_all()
 
+    def get_grades(self, subject_id):
+        students = self.get_all_students().order_by('last_name')
+        result = []
+        for student in students:
+            result.append({
+                'student': student,
+                'grades': Grade.get_by_student_subject(student, subject_id),
+                'subject': SquadSubject.get_by_id(subject_id)
+            })
+        return result
+
+    def get_attendance(self, lesson_no):
+        students = self.get_all_students().order_by('last_name')
+        result = []
+        for student in students:
+            result.append({
+                'student': student,
+                'attendance': Attendance.get_by_student_subject(student, lesson_no)
+            })
+        return result
+
     def get_subjects(self):
         return SquadSubject.objects.filter(squad=self)
 
@@ -555,6 +585,12 @@ class LessonTable(models.Model):
         else:
             return None
 
+    def get_by_number(number):
+        if LessonTable.objects.filter(number = number).exists():
+            return LessonTable.objects.get(number = number)
+        else:
+            return None
+
 class TimeTable(models.Model):
     id = models.AutoField(primary_key=True)
     DAY_CHOICES = [
@@ -617,6 +653,43 @@ class TimeTable(models.Model):
             })  
         return ready_time_table
 
+    def get_by_teacher(teacher):
+        time_table = TimeTable.objects.filter(subject__teacher=teacher)
+        lesson_no = LessonTable.get_all()
+        ready_time_table = []
+        for lesson in lesson_no:
+            ready_time_table.append({
+                'no': lesson.number,
+                'hour_start': lesson.start,
+                'hour_end': lesson.end,
+                'M': {
+                    'lesson': time_table.filter(day='M', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'M',
+                },
+                'T': {
+                    'lesson': time_table.filter(day='T', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'T',
+                },
+                'W': {
+                    'lesson': time_table.filter(day='W', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'W',
+                },
+                'C': {
+                    'lesson': time_table.filter(day='C', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'C',
+                },
+                'F': {
+                    'lesson': time_table.filter(day='F', lesson_number=lesson).first(),
+                    'lesson_no': lesson,
+                    'day': 'F',
+                },
+            })
+        return ready_time_table
+
     def add(squad, day, lesson, subject):
         new_lesson = TimeTable()
         new_lesson.day = day
@@ -643,6 +716,7 @@ class Grade(models.Model):
     issued_by = models.ForeignKey(Teacher, related_name='%(class)s_issued_by', on_delete=models.CASCADE)
     edit_date = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     edited_by = models.ForeignKey(Teacher, related_name='%(class)s_edited_by', on_delete=models.CASCADE, null=True, blank=True)
+    is_final = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'grades'
@@ -656,7 +730,7 @@ class Grade(models.Model):
         else:
             return False
 
-    def add(issuer, student, subject, grade, description):
+    def add(issuer, student, subject, grade, description, final):
         new = Grade()
         new.subject = subject
         new.student = student
@@ -664,21 +738,46 @@ class Grade(models.Model):
         new.description = description
         new.issued_by = issuer
         new.save()
+        if final:
+            new.mark_as_final()
         return new
 
-    def change(self, editor, grade, description):
+    def change(self, editor, grade, description, final):
         self.grade = grade
         self.description = description
         self.edited_by = editor
         self.edit_date = datetime.now()
         self.save()
+        if final:
+            self.mark_as_final()
+        else:
+            self.mark_as_not_final()
         return self
+
+    def mark_as_final(self):
+        if Grade.objects.filter(student=self.student, subject=self.subject, is_final=True).exists():
+            Grade.objects.filter(student=self.student, subject=self.subject, is_final=True).update(is_final=False)
+        self.is_final = True
+        self.save()
+        return self
+
+    def mark_as_not_final(self):
+        self.is_final = False
+        self.save()
+        return self
+
+    def get_by_student_subject(student, subject):
+        if Grade.objects.filter(student=student, subject=subject).exists():
+            return Grade.objects.filter(student=student, subject=subject)
+        else:
+            return []
 
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
     lesson = models.ForeignKey(LessonTable, related_name='%(class)s_lesson_number', on_delete=models.CASCADE)
     student = models.ForeignKey(Student, related_name='%(class)s_student', on_delete=models.CASCADE)
     EVENT_CHOICES = [
+        ('OB', 'Obecność'),
         ('SP', 'Spóźnienie'),
         ('NB', 'Nieobecność'),
         ('NU', 'Nieobecność usprawiedliwiona')
@@ -703,6 +802,9 @@ class Attendance(models.Model):
         return Attendance.EVENT_CHOICES
 
     def add(creator, student, lesson, event, date):
+        if Attendance.objects.filter(student=student, lesson=lesson, date=date).exists():
+            attendance = Attendance.objects.get(student=student, lesson=lesson, date=date)
+            return attendance.change(creator, lesson, event, date)
         new = Attendance()
         new.lesson = lesson
         new.student = student
@@ -739,6 +841,12 @@ class Attendance(models.Model):
             return TimeTable.objects.filter(day=days[week_day], lesson_number=self.lesson, squad=self.student.get_class()).first().subject.subject
         else:
             return None
+
+    def get_by_student_subject(student, lesson_no):
+        if Attendance.objects.filter(student=student, lesson__number=lesson_no, date=date.today()).exists():
+            return Attendance.objects.get(student=student, lesson__number=lesson_no, date=date.today())
+        else:
+            return []
     
 class Message(models.Model):
     id = models.AutoField(primary_key=True)

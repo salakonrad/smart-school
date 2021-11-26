@@ -178,6 +178,7 @@ class AddGradeForm(forms.Form):
     subject_id = forms.IntegerField()
     grade = forms.CharField(max_length=4)
     description = forms.CharField(max_length=64, required=False)
+    final = forms.BooleanField(required=False)
 
 class DeleteGradeForm(forms.Form):
     grade_id = forms.IntegerField()
@@ -186,6 +187,7 @@ class ChangeGradeForm(forms.Form):
     grade_id = forms.IntegerField()
     grade = forms.CharField(max_length=4)
     description = forms.CharField(max_length=64, required=False)
+    final = forms.BooleanField(required=False)
 
 
 # Attendance
