@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="app-card-settings">
                     <div class="mb-3">
-                        <p class="text-center display-5">Ocena: <strong>{{ grade }}</strong></p>
+                        <p class="text-center display-5">Ocena{% if grade.is_final %} końcowa{% endif %}: <strong>{{ grade }}</strong></p>
                         {% if grade.description %}
                         <p class="fs-5">Opis: <strong>{{ grade.description }}</strong></p>
                         {% endif %}

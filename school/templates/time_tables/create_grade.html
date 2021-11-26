@@ -1,5 +1,5 @@
 <!-- Add new lesson modal -->
-<div class="modal fade" id="add_grade{{ subject.subject.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+<div class="modal fade" id="add_grade{{ student.subject.id }}-{{ student.student.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,8 +10,8 @@
             <form action="{% url 'grade_add' %}" method="POST" class="settings-form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="hidden" name="student_id" value="{{ data.student.id }}" />
-                    <input type="hidden" name="subject_id" value="{{ subject.subject.id }}" />
+                    <input type="hidden" name="student_id" value="{{ student.student.id }}" />
+                    <input type="hidden" name="subject_id" value="{{ student.subject.id }}" />
 
                     <div class="mb-3">
                         <label for="add-grade-1" class="form-label">Ocena</label>

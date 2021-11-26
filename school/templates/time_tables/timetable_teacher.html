@@ -1,0 +1,121 @@
+{% extends '../base.html' %}
+
+{% block page_content %}
+<!-- Page header -->
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+      <h1 class="app-page-title mb-0">Plan lekcji</h1>
+    </div>
+    <div class="col-auto">
+      <div class="page-utilities">
+      </div>
+    </div>
+  </div>
+
+<table class="table">
+    <thead>
+        <tr class="timetable">
+            <th scope="col">#</th>
+            <th scope="col">Godziny</th>
+            <th scope="col">Poniedziałek</th>
+            <th scope="col">Wtorek</th>
+            <th scope="col">Środa</th>
+            <th scope="col">Czwartek</th>
+            <th scope="col">Piątek</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for timetable in data.time_tables %}
+            <tr class="timetable fs-7">
+                <th scope="row">{{ timetable.no }}</th>
+                <td>{{ timetable.hour_start }}-{{ timetable.hour_end }}</td>
+                <!-- Monday table row -->
+                {% if timetable.M.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.M.lesson.subject.teacher.get_initials }}</span> {{ timetable.M.lesson.subject.subject.name }}
+                        <sup>
+                            <a href="{% url 'time_table_grades' class_id=timetable.M.lesson.squad.id subject_id=timetable.M.lesson.subject.id %}"><i class="far fa-star fa-sm pointer"></i></a>
+                        </sup>
+                        {% if data.weekday == 1 %}
+                        <sup>
+                            <a href="{% url 'time_table_attendance' class_id=timetable.M.lesson.squad.id lesson_no=timetable.no %}"><i class="fas fa-user-check fa-sm pointer"></i></a>
+                        </sup>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                    </td>
+                {% endif %}
+                
+                {% if timetable.T.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.T.lesson.subject.teacher.get_initials }}</span> {{ timetable.T.lesson.subject.subject.name }}
+                        <sup>
+                            <a href="{% url 'time_table_grades' class_id=timetable.T.lesson.squad.id subject_id=timetable.T.lesson.subject.id %}"><i class="far fa-star fa-sm pointer"></i></a>
+                        </sup>
+                        {% if data.weekday == 2 %}
+                        <sup>
+                            <a href="{% url 'time_table_attendance' class_id=timetable.T.lesson.squad.id lesson_no=timetable.no %}"><i class="fas fa-user-check fa-sm pointer"></i></a>
+                        </sup>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                    </td>
+                {% endif %}
+
+                {% if timetable.W.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.W.lesson.subject.teacher.get_initials }}</span> {{ timetable.W.lesson.subject.subject.name }}
+                        <sup>
+                            <a href="{% url 'time_table_grades' class_id=timetable.W.lesson.squad.id subject_id=timetable.W.lesson.subject.id %}"><i class="far fa-star fa-sm pointer"></i></a>
+                        </sup>
+                        {% if data.weekday == 3 %}
+                        <sup>
+                            <a href="{% url 'time_table_attendance' class_id=timetable.W.lesson.squad.id lesson_no=timetable.no %}"><i class="fas fa-user-check fa-sm pointer"></i></a>
+                        </sup>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                    </td>
+                {% endif %}
+
+                {% if timetable.C.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.C.lesson.subject.teacher.get_initials }}</span> {{ timetable.C.lesson.subject.subject.name }}
+                        <sup>
+                            <a href="{% url 'time_table_grades' class_id=timetable.C.lesson.squad.id subject_id=timetable.C.lesson.subject.id %}"><i class="far fa-star fa-sm pointer"></i></a>
+                        </sup>
+                        {% if data.weekday == 4 %}
+                        <sup>
+                            <a href="{% url 'time_table_attendance' class_id=timetable.C.lesson.squad.id lesson_no=timetable.no %}"><i class="fas fa-user-check fa-sm pointer"></i></a>
+                        </sup>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                    </td>
+                {% endif %}
+
+                {% if timetable.F.lesson %}
+                    <td>
+                        <span class="teacher">{{ timetable.F.lesson.subject.teacher.get_initials }}</span> {{ timetable.F.lesson.subject.subject.name }}
+                        <sup>
+                            <a href="{% url 'time_table_grades' class_id=timetable.F.lesson.squad.id subject_id=timetable.F.lesson.subject.id %}"><i class="far fa-star fa-sm pointer"></i></a>
+                        </sup>
+                        {% if data.weekday == 5 %}
+                        <sup>
+                            <a href="{% url 'time_table_attendance' class_id=timetable.F.lesson.squad.id lesson_no=timetable.no %}"><i class="fas fa-user-check fa-sm pointer"></i></a>
+                        </sup>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

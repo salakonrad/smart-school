@@ -1,0 +1,49 @@
+<div class="modal fade" id="change_attendance{{ student.student.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Dodaj wydarzenie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'attendance_add' %}" method="POST" class="settings-form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="student_id" value="{{ student.student.id }}" />
+                    <input type="hidden" name="lesson_id" value="{{ lesson.id }}" />
+                    <input type="hidden" name="date" value="{{ data.date }}">
+
+                    <div class="mb-3">
+                        <label for="add-attendance-1" class="form-label">Lekcja</label>
+                        <select class="form-select" id="add-attendance-1" disabled>
+                            <option disabled selected value="{{ lesson.id }}">{{ lesson.start }}-{{ lesson.end }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="add-attendance-2" class="form-label">Typ</label>
+                        <select name="event" class="form-select" id="add-attendance-2">
+                            {% for type in data.event_types %}
+                                {% if type.0 == student.attendance.event %}
+                                    <option selected value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% else %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="add-attendance-3" class="form-label">Data</label>
+                        <input type="date" class="disabled form-control" id="add-attendance-3" disabled value="{{ data.date }}">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <input type="submit" class="btn btn-primary" value="Dodaj">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
