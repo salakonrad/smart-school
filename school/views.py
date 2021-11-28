@@ -932,9 +932,11 @@ def time_table_change(request):
 def time_table_grades_view(request, class_id, subject_id):
     squad = Squad.get_by_id(class_id)
     grades = squad.get_grades(subject_id)
+    subject = SquadSubject.get_by_id(subject_id)
     data = {
         'squad': squad,
-        'grades': grades
+        'grades': grades,
+        'subject': subject
     }
     print(data)
     return render(request, 'time_tables/grades.html', {'data': data})
