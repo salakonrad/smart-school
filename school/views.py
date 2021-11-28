@@ -400,6 +400,7 @@ def student_list_view(request, class_id=None, error_message=None):
     data = {
         'students': students_page,
         'classes': Squad.get_all(),
+        'squad': Squad.get_by_id(class_id),
         'paginator': paginator,
         'error': error_message
     }
