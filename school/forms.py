@@ -2,7 +2,8 @@ from django import forms
 from django.db.models.fields import IntegerField
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=48, label="Nazwa użytkownika")
+    # username = forms.CharField(max_length=48, label="Nazwa użytkownika")
+    email = forms.CharField(max_length=48, label="E-mail")
     password = forms.CharField(max_length=64, label="Hasło")
 
 class ResetPasswordForm(forms.Form):
