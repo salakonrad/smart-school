@@ -21,6 +21,18 @@
 	<!-- App CSS -->
 	<link id="theme-style" rel="stylesheet" href="{% static 'css/portal.css' %}">
 
+    {% for group_for in request.user.groups.all %}
+        {% if group_for.name == 'Principals' %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/principal-colors.css' %}">
+        {% elif group_for.name == 'Teachers' %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/teacher-colors.css' %}">
+        {% elif group_for.name == 'Students' %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/student-colors.css' %}">
+        {% elif group_for.name == 'Parents' %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/student-colors.css' %}">
+        {% endif %}
+    {% endfor %}
+
 </head>
 
 <body class="app">
