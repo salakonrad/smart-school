@@ -68,3 +68,6 @@ App is now ready! You can visit http://127.0.0.1:8000
 
 ## Force redeploy  
 `docker-compose up --force-recreate --build -d`
+
+## Running tests
+`python manage.py test school/tests`
