@@ -1,7 +1,5 @@
 from django.test import TestCase, Client
-from django.urls import reverse
-from school.models import ClassProfile, User, Message
-import json
+from school.models import User
 
 
 class TestViews(TestCase):
@@ -20,14 +18,6 @@ class TestViews(TestCase):
 
         self.assertTemplateUsed(response, 'messages/messages_list.html')
 
-    # def test_messages_view(self):
-    #     client = Client()
-    #     client.login(username='konradsala', password='test12345')
-    #
-    #     response = client.get("/messages", follow=True)
-    #
-    #     self.assertTemplateUsed(response, 'messages/messages.html')
-
     def test_attendance_list_view(self):
         client = Client()
         client.login(username='konradsala', password='test12345')
@@ -44,3 +34,11 @@ class TestViews(TestCase):
         })
 
         self.assertEquals(response.status_code, 302)
+
+    # def test_messages_view(self):
+    #     client = Client()
+    #     client.login(username='konradsala', password='test12345')
+    #
+    #     response = client.get("/messages", follow=True)
+    #
+    #     self.assertTemplateUsed(response, 'messages/messages.html')
